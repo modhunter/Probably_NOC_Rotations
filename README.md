@@ -2,10 +2,10 @@
 NOC Rotations
 ====================
 
-# Hunter (Survival and BeastMaster)
+## Hunter (Survival and BeastMaster)
 ====================
 
-## Features
+### Features
 ====================
 - Single Target / AoE (Multi-Shot with hotkey support for barrage)
 - Engineering gloves usage is part of the rotation
@@ -25,7 +25,7 @@ NOC Rotations
 - When out of combat will automatically cast Hunter's mark on your target if it's been targetted at least 2 seconds
 - Will not cast Serpent Sting or Black Arrow against a charmed player in order to prevent DOTS from killing them
 
-## Hotkeys
+### Hotkeys
 ====================
 - Left Shift - Pause
 - Left Control - Binding Shot
@@ -33,7 +33,7 @@ NOC Rotations
 - Left Alt - Snake Trap
 - Left Alt - Ice Trap
 
-## Survival
+### Survival
 ====================
 - Exhilaration when health below 50%
 - Healthstone when below 40% health
@@ -42,12 +42,12 @@ NOC Rotations
 - Automatic misdirect to focus or pet when you pull too much threat
 - Automatic mend pet (in combat & out of combat) when the pet is < 90% health
 
-## Rotation
+### Rotation
 ====================
 - Basically following the Icy Veins & Simcraft suggested priority system
 - Controlled single-target tests have shown this profile to perform about 1.5% better than simcraft
 
-## Todo
+### Todo
 ====================
 - Implement G52 Landshark usage as part of cooldowns
 - Figure out how to get Healing Potions & Virmen's Bite potions to work 100% when potions are already on cooldowna
@@ -55,10 +55,10 @@ NOC Rotations
 
 
 
-# Windwalker Monk
+## Windwalker Monk
 ====================
 
-## Features
+### Features
 ====================
 - Self Buffs in & out of combat
 - Cooldowns
@@ -93,14 +93,14 @@ NOC Rotations
 - Toggle button for turning on/off automatic targetting while in combat & automatic target switching to next nearest target - this is to allow for high efficiency when needed
 - Toggle button for switching Fists of Furon on/off.  This may be necessary to use for an encounter or phase of an enounter where FoF is problematic.  For example Fof the adds during Garrosh phase 1 can kill the tank due to the stun.
 
-## Hotkeys
+### Hotkeys
 ====================
 - Left Shift - Pause
 - Left Control - Healing Sphere
 - Left Alt - Touch of Karma
 - Right Alt - Leg Sweep
 
-## Survival
+### Survival
 ====================
 - Expel Harm <= 80% health
 - Chi Wave <= 75% health
@@ -113,12 +113,12 @@ NOC Rotations
 - Tiger's Lust if you are disoriented/stunned/rooted/snared
 - Self-Healing via Expel Harm while out of combat
 
-## Rotation
+### Rotation
 ====================
 - Based loosly on the original 'rootWind' DPS rotation logic and SimCraft
 - Controlled single-target tests have shown this profile to perform within 1% of simcraft
 
-## Todo
+### Todo
 ====================
 - Implement G52 Landshark usage as part of cooldowns
 - Figure out how to get Healing Potions & Virmen's Bite potions to work 100% when potions are already on cooldown
@@ -126,10 +126,10 @@ NOC Rotations
 
 
 
-# Brewmaster Monk
+## Brewmaster Monk
 ====================
 
-## Features
+### Features
 ====================
 - Self Buffs in & out of combat
 - Cooldowns
@@ -161,13 +161,13 @@ NOC Rotations
 - Toggle to turn on/off Fortifying Brew
 - Auto-enable Sturdy Ox Stance if not in it already
 
-## Hotkeys
+### Hotkeys
 ====================
 - Left Shift - Pause
 - Left Control - Dizzying Haze
 - Left Alt - Black Ox Statue
 
-## Survival
+### Survival
 ====================
 - Elusive Brew at 10 stacks
 - Fortifying Brew <= 35% health
@@ -183,10 +183,10 @@ NOC Rotations
 - Tiger's Lust if you are disoriented/stunned/rooted/snared
 - Self-Healing via Expel Harm while out of combat
 
-## Rotation
+### Rotation
 ====================
 - Based on the original 'Into_The_Brew' tank rotation logic from Chumii
 
-## Todo
+### Todo
 ====================
 - More effective automatic tanking
