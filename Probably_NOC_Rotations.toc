@@ -1,0 +1,11 @@
+## Interface: 50400
+## Title: Probably - NOC Custom Rotations
+## Notes: ProbablyEngine NOC Custom Rotations
+## Dependencies: Probably
+
+library.lua
+hunter\beastmastery.lua
+hunter\survival.lua
+monk\brewmaster.lua
+monk\windwalker.lua
+
