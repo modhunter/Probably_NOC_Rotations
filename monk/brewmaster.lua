@@ -67,7 +67,7 @@ ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk|r", 
        "!modifier.last(116705)"
     }},
     { "116705" }, -- Spear Hand Strike
-  }, "target.interruptAt(50)" },
+  }, "target.interruptAt(30)" }, -- Interrupt when 30% into the cast time
 
 
 -- Selfheal Talents T2 --------------------------------------------------------------------------------------------- 

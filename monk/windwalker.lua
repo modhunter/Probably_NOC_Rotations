@@ -54,7 +54,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk|r",
        "!modifier.last(Spear Hand Strike)"
     }}, 
     { "Spear Hand Strike" }, -- Spear Hand Strike
-  }, "target.interruptAt(50)" },
+  }, "target.interruptAt(30)" }, -- Interrupt when 30% into the cast time
 
   -- Buffs
   { "Legacy of the White Tiger", { -- Legacy of the White Tiger

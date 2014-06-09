@@ -25,7 +25,7 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter",
    { "1978", { "!mouseover.debuff(118253)", "toggle.autoSS", "!mouseover.charmed", "!mouseover.state.charm", "!mouseover.debuff(Touch of Y'Shaarj)", "!mouseover.debuff(Empowered Touch of Y'Shaarj)", "!mouseover.buff(Touch of Y'Shaarj)", "!mouseover.buff(Empowered Touch of Y'Shaarj)" }, "mouseover" },
 
    -- Interrupt(s)
-   { "147362", "target.interruptAt(50)" }, -- Counter Shot at 50% cast time left
+   { "147362", "target.interruptAt(30)" }, -- Counter Shot at 30% cast time left
 
    -- Survival
    { "109304", "player.health < 50" }, -- Exhiliration

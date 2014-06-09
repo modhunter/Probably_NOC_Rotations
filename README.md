@@ -18,7 +18,7 @@ NOC Rotations
 - Automatic Master's Call when the player is rooted/stunned/snared
 - Multitarget mode will only engage AOE abilities when both the multitarget toggle is set and there are at least 3 active enemies - this means that you can generally leave multitarget toggled on and not worry about only casting multi-shot all the time
 - Pause rotation when in feign death
-- Delayed interrupting: Don't attempt to interrupt until the spellcast is 50% complete
+- Delayed interrupting: Don't attempt to interrupt until the spellcast is 30% complete
 - Toggle to allow for automatic serpent sting on your current mouseover target whenever that target doesn't already have the serpent sting DOT/debuff.  This is a great way to 'DOT-up' multiple enemies that are spread around
 - Support for international clients
 - Revive Pet, Heart of the Phoenix, & Call Pet should work correctly 100% of the time
@@ -65,7 +65,7 @@ NOC Rotations
 - Potions (not working correctly when used in conjunction with healthstone)
 - Synapse Springs / Gloves item slot
 - Chi Stacking on a toggle so that you can have max chi as combat starts
-- Castcading Interrupts when cast time is at 50%: 
+- Castcading Interrupts when cast time is at 30%: 
   - Spear Hand Strike
   - Ring of Peace (if talent chosen) when SHS is on CD
   - Leg Sweep (if talent chosen) when SHS is on CD
@@ -134,7 +134,7 @@ NOC Rotations
 - Self Buffs in & out of combat
 - Cooldowns
 - Synapse Springs / Gloves item slot
-- Castcading Interrupts when cast time is at 50%: 
+- Castcading Interrupts when cast time is at 30%: 
   - Spear Hand Strike
   - Ring of Peace (if talent chosen) when SHS is on CD
   - Leg Sweep (if talent chosen) when SHS is on CD
