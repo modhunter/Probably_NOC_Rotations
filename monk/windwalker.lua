@@ -20,7 +20,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk|r",
   -- SEF on mouseover
   {{
     { "Storm, Earth, and Fire", { "@NOC.SEF()" }, "mouseover" },
-    { "/cancelaura Storm, Earth, and Fire", { "@NOC.cancelSEF" }}
+    --{ "/cancelaura Storm, Earth, and Fire", { "@NOC.cancelSEF" }}
   }, "toggle.autosef" },
 
   -- Interrupts
@@ -93,16 +93,6 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk|r",
     "!player.buff(Diffuse Magic)", --DM
     "!player.buff(Dampen Harm)" --DH
   }}, 
-  { "Diffuse Magic", { -- Diffuse Magic at < 50% health and when FB & DH buff is not up
-    "player.health < 50",
-    "!player.buff(Fortifying Brew)", --FB
-    "!player.buff(Dampen Harm)" --DH
-  }}, 
-  { "Dampen Harm", { -- Dampen Harm at < 50% health and when FB & DM buff is not up
-    "player.health < 50",
-    "!player.buff(Fortifying Brew)", --FB
-    "!player.buff(Diffuse Magic)" --DM
-  }}, 
   {{
      { "#5512", "player.health < 40" }, -- Healthstone
      -- This is still broken if the potion is on cooldown
@@ -141,9 +131,6 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk|r",
   -- Melee range only
   {{
     { "Touch of Death", "player.buff(Death Note)" }, -- Touch of Death
-    { "Grapple Weapon", "target.disarmable" }, -- Grapple Weapon
-    -- Ring of Peace when Grapple Weapon debuff is not present, is on CD, and the target is in melee range
-    --{ "Ring of Peace", { "!player.buff(123231)", "player.spell(117368).cooldown > 0", "target.range <= 5" }},
 
     -- Chi Brew
     {{
@@ -282,9 +269,6 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk|r",
   {{
     -- Tiger's Lust if the target is at least 15 yards away and we are moving
     { "Tiger's Lust", { "target.range >= 15", "player.moving" }},
-
-    -- Spinning Fire Blossom - best when used glyphed to avoid random blossoms going all over the combat area
-    { "Spinning Fire Blossom", { "target.range > 5", "target.range <= 50", "player.chi > 1" }},
 
     { "Zen Sphere", "!target.debuff(Zen Sphere)" }, -- 40 yard range!
     { "Chi Wave" }, -- Chi Wave (40yrd range!)
