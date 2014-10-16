@@ -4,10 +4,8 @@ NOC Rotations
 
 WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
 
-## Hunter (Survival and BeastMaster)
+## Hunter (Survival and BeastMaster) - NOT UPDATED FOR 6.x YET
 ====================
-
-###NOT UPDATED FOR 6.x YET
 
 ### Features
 ====================
@@ -115,10 +113,8 @@ WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
 
 
 
-## Brewmaster Monk
+## Brewmaster Monk - NOT UPDATED FOR 6.x YET
 ====================
-
-###NOT UPDATED FOR 6.x YET
 
 ### Features
 ====================
