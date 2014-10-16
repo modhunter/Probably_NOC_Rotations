@@ -2,8 +2,6 @@
 NOC Rotations
 ====================
 
-WindWalker Monk updated for 6.0.2. Level 100 talents/abilities are not in yet
-
 ## Hunter (Survival and BeastMaster)
 ====================
 
