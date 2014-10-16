@@ -2,10 +2,12 @@
 NOC Rotations
 ====================
 
-WindWalker Monk updated for 6.0.2. Level 100 talents/abilities are not in yet
+WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
 
 ## Hunter (Survival and BeastMaster)
 ====================
+
+###NOT UPDATED FOR 6.x YET
 
 ### Features
 ====================
@@ -57,15 +59,13 @@ WindWalker Monk updated for 6.0.2. Level 100 talents/abilities are not in yet
 
 
 
-## Windwalker Monk
+## Windwalker Monk (6.x)
 ====================
 
 ### Features
 ====================
 - Self Buffs in & out of combat
 - Cooldowns
-- Potions (not working correctly when used in conjunction with healthstone)
-- Synapse Springs / Gloves item slot
 - Chi Stacking on a toggle so that you can have max chi as combat starts
 - Castcading Interrupts when cast time is at 30%: 
   - Spear Hand Strike
@@ -75,7 +75,6 @@ WindWalker Monk updated for 6.0.2. Level 100 talents/abilities are not in yet
   - Paralysis when SHS, Quaking Palm, & Ring of Peace are all on CD
 - Queued Spells (use '/mWW <qName (see below)/spellID>')
   - Touch of Karma (/mWW qKarma)
-  - Grapple Weapon (/mWW qGrapple)
   - Tiger's Lust (/mWW qLust)
   - Healing Sphere (/mWW qSphere)
   - Ring of Peace (/mWW qtFour)
@@ -83,14 +82,6 @@ WindWalker Monk updated for 6.0.2. Level 100 talents/abilities are not in yet
   - Leg Sweep (/mWW qtFour)
   - Diffuse Magic (/mWW qTfive)
   - Dampen Harm (/mWW qtFive)
-- Multitarget/AOE mode will only engage AOE abilities when both the multitarget toggle is set and there are at least 4 active enemies - this means that you can generally leave multitarget toggled on and not cast Spinning Crane Kick over and over
-- Tigereye Brew @ 10 stacks when certain agility trinkets are up 
-- Tigereye Brew @ 15 stacks (prevent capping) with the following conditions: at least 2 chi, at least 15 stacks, TeB buff not already up, tiger power buff will be up at least 2 seconds, and RsK debuff is already on the target
-- Fists of Fury whenever the following conditions are met: toggle is on, player is not moving, player does not have the Energizing Brew buff, energy will not cap in < 4 seconds, Tiger Power buff will last at least 4 seconds, Rising Sun Kick debuff will last at least 4 seconds, and:
-  - Trinket procced, or
-  - TigerEye Brew buff is up, or
-  - Synapse Springs buff is up
-- Automatic grapple weapon when the target is disarmable
 - Automatic & smart Storm, Earth, and Fire on mouseover. It will not apply more than 2 clones, will prevent you from castting on your current target, and if you switch to a target with one on, it will cancel the spell. Thanks to Tao for the routine
 - Toggle button for turning on/off automatic targetting while in combat & automatic target switching to next nearest target - this is to allow for high efficiency when needed
 - Toggle button for switching Fists of Furon on/off.  This may be necessary to use for an encounter or phase of an enounter where FoF is problematic.  For example Fof the adds during Garrosh phase 1 can kill the tank due to the stun.
@@ -98,7 +89,6 @@ WindWalker Monk updated for 6.0.2. Level 100 talents/abilities are not in yet
 ### Hotkeys
 ====================
 - Left Shift - Pause
-- Left Control - Healing Sphere
 - Left Alt - Touch of Karma
 - Right Alt - Leg Sweep
 
@@ -117,19 +107,18 @@ WindWalker Monk updated for 6.0.2. Level 100 talents/abilities are not in yet
 
 ### Rotation
 ====================
-- Based loosly on the original 'rootWind' DPS rotation logic and SimCraft
 - Controlled single-target tests have shown this profile to perform within 1% of simcraft
 
 ### Todo
 ====================
-- Implement G52 Landshark usage as part of cooldowns
-- Figure out how to get Healing Potions & Virmen's Bite potions to work 100% when potions are already on cooldown
 - DPS fine-tuning
 
 
 
 ## Brewmaster Monk
 ====================
+
+###NOT UPDATED FOR 6.x YET
 
 ### Features
 ====================
