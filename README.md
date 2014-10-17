@@ -3,6 +3,7 @@ NOC Rotations
 ====================
 
 WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
+BrewMaser Monk updated for 6.0.2. Level 100 abilities are not in yet
 
 ## Hunter (Survival and BeastMaster) - NOT UPDATED FOR 6.x YET
 ====================
@@ -65,7 +66,7 @@ WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
 - Self Buffs in & out of combat
 - Cooldowns
 - Chi Stacking on a toggle so that you can have max chi as combat starts
-- Castcading Interrupts when cast time is at 30%: 
+- Castcading Interrupts when cast time is at 30%:
   - Spear Hand Strike
   - Ring of Peace (if talent chosen) when SHS is on CD
   - Leg Sweep (if talent chosen) when SHS is on CD
@@ -88,7 +89,7 @@ WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
 ====================
 - Left Shift - Pause
 - Left Alt - Touch of Karma
-- Right Alt - Leg Sweep
+- Left Control - Leg Sweep
 
 ### Survival
 ====================
@@ -113,15 +114,14 @@ WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
 
 
 
-## Brewmaster Monk - NOT UPDATED FOR 6.x YET
+## Brewmaster Monk - (6.x)
 ====================
 
 ### Features
 ====================
 - Self Buffs in & out of combat
 - Cooldowns
-- Synapse Springs / Gloves item slot
-- Castcading Interrupts when cast time is at 30%: 
+- Castcading Interrupts when cast time is at 30%:
   - Spear Hand Strike
   - Ring of Peace (if talent chosen) when SHS is on CD
   - Leg Sweep (if talent chosen) when SHS is on CD
@@ -131,7 +131,6 @@ WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
   - Guard (/mBM qGuard)
   - Fortifying Brew (/mBM qBrew)
   - Zen Meditation (/mBM qZen)
-  - Avert Harm (/mBM qAvert)
   - Statue of the Ox (/mBM qOx)
   - Paralysis (mouseover) (/mBM qPara)
   - Ring of Peace (/mBM qtFour)
@@ -140,7 +139,6 @@ WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
   - Diffuse Magic (/mBM qTfive)
   - Dampen Harm (/mBM qtFive)
 - Multitarget/AOE mode will only engage AOE abilities when both the multitarget toggle is set and there are at least 4 active enemies - this means that you can generally leave multitarget toggled on and not cast Spinning Crane Kick over and over
-- Automatic grapple weapon when the target is disarmable
 - Toggle button for turning on/off automatic targetting while in combat & automatic target switching to next nearest target - this is to allow for high efficiency when needed
 - Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
 - Toggle to turn on/off Keg Smash
@@ -169,11 +167,3 @@ WindWalker Monk updated for 6.0.2. Level 100 abilities are not in yet
 - Nimble Brew if you are disoriented/feared/stunned/rooted/snared
 - Tiger's Lust if you are disoriented/stunned/rooted/snared
 - Self-Healing via Expel Harm while out of combat
-
-### Rotation
-====================
-- Based on the original 'Into_The_Brew' tank rotation logic from Chumii
-
-### Todo
-====================
-- More effective automatic tanking

@@ -117,16 +117,6 @@ ProbablyEngine.command.register('mWW', function(msg, box)
     end
   end
 
-  if command == 'useItem' then
-    if ProbablyEngine.config.read('button_states', 'useItem', false) then
-      ProbablyEngine.buttons.toggle('useItem')
-      mww:message("|cFFB30000Automatic Item Usage off")
-    else
-      ProbablyEngine.buttons.toggle('useItem')
-      mww:message("|cFF00B34AAutomatic Item Usage on")
-    end
-  end
-
   if command == 'autosef' then
     if ProbablyEngine.config.read('button_states', 'autosef', false) then
       ProbablyEngine.buttons.toggle('autosef')
@@ -140,15 +130,9 @@ ProbablyEngine.command.register('mWW', function(msg, box)
   if command == "qKarma" or command == 122470 then
     NOC.queueSpell = 122470 -- Touch of Karma
     mww.message("Touch of Karma queued")
-  elseif command == "qGrapple" or command == 117368 then
-    NOC.queueSpell = 117368 -- Grapple Weapon
-    mww.message("Grapple Weapon queued")
   elseif command == "qLust" or command == 116841 then
     NOC.queueSpell = 116841 -- Tiger's Lust
     mww.message("Tger's Lust queued")
-  elseif command == "qSphere" or command == 115460 then
-    NOC.queueSpell = 115460 -- Healing Sphere
-    mww.message("Healing Sphere queued")
   elseif command == "qTfour" then
     if select(2,GetTalentRowSelectionInfo(4)) == 10 then
         NOC.queueSpell = 116844 -- Ring of Peace
@@ -217,7 +201,7 @@ ProbablyEngine.command.register('mBM', function(msg, box)
       mww:message("|cFF00B34AAoE on")
     end
   end
-  
+
   if command == 'taunt' then
     if ProbablyEngine.config.read('button_states', 'taunt', false) then
       ProbablyEngine.buttons.toggle('taunt')
@@ -258,9 +242,6 @@ ProbablyEngine.command.register('mBM', function(msg, box)
   elseif command == "qZen" or command == 115176 then
     NOC.queueSpell = 115176
     mww:message("Zen Meditation queued")
-  elseif command == "qAvert" or command == 115213 then
-    NOC.queueSpell = 115213
-    mww:message("Avert Harm queued")
   elseif command == "qPara" or command == 115078 then
     NOC.queueSpell = 115078
     mww:message("Paralysis (mouseover) queued")
@@ -270,21 +251,21 @@ ProbablyEngine.command.register('mBM', function(msg, box)
   elseif command == "qTfour" then
     if select(2,GetTalentRowSelectionInfo(4)) == 10 then
         NOC.queueSpell = 116844
-        mww:message("Ring of Peace queued") 
+        mww:message("Ring of Peace queued")
     elseif select(2,GetTalentRowSelectionInfo(4)) == 11 then
         NOC.queueSpell = 119392
-        mww:message("Charging Ox Wave queued") 
+        mww:message("Charging Ox Wave queued")
     elseif select(2,GetTalentRowSelectionInfo(4)) == 12 then
         NOC.queueSpell = 119381
-        mww:message("Leg Sweep queued") 
+        mww:message("Leg Sweep queued")
     end
   elseif command == "qTfive" then
     if select(2,GetTalentRowSelectionInfo(5)) == 14 then
         NOC.queueSpell = 122278
-        mww:message("Dampen Harm queued") 
+        mww:message("Dampen Harm queued")
     elseif select(2,GetTalentRowSelectionInfo(5)) == 15 then
         NOC.queueSpell = 122783
-        mww:message("Diffuse Magic queued") 
+        mww:message("Diffuse Magic queued")
     end
   else
     NOC.queueSpell = nil
@@ -437,8 +418,8 @@ function NOC.SEF()
     NOC.sefUnits[NOC.lastSEFTarget], NOC.lastSEFCount, NOC.lastSEFTarget = true, count, nil
   end
   if count < 2
-     and DSL('enemy')('mouseover')
-     and DSL('modifier.enemies')() > 1 then
+     and DSL('enemy')('mouseover') then
+     --and DSL('modifier.enemies')() > 1 then
     local mouseover, target = UnitGUID('mouseover'), UnitGUID('target')
     if mouseover and target ~= mouseover and not NOC.sefUnits[mouseover] then
       NOC.lastSEFTarget = mouseover
@@ -450,8 +431,8 @@ end
 
 
 function NOC.cancelSEF()
-  if DSL('buff')('player', '137639')
-     and DSL('modifier.enemies')() < 2 then
+  if DSL('buff')('player', '137639') then
+     --and DSL('modifier.enemies')() < 2 then
     NOC.sefUnits, NOC.lastSEFCount, NOC.lastSEFTarget = {}, 0, nil
     return true
   end
@@ -459,7 +440,7 @@ function NOC.cancelSEF()
 end
 
 
-function NOC.StaggerValue ()    
+function NOC.StaggerValue ()
     local staggerLight, _, iconLight, _, _, remainingLight, _, _, _, _, _, _, _, _, valueStaggerLight, _, _ = UnitAura("player", GetSpellInfo(124275), "", "HARMFUL")
     local staggerModerate, _, iconModerate, _, _, remainingModerate, _, _, _, _, _, _, _, _, valueStaggerModerate, _, _ = UnitAura("player", GetSpellInfo(124274), "", "HARMFUL")
     local staggerHeavy, _, iconHeavy, _, _, remainingHeavy, _, _, _, _, _, _, _, _, valueStaggerHeavy, _, _ = UnitAura("player", GetSpellInfo(124273), "", "HARMFUL")
@@ -471,7 +452,7 @@ end
 
 
 function NOC.DrinkStagger()
-    if (UnitPower("player", 12) >= 1 or UnitBuff("player", GetSpellInfo(138237))) then 
+    if (UnitPower("player", 12) >= 1 or UnitBuff("player", GetSpellInfo(138237))) then
         if UnitDebuff("player", GetSpellInfo(124273))
             then return true
         end
@@ -499,4 +480,3 @@ end
 
 
 ProbablyEngine.library.register("NOC", NOC)
-

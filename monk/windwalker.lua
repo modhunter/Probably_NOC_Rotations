@@ -11,8 +11,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
 { "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" } },
 
 -- Keyboard modifiers
-{ "Healing Sphere", "modifier.lcontrol", "ground" },  -- Healing Sphere
-{ "Leg Sweep", "modifier.ralt" },              -- Leg Sweep
+{ "Leg Sweep", "modifier.lcontrol" },              -- Leg Sweep
 { "Touch of Karma", "modifier.lalt" },              -- Touch of Karma
 
 -- SEF on mouseover
@@ -201,8 +200,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
   { "Jab", { "player.chi <= 2", "!player.spell(Ascension).exists" }},
   { "Jab", { "player.chi <= 3", "player.spell(Ascension).exists" }},
 
-  -- TODO: the target.spell().range and target.range checks appear to be broken at the moment
-}, { "target.exists", "target.alive", "player.alive", "target.spell(100780).range", "!player.casting" }},
+}, { "target.exists", "target.alive", "player.alive", "target.range <=5", "!player.casting" }},
 
 -- Ranged
 {{
