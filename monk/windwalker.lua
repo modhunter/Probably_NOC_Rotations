@@ -98,6 +98,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
    { "Bear Hug" },
    { "Invoke Xuen, the White Tiger" },
 }, "modifier.cooldowns" },
+
 -- Melee range only
 {{
   { "Touch of Death", "player.buff(Death Note)" },
@@ -201,6 +202,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
   { "Jab", { "player.chi <= 3", "player.spell(Ascension).exists" }},
 
 }, { "target.exists", "target.alive", "player.alive", "target.range <=5", "!player.casting" }},
+
 
 -- Ranged
 {{
