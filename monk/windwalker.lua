@@ -22,10 +22,9 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
 
 -- Interrupts
 {{
-  { "Paralysis", { -- Paralysis when SHS, Ring of Peace, and Quaking Palm are all on CD
+  { "Paralysis", { -- Paralysis when SHS, and Quaking Palm are all on CD
      "!target.debuff(Spear Hand Strike)",
      "player.spell(Spear Hand Strike).cooldown > 0",
-     "player.spell(Ring of Peace).cooldown > 0",
      "player.spell(Quaking Palm).cooldown > 0",
      "!modifier.last(Spear Hand Strike)"
   }},
@@ -44,10 +43,9 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
      "target.range <= 30",
      "!modifier.last(116705)"
   }},
-  { "Quaking Palm", { -- Quaking Palm when SHS and Ring of Peace are on CD
+  { "Quaking Palm", { -- Quaking Palm when SHS is on CD
      "!target.debuff(Spear Hand Strike)",
      "player.spell(Spear Hand Strike).cooldown > 0",
-     "player.spell(Ring of Peace).cooldown > 0",
      "!modifier.last(Spear Hand Strike)"
   }},
   { "Spear Hand Strike" }, -- Spear Hand Strike
@@ -100,7 +98,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
 }, "modifier.cooldowns" },
 
 -- Melee range only
-{{
+--{{
   { "Touch of Death", "player.buff(Death Note)" },
 
   {{
@@ -201,10 +199,12 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
   { "Jab", { "player.chi <= 2", "!player.spell(Ascension).exists" }},
   { "Jab", { "player.chi <= 3", "player.spell(Ascension).exists" }},
 
-}, { "target.exists", "target.alive", "player.alive", "target.range <=5", "!player.casting" }},
+
+--  }, { "target.exists", "target.alive", "player.alive", "target.range <=5", "!player.casting" }},
 
 
 -- Ranged
+
 {{
   -- Tiger's Lust if the target is at least 15 yards away and we are moving
   { "Tiger's Lust", { "target.range >= 15", "player.moving" }},
@@ -218,7 +218,6 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
 
   { "Expel Harm", "player.chi < 4" } -- Expel Harm
 }, "@NOC.immuneEvents" },
-
 
 },{
 -- Out of Combat

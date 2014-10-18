@@ -39,10 +39,9 @@ ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0|
 
 -- Interrupts ------------------------------------------------------------------------------------------------------
 	{{
-		{ "115078", { -- Paralysis when SHS, Ring of Peace, and Quaking Palm are all on CD
+		{ "115078", { -- Paralysis when SHS and Quaking Palm are all on CD
 			"!target.debuff(Spear Hand Strike)",
 			"player.spell(116705).cooldown > 0",
-			"player.spell(116844).cooldown > 0",
 			"player.spell(107079).cooldown > 0",
 			"!modifier.last(116705)"
 		}},
@@ -61,10 +60,9 @@ ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0|
 			"target.range <= 30",
 			"!modifier.last(116705)"
 		}},
-		{ "107079", { -- Quaking Palm when SHS and Ring of Peace are on CD
+		{ "107079", { -- Quaking Palm when SHS on CD
 			"!target.debuff(Spear Hand Strike)",
 			"player.spell(116705).cooldown > 0",
-			"player.spell(116844).cooldown > 0",
 			"!modifier.last(116705)"
 		}},
 		{ "116705" }, -- Spear Hand Strike
@@ -126,82 +124,54 @@ ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0|
 		"mouseover.range > 10"
 	}, "mouseover.ground" },
 
+	-- Main Rotation
 	{{
+		{{
 		{ "Keg Smash", { "player.chi < 3", "!player.spell(Ascension).exists" }}, -- Keg Smash when less then 3 Chi
 		{ "Keg Smash", { "player.chi < 4", "player.spell(Ascension).exists" }}, -- Keg Smash when less then 4 Chi (due to Ascension)
-	}, "toggle.kegsmash" },
+		}, "toggle.kegsmash" },
 
-	-- Blackout Kick
-	{ "100784", "!player.buff(115307)" },
-	{ "100784", "player.buff(115307).duration < 3" },
-	{ "100784",  "player.chi >= 4" },
+		-- Blackout Kick
+		{ "100784", "!player.buff(115307)" },
+		{ "100784", "player.buff(115307).duration < 3" },
+		{ "100784",  "player.chi >= 4" },
 
+		{ "Chi Brew", {"player.chi <= 2", "player.buff(128939).count <= 10" }},
 
-	{ "Chi Brew", {"player.chi <= 2", "player.buff(128939).count <= 10" }},
--------------------
+		{ "Touch of Death", "player.buff(Death Note)" },
 
+		{ "115072", "player.health <= 85"}, -- Expel Harm if < 85
 
+		-- { "100787", "!player.spell(100780).usable" }, -- Tiger Palm if Jab isn't usable... ?
 
-
-	-- Blackout Kick only with at least 2 Chi
-	{{
-		{ "100784", "!player.buff(115307)"},
-		{ "100784", "player.buff(115307).duration < 3"},
-		{ "100784" }
-	}, "player.chi >= 2" },
-
-	{ "Touch of Death", "player.buff(Death Note)" },
-
-	-- AoE only when toggles and at least 3 enemies
-	{{
-			--{{
-			--   { "Keg Smash", { "player.chi < 3", "!player.spell(Ascension).exists" }}, -- Keg Smash when less then 3 Chi
-			--   { "Keg Smash", { "player.chi < 4", "player.spell(Ascension).exists" }}, -- Keg Smash when less then 4 Chi (due to Ascension)
-			--}, { "toggle.kegsmash", "!target.debuff(Dizzying Haze)" }},
-
-			{ "Breath of Fire", {
-				"player.buff(125359).duration >= 6",
+		-- AoE only when toggled and at least 3 enemies
+		{{
+		{ "Breath of Fire", {
 				"target.debuff(Dizzying Haze)",
 				"!target.debuff(Breath of Fire)",
-				"player.chi >= 3",
+				"player.chi >= 2",
+		}},
+		--Spinning Crane Kick
+			{ "101546", {
+				"!player.spell(116847).exists",
+				"player.buff(115307).duration >= 3",
 			}},
-
 			--Rushing Jade Wind
 			{ "116847", {
-				"player.chi >= 3",
-				--"player.buff(115307).duration >= 3",  -- Shuffle
+				"!player.buff(116847)",
+				"player.buff(115307).duration >= 3",
 			}},
-
-			-- Blackout Kick
-			{ "100784", { "player.spell(Rushing Jade Wind).exists", "player.buff(115307).duration <= 3" }},
-			{ "100784", { "player.spell(Rushing Jade Wind).exists", "player.chi >= 4" }},
-
-		--Spinning Crane Kick
-		{ "101546", {
-			"!player.spell(116847).exists",
-			"player.chi >= 3",
-			--"player.buff(115307).duration >= 3", -- shuffle
-		}},
-
-		{ "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chi >= 3" }},
-
-		--"modifier.enemies > 2"
-	}, { "toggle.multitarget" }},
-
-
--- ST
+		}, { "toggle.multitarget" }},
+--modifier.enemies >= 3"
 
 	{ "100787", "player.buff(125359).duration < 4" }, -- Tiger Palm if Tiger Power buff will last < 4 seconds
 	{ "100787", "player.energy <= 39"}, -- Tiger Palm when < 40 energy
-	{ "115072", "player.health <= 85"}, -- Expel Harm if < 85
 
-	{ "Jab", "player.energy >= 40"}, -- Jab when we have at least 40 energy
+	{ "100780", "player.energy >= 40"}, -- Jab when we have at least 40 energy
 
 	{ "Tiger's Lust", { "target.range >= 15", "player.moving" }},
 
-	-- TODO: Not sure if a good idea as a BM
-	--{ "Crackling Jade Lightning", { "target.range > 5", "target.range <= 40", "!player.moving" }},
-
+	},{ "target.exists", "target.alive", "player.alive" }},
 
 --Taunt on Encounter (needs focus on other tank)
 {{
