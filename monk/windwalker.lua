@@ -169,8 +169,6 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
 -- Fists of Fury
   { "Fists of Fury", {
      "!player.moving",
-     "player.timetomax > 4",
-     "player.buff(Tiger Power).duration > 4",
      "target.debuff(Rising Sun Kick).duration > 4",
      "toggle.fof" }},
 
@@ -191,8 +189,11 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
   -- TODO: Implement Chi Explosion
 
   { "Tiger Palm", { "player.buff(125359)", "player.buff(125359).duration <= 2" }},
+  { "Tiger Palm",  "player.buff(Combo Breaker: Tiger Palm)" },
 
-  { "Blackout Kick", "player.chi <= 2" },
+  { "Blackout Kick", { "player.chi <= 2" , "player.spell(Fists of Fury).cooldown > 2" , "!player.moving"}},
+  { "Blackout Kick", { "player.chi <= 2" , "player.moving"}},
+  { "Blackout Kick", { "player.chi <= 2" , "!toggle.fof" }},
 
   -- TODO: Implement Chi Explosion
 
