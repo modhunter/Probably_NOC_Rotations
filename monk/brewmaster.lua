@@ -169,9 +169,9 @@ ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0|
 
 	{ "100780", "player.energy >= 40"}, -- Jab when we have at least 40 energy
 
-	{ "Tiger's Lust", { "target.range >= 15", "player.moving" }},
+}, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
-	},{ "target.exists", "target.alive", "player.alive" }},
+{ "Tiger's Lust", { "target.range >= 15", "player.moving" }},
 
 --Taunt on Encounter (needs focus on other tank)
 {{

@@ -98,7 +98,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
 }, "modifier.cooldowns" },
 
 -- Melee range only
---{{
+{{
   { "Touch of Death", "player.buff(Death Note)" },
 
   {{
@@ -201,7 +201,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
   { "Jab", { "player.chi <= 3", "player.spell(Ascension).exists" }},
 
 
---  }, { "target.exists", "target.alive", "player.alive", "target.range <=5", "!player.casting" }},
+  }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
 
 -- Ranged
@@ -218,7 +218,9 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
   { "Crackling Jade Lightning", { "target.range > 5", "target.range <= 40", "!player.moving" }},
 
   { "Expel Harm", "player.chi < 4" } -- Expel Harm
-}, "@NOC.immuneEvents" },
+}},
+-- TODO: re-add this check when I can figure out why it stopped working
+--}, "@NOC.immuneEvents" },
 
 },{
 -- Out of Combat

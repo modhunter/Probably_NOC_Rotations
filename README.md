@@ -2,8 +2,22 @@
 NOC Rotations
 ====================
 
-Windwalker Monk updated for 6.0.2. Level 100 abilities are not in yet
-Brewmaser Monk updated for 6.0.2. Level 100 abilities are not in yet
+##Status
+- Monk Windwalker
+ - Updated for 6.x
+ - **Level 90: raid ready**
+ - Level 100: under development
+- Monk Brewmaster
+ - Updated for 6.x
+ - **Level 90: raid ready**
+ - Level 100: under development
+- Hunter Survival
+ - 6.x under development
+- Hunter Beastmaster
+ - 6.x under development
+- Hunter Marksman
+ - 6.x under development
+
 
 ## Hunter (Survival and BeastMaster) - NOT UPDATED FOR 6.x YET
 ====================
@@ -108,10 +122,11 @@ Brewmaser Monk updated for 6.0.2. Level 100 abilities are not in yet
 ====================
 - Controlled single-target tests have shown this profile to perform within 1% of simcraft
 
-### Todo
+### Issues/Todo
 ====================
-- DPS fine-tuning
-
+- Smart check for multi-target AOE missing
+- Logic for target's 'time to die' missing
+- Logic to automatically suppress ranged abilities when needed is missing
 
 
 ## Brewmaster Monk (6.x)
@@ -167,3 +182,8 @@ Brewmaser Monk updated for 6.0.2. Level 100 abilities are not in yet
 - Nimble Brew if you are disoriented/feared/stunned/rooted/snared
 - Tiger's Lust if you are disoriented/stunned/rooted/snared
 - Self-Healing via Expel Harm while out of combat
+
+### Issues/Todo
+====================
+- Smart check for multi-target AOE missing
+- Logic for target's 'time to die' missing
