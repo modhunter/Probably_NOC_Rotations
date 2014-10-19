@@ -413,21 +413,25 @@ end
 
 
 function NOC.SEF()
-  local count = DSL('buff.count')('player', '137639')
-  if count > NOC.lastSEFCount and NOC.lastSEFTarget then
-    NOC.sefUnits[NOC.lastSEFTarget], NOC.lastSEFCount, NOC.lastSEFTarget = true, count, nil
-  end
-  if count < 2
-     and DSL('enemy')('mouseover') then
-     --and DSL('modifier.enemies')() > 1 then
-    local mouseover, target = UnitGUID('mouseover'), UnitGUID('target')
-    if mouseover and target ~= mouseover and not NOC.sefUnits[mouseover] then
-      NOC.lastSEFTarget = mouseover
-      return true
-    end
+  if (UnitGUID('target') ~= nil) then
+	  local count = DSL('buff.count')('player', '137639')
+	  if count > NOC.lastSEFCount and NOC.lastSEFTarget then
+		NOC.sefUnits[NOC.lastSEFTarget], NOC.lastSEFCount, NOC.lastSEFTarget = true, count, nil
+	  end
+	  if count < 2 and DSL('enemy')('mouseover') then
+		local mouseover, target = UnitGUID('mouseover'), UnitGUID('target')
+		if mouseover and target ~= mouseover and not NOC.sefUnits[mouseover] then
+		  NOC.lastSEFTarget = mouseover
+		  return true
+		end
+	  end
+	  if (count == 0) then
+		NOC.sefUnits, NOC.lastSEFCount, NOC.lastSEFTarget = {}, 0, nil
+	  end
   end
   return false
 end
+
 
 
 function NOC.cancelSEF()
@@ -438,7 +442,6 @@ function NOC.cancelSEF()
   end
   return false
 end
-
 
 function NOC.StaggerValue ()
     local staggerLight, _, iconLight, _, _, remainingLight, _, _, _, _, _, _, _, _, valueStaggerLight, _, _ = UnitAura("player", GetSpellInfo(124275), "", "HARMFUL")
