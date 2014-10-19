@@ -17,7 +17,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
 -- SEF on mouseover
 {{
   { "Storm, Earth, and Fire", { "@NOC.SEF()" }, "mouseover" },
-  { "/cancelaura Storm, Earth, and Fire", { "@NOC.cancelSEF", "target.debuff(Storm, Earth, and Fire)" }}
+  { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }}
 }, "toggle.autosef" },
 
 -- Interrupts
