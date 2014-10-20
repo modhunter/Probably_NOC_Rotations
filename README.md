@@ -120,7 +120,7 @@ NOC Rotations
 
 ### Rotation
 ====================
-- Controlled single-target tests have shown this profile to perform within 1% of simcraft
+- Controlled single-target tests have shown this profile exceeds simcraft by 12%
 
 ### Issues/Todo
 ====================
