@@ -13,13 +13,15 @@ NOC Rotations
  - Level 100: under development
 - Hunter Survival
  - Updated for 6.x
+ - NOT TESTED
 - Hunter Beastmaster
- - 6.x under development
+ - Updated for 6.x
+ - NOT TESTED
 - Hunter Marksman
  - 6.x under development
 
 
-## Hunter (Survival (6.0) and BeastMaster (NOT 6.0 yet))
+## Hunter (Survival (6.0) and BeastMaster (6.0))
 ====================
 
 ### Features

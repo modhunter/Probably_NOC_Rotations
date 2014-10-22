@@ -70,10 +70,9 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0",
    { "Dire Beast" },
 
 --/multishot,if=buff.thrill_of_the_hunt.react&focus>50&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
-   -- Multi-Shot
-   { "2643", { "player.buff(34720)", "player.focus > 50" }},
-   --{ "2643", "target.ttd < 4.5" },
-   { "2643", "target.debuff(Serpent Sting).duration <= 5" },
+   { "Multi-Shot", { "player.buff(34720)", "player.focus > 50" }},
+   --{ "Multi-Shot", "target.ttd < 4.5" },
+   { "Multi-Shot", "target.debuff(Serpent Sting).duration <= 5" },
 
 
    { "Glaive Toss" },
@@ -98,7 +97,7 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0",
     { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 5" },
     { "Glaive Toss" },
     { "Powershot" },
-    { "Barrage" },
+    { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
     { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 65" }},
     { "Arcane Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }},
     { "Focusing Shot" },
@@ -107,16 +106,16 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0",
 }, -- Combat
 {
   -- Out of combat
-   { "pause", "modifier.lshift" },
-   { "pause","player.buff(5384)" }, -- Pause for Feign Death
-   { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
-   {{
-      { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
-      { "/cancelaura Aspect of the Cheetah", "!player.moving" },
-   }, "toggle.aspect" },
-   { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
-   { "82948", "modifier.lalt", "ground" }, -- Snake Trap
-   { "82941", "modifier.lalt", "ground" }, -- Ice Trap
+  { "pause", "modifier.lshift" },
+  { "pause","player.buff(5384)" }, -- Pause for Feign Death
+  { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
+  {{
+    { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
+    { "/cancelaura Aspect of the Cheetah", "!player.moving" },
+  }, "toggle.aspect" },
+  { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
+  { "82948", "modifier.lalt", "ground" }, -- Snake Trap
+  { "82941", "modifier.lalt", "ground" }, -- Ice Trap
 }, function()
 ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
 ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')

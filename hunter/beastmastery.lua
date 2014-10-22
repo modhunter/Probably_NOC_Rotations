@@ -1,98 +1,102 @@
 -- ProbablyEngine Rotation Packager
 -- Modified Hunter Rotation for BM/SV
-ProbablyEngine.rotation.register_custom(253, "NOC BeastMaster Hunter", 
+ProbablyEngine.rotation.register_custom(253, "NOC BeastMaster Hunter 6.0",
 {
-   -- Combat
-   { "pause", "modifier.lshift" },
-   { "pause","player.buff(5384)" }, -- Pause for Feign Death
+  -- Combat
+  { "pause", "modifier.lshift" },
+  { "pause","player.buff(5384)" }, -- Pause for Feign Death
 
-   -- AutoTarget
-   { "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" } },
-   { "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" } },
+  -- AutoTarget
+  { "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" }},
+  { "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" }},
 
-   -- Pet
-   { "883", { "!pet.dead", "!pet.exists" }}, -- Call Pet 1
-   { "55709", "pet.dead" }, -- Heart of the Phoenix (55709)
-   { "982", "pet.dead" }, -- Revive Pet
+  -- Pet
+  { "883", { "!pet.dead", "!pet.exists" }}, -- Call Pet 1
+  { "55709", "pet.dead" }, -- Heart of the Phoenix (55709)
+  { "982", "pet.dead" }, -- Revive Pet
 
-   { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
-   { "82948", "modifier.lalt", "ground" }, -- Snake Trap
-   { "82941", "modifier.lalt", "ground" }, -- Ice Trap
+  { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
+  { "82948", "modifier.lalt", "ground" }, -- Snake Trap
+  { "82941", "modifier.lalt", "ground" }, -- Ice Trap
 
-   { "109248" , "modifier.lcontrol", "ground" }, -- Binding Shot
+  { "109248" , "modifier.lcontrol", "ground" }, -- Binding Shot
 
-   -- Interrupt(s)
-   { "147362", "target.interruptAt(30)" }, -- Counter Shot at 70% cast time left
+  -- Interrupt(s)
+  { "147362", "target.interruptAt(30)" }, -- Counter Shot at 70% cast time left
 
-   -- Survival
-   { "109304", "player.health < 50" }, -- Exhiliration
-   { "19263", "player.health < 10" }, -- Deterrence as a last resort
-   { "#5512", "player.health < 40" }, -- Healthstone
-   -- This is still broken if the potion is on cooldown
-   { "#76097", "player.health < 40" }, -- Master Healing Potion
-   { "136", { "pet.health <= 75", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
-   -- Misdirect to focus target or pet when threat is above a certain threshhold
-   {{
-     { "34477", { "focus.exists", "!player.buff(34477)", "target.threat > 60" }, "focus" },
-     { "34477", { "pet.exists", "!pet.dead", "!player.buff(34477)", "!focus.exists", "target.threat > 85" }, "pet" },
-   }, "toggle.md", },
-   -- Mastrer's Call when stuck
-   { "53271", "player.state.stun" },
-   { "53271", "player.state.root" },
-   { "53271", "player.state.snare" },
+  -- Survival
+  { "109304", "player.health < 50" }, -- Exhiliration
+  { "19263", "player.health < 10" }, -- Deterrence as a last resort
+  { "#5512", "player.health < 40" }, -- Healthstone
+  -- This is still broken if the potion is on cooldown
+  { "#76097", "player.health < 40" }, -- Master Healing Potion
+  { "136", { "pet.health <= 75", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
 
-   -- Cooldowns
-   {{
-      { "121818" }, -- Stampede
-      -- { "53401" }, -- Rabid
-   }, "modifier.cooldowns" },
+  -- Misdirect to focus target or pet when threat is above a certain threshhold
+  {{
+   { "34477", { "focus.exists", "!player.buff(34477)", "target.threat > 60" }, "focus" },
+   { "34477", { "pet.exists", "!pet.dead", "!player.buff(34477)", "!focus.exists", "target.threat > 85" }, "pet" },
+  }, "toggle.md", },
 
-   -- Shared
-   { "53351", "target.health <= 20" }, -- Kill Shot
-   { "120679" }, -- Dire Beast
-   { "19574" }, -- Beastial Wrath
-   { "131894" }, -- A Murder of Crows
-   -- TODO: play with timing of BW some more
-   --{ "Bestial Wrath", {
-   --    "player.spell(Kill Command).cooldown = 0"
-   --}},
-   --{ "Kill Command", { "target.petinmelee", "!pet.dead", "pet.exists" }}, -- Kill Command
-   { "Kill Command", { "!pet.dead", "pet.exists" }}, -- Kill Command
-   { "3045" }, -- Rapid Fire
-   { "82692", { "player.buff(Frenzy).count = 5", "!player.buff(34471)" }}, -- Focus Fire when at 5 stacks of frenzy and not under 'The Beast Within' buff from Beastial Wrath
-   { "82726", "player.focus < 50" }, -- Fervor when under 50 focus
-   { "19801", { "target.dispellable(19801)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" }, -- Tranquilizing Shot
+  -- Master's Call when stuck
+  { "53271", "player.state.stun" },
+  { "53271", "player.state.root" },
+  { "53271", "player.state.snare" },
 
-   -- AoE
-   {{
-      { "120360" }, -- Barrage
-       { "2643", { "player.buff(34720)", "player.focus >= 40" }}, -- Multi-Shot if ToTH buff is up
-       { "2643", "player.focus >= 60" }, -- Multi-Shot
-       { "77767", "player.focus < 20" } -- Cobra Shot
-   }, { "modifier.multitarget", "modifier.enemies >= 3" }, },
+  -- Cooldowns
+  {{
+    { "Stampede" },
+    { "Lifeblood" },
+    { "Berserking" },
+    { "Blood Fury" },
+    { "Bear Hug" },
+    -- { "53401" }, -- Rabid
+  }, "modifier.cooldowns" },
 
-   -- Single
-   { "77767", "target.debuff(118253).duration < 4" }, -- Cobra Shot if SS duration < 4 secs
-   { "117050" }, -- Glaive Toss
-   { "109259" }, -- Power Shot
-   { "3044", { "player.buff(34720)", "player.focus >= 40" }}, -- AS if ToTH buff is up focus is >= 40
-   { "3044", "player.focus >= 60"}, -- Arcane Shot if focus >= 60
-   { "77767" } -- Cobra Shot
+  { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" },
+
+  -- Shared
+  { "Dire Beast" },
+  { "Bestial Wrath", { "player.focus > 60", "!player.buff(Bestial Wrath)" }},
+
+  -- AoE
+  {{
+    { "Barrage" },
+    -- Multi-Shot
+    { "Multi-Shot", "!player.buff(Beast Cleave)" },
+    { "Cobra Shot" },
+  }, { "modifier.multitarget" }, },
+  -- "modifier.enemies >= 3"
+
+  -- Single Target
+  {{
+    { "A Murder of Crows" },
+    { "Kill Shot" },
+    { "Kill Command" },
+    { "Focusing Shot", "player.focus < 50" },
+    { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 65" }},
+    { "Glaive Toss" },
+    { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
+    { "Powershot", "player.timetomax > 2.5" },
+    { "Arcane Shot", { "player.buff(Thrill of the Hunt)", "player.focus > 35" }},
+    { "Arcane Shot", "player.buff(Bestial Wrath)" },
+    { "Focus Fire", "player.buff(Frenzy).count = 5" },
+    { "Arcane Shot", "player.focus >= 64" },
+    { "Cobra Shot" },
+  }, { "!modifier.multitarget" }, }, -- Single Target
 },
 {
   -- Out of combat
-   { "pause", "modifier.lshift" },
-   { "pause","player.buff(5384)" }, -- Pause for Feign Death
-   { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
-   {{
-      { "5118", { "player.moving", "!player.buff(5118)" }}, -- Cheetah
-      { "109260", { "!player.buff(109260)", "!player.moving" }}, -- Iron Hawk
-      { "13165", { "!player.spell(109260).exists", "!player.buff(13165)", "!player.moving" }}, -- Hawk
-   }, "toggle.aspect" },
-   { "1130", { "target.exists", "!target.debuff(1130).any", "@NOC.HuntersMark()" }, "target" }, -- Hunters Mark
-   { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
-   { "82948", "modifier.lalt", "ground" }, -- Snake Trap
-   { "82941", "modifier.lalt", "ground" }, -- Ice Trap
+  { "pause", "modifier.lshift" },
+  { "pause","player.buff(5384)" }, -- Pause for Feign Death
+  { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
+  {{
+    { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
+    { "/cancelaura Aspect of the Cheetah", "!player.moving" },
+  }, "toggle.aspect" },
+  { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
+  { "82948", "modifier.lalt", "ground" }, -- Snake Trap
+  { "82941", "modifier.lalt", "ground" }, -- Ice Trap
 }, function()
 ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
 ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')

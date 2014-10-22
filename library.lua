@@ -432,8 +432,6 @@ function NOC.SEF()
   return false
 end
 
-
-
 function NOC.cancelSEF()
   if DSL('buff')('player', '137639') then
      --and DSL('modifier.enemies')() < 2 then
@@ -467,18 +465,5 @@ function NOC.DrinkStagger()
     return false
 end
 
-
-function NOC.HuntersMark()
-   if not NOC.HMDelay or UnitGUID("target") ~= NOC.HMTargetGUID and UnitGUID("target") ~= nil then
-      NOC.HMTargetGUID = UnitGUID("target")
-      NOC.HMDelay = GetTime()
-   end
-   if NOC.HMDelay then
-      if 2 < GetTime() - NOC.HMDelay then
-         NOC.HMDelay = nil
-         return true
-      end
-   end
-end
 
 ProbablyEngine.library.register("NOC", NOC)
