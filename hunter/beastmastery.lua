@@ -21,9 +21,6 @@ ProbablyEngine.rotation.register_custom(253, "NOC BeastMaster Hunter",
 
    { "109248" , "modifier.lcontrol", "ground" }, -- Binding Shot
 
-   -- Serpent Sting on mouseover when they don't have the debuff already and the toggle is enabled
-   { "1978", { "!mouseover.debuff(118253)", "toggle.autoSS", "!mouseover.charmed", "!mouseover.state.charm", "!mouseover.debuff(Touch of Y'Shaarj)", "!mouseover.debuff(Empowered Touch of Y'Shaarj)", "!mouseover.buff(Touch of Y'Shaarj)", "!mouseover.buff(Empowered Touch of Y'Shaarj)" }, "mouseover" },
-
    -- Interrupt(s)
    { "147362", "target.interruptAt(30)" }, -- Counter Shot at 70% cast time left
 
@@ -43,22 +40,18 @@ ProbablyEngine.rotation.register_custom(253, "NOC BeastMaster Hunter",
    { "53271", "player.state.stun" },
    { "53271", "player.state.root" },
    { "53271", "player.state.snare" },
-   { "109260", { "!player.buff(109260)", "!player.moving" }}, -- Iron Hawk
-   { "13165", { "!player.spell(109260).exists", "!player.buff(13165)", "!player.moving" }}, -- Hawk
 
    -- Cooldowns
    {{
       { "121818" }, -- Stampede
-      { "131894" }, -- A Murder of Crows
-      { "120697" }, -- Lynx Rush
       -- { "53401" }, -- Rabid
    }, "modifier.cooldowns" },
 
    -- Shared
-   { "#gloves" },
    { "53351", "target.health <= 20" }, -- Kill Shot
    { "120679" }, -- Dire Beast
    { "19574" }, -- Beastial Wrath
+   { "131894" }, -- A Murder of Crows
    -- TODO: play with timing of BW some more
    --{ "Bestial Wrath", {
    --    "player.spell(Kill Command).cooldown = 0"
@@ -79,7 +72,6 @@ ProbablyEngine.rotation.register_custom(253, "NOC BeastMaster Hunter",
    }, { "modifier.multitarget", "modifier.enemies >= 3" }, },
 
    -- Single
-   { "1978", { "!target.debuff(118253)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }}, -- Serpent Sting if SS debuff is not present
    { "77767", "target.debuff(118253).duration < 4" }, -- Cobra Shot if SS duration < 4 secs
    { "117050" }, -- Glaive Toss
    { "109259" }, -- Power Shot
@@ -105,5 +97,4 @@ ProbablyEngine.rotation.register_custom(253, "NOC BeastMaster Hunter",
 ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
 ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')
 ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
-ProbablyEngine.toggle.create('autoSS', 'Interface\\Icons\\ability_hunter_quickshot', 'Mouseover Serpent Sting', 'Automatically apply Serpent Sting to mouseover units while in combat')
 end)

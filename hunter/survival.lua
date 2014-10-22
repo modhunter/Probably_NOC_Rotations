@@ -43,23 +43,18 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter",
    { "53271", "player.state.stun" },
    { "53271", "player.state.root" },
    { "53271", "player.state.snare" },
-   { "109260", { "!player.buff(109260)", "!player.moving" }}, -- Iron Hawk
-   { "13165", { "!player.spell(109260).exists", "!player.buff(13165)", "!player.moving" }}, -- Hawk
 
    -- Cooldowns
    {{
       { "121818" }, -- Stampede
-      { "131894" }, -- A Murder of Crows
-      { "120697" }, -- Lynx Rush
       -- { "53401" }, -- Rabid
    }, "modifier.cooldowns" },
 
    -- Shared
-   { "#gloves" },
-   { "53351", "target.health <= 20" }, -- Kill Shot
    { "53301", { "player.buff(56453)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }}, -- Explosive shot if LnL buff is up
    { "3045" }, -- Rapid Fire
    { "120679" }, -- Dire Beast
+   { "131894" }, -- A Murder of Crows
    { "82726", "player.focus < 50" }, -- Fervor when under 50 focus
    { "19801", { "target.dispellable(19801)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" }, -- Tranquilizing Shot
 
@@ -70,7 +65,8 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter",
        { "2643", { "player.buff(34720)", "player.focus >= 40" }}, -- Multi-Shot if ToTH buff is up
        { "2643", "player.focus >= 60" }, -- Multi-Shot
        { "77767", "player.focus < 20" } -- Cobra Shot
-   }, { "modifier.multitarget", "modifier.enemies >= 3" }, },
+   }, { "modifier.multitarget" }, },
+   -- "modifier.enemies >= 3"
 
    -- Single
    { "1978", { "!target.debuff(118253)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }}, -- Serpent Sting if SS debuff is not present
@@ -93,7 +89,6 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter",
       { "109260", { "!player.buff(109260)", "!player.moving" }}, -- Iron Hawk
       { "13165", { "!player.spell(109260).exists", "!player.buff(13165)", "!player.moving" }}, -- Hawk
    }, "toggle.aspect" },
-   { "1130", { "target.exists", "!target.debuff(1130).any", "@NOC.HuntersMark()" }, "target" }, -- Hunters Mark
    { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
    { "82948", "modifier.lalt", "ground" }, -- Snake Trap
    { "82941", "modifier.lalt", "ground" }, -- Ice Trap

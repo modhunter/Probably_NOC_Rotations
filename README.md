@@ -25,8 +25,7 @@ NOC Rotations
 ### Features
 ====================
 - Single Target / AoE (Multi-Shot with hotkey support for barrage)
-- Engineering gloves usage is part of the rotation
-- Stampede, AMoC, Lynx Rush, and Rabid are only cast when cooldowns is enabled
+- Stampede, AMoC, and Rabid are only cast when cooldowns is enabled
 - Fervor is only cast when focus is below 50 instead of on cooldown
 - Toggle button for automatic aspect switching while moving, standing still, or in combat
 - Toggle button for turning on/off automatic misdirect
@@ -37,9 +36,7 @@ NOC Rotations
 - Pause rotation when in feign death
 - Delayed interrupting: Don't attempt to interrupt until the spellcast is 30% complete
 - Toggle to allow for automatic serpent sting on your current mouseover target whenever that target doesn't already have the serpent sting DOT/debuff.  This is a great way to 'DOT-up' multiple enemies that are spread around
-- Support for international clients
-- Revive Pet, Heart of the Phoenix, & Call Pet should work correctly 100% of the time
-- When out of combat will automatically cast Hunter's mark on your target if it's been targetted at least 2 seconds
+- Revive Pet, Heart of the Phoenix, & Call Pet 
 - Will not cast Serpent Sting or Black Arrow against a charmed player in order to prevent DOTS from killing them
 
 ### Hotkeys
@@ -64,12 +61,10 @@ NOC Rotations
 - Basically following the Icy Veins & Simcraft suggested priority system
 - Controlled single-target tests have shown this profile to perform about 1.5% better than simcraft
 
-### Todo
+### Issues/Todo
 ====================
-- Implement G52 Landshark usage as part of cooldowns
-- Figure out how to get Healing Potions & Virmen's Bite potions to work 100% when potions are already on cooldowna
-- More DPS fine-tuning
-
+- Smart check for multi-target AOE missing
+- Logic for target's 'time to die' missing
 
 
 ## Windwalker Monk (6.x)
