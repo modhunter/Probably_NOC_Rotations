@@ -19,14 +19,13 @@ NOC Rotations
  - 6.x under development
 
 
-## Hunter (Survival and BeastMaster) - NOT UPDATED FOR 6.x YET
+## Hunter (Survival (6.0) and BeastMaster (NOT 6.0 yet))
 ====================
 
 ### Features
 ====================
-- Single Target / AoE (Multi-Shot with hotkey support for barrage)
-- Stampede, AMoC, and Rabid are only cast when cooldowns is enabled
-- Fervor is only cast when focus is below 50 instead of on cooldown
+- Single Target / AoE
+- Stampede is only cast when cooldowns is enabled
 - Toggle button for automatic aspect switching while moving, standing still, or in combat
 - Toggle button for turning on/off automatic misdirect
 - Toggle button for turning on/off automatic targetting while in combat & automatic target switching to next nearest target - this is to allow for high efficiency when needed
@@ -35,9 +34,8 @@ NOC Rotations
 - Multitarget mode will only engage AOE abilities when both the multitarget toggle is set and there are at least 3 active enemies - this means that you can generally leave multitarget toggled on and not worry about only casting multi-shot all the time
 - Pause rotation when in feign death
 - Delayed interrupting: Don't attempt to interrupt until the spellcast is 30% complete
-- Toggle to allow for automatic serpent sting on your current mouseover target whenever that target doesn't already have the serpent sting DOT/debuff.  This is a great way to 'DOT-up' multiple enemies that are spread around
-- Revive Pet, Heart of the Phoenix, & Call Pet 
-- Will not cast Serpent Sting or Black Arrow against a charmed player in order to prevent DOTS from killing them
+- Toggle to allow for automatic arcane shot on your current mouseover target whenever that target doesn't already have the serpent sting DOT/debuff.  This is a great way to 'DOT-up' multiple enemies that are spread around
+- Revive Pet, Heart of the Phoenix, & Call Pet support
 
 ### Hotkeys
 ====================
@@ -58,8 +56,7 @@ NOC Rotations
 
 ### Rotation
 ====================
-- Basically following the Icy Veins & Simcraft suggested priority system
-- Controlled single-target tests have shown this profile to perform about 1.5% better than simcraft
+- Basically following the Simcraft suggested priority system
 
 ### Issues/Todo
 ====================
