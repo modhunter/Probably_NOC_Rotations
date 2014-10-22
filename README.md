@@ -12,7 +12,7 @@ NOC Rotations
  - **Level 90: raid ready**
  - Level 100: under development
 - Hunter Survival
- - 6.x under development
+ - Updated for 6.x
 - Hunter Beastmaster
  - 6.x under development
 - Hunter Marksman
