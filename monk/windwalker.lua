@@ -103,7 +103,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
 
   {{
     { "Chi Brew", { "!modifier.last(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
-    --{ "Chi Brew", "target.ttd < 10" },
+    { "Chi Brew", "target.ttd < 10" },
     { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.last(Chi Brew)" }},
   }, {"player.chi <= 2", "player.buff(Tigereye Brew).count <= 16" }},
 
@@ -116,7 +116,7 @@ ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|
       { "116740", { "player.chi >= 3", "player.buff(125195).count >= 10", "player.spell(Fists of Fury).cooldown < 1" }},
         {{
           { "116740", { "player.buff(125195).count >= 16" }},
-          --{ "116740", { "target.ttd < 40" }},
+          { "116740", { "target.ttd < 40" }},
         },{ "player.chi >= 2" }},
     },{ "target.debuff(130320)", "player.buff(125359)" }},
   },{ "!player.buff(116740)", "!modifier.last(116740)" }},
