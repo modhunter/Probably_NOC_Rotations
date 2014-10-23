@@ -411,7 +411,7 @@ function NOC.hasDebuffTable(target, spells)
   end
 end
 
-
+-- TODO: Deprecated, should remove
 function NOC.SEF()
   if (UnitGUID('target') ~= nil) then
 	  local count = DSL('buff.count')('player', '137639')
@@ -439,6 +439,18 @@ function NOC.cancelSEF()
     return true
   end
   return false
+end
+
+-- Props to MrTheSoulz for this code: Check Mouseover and target are not equal
+function NOC.mouseNotEqualTarget()
+   if (UnitGUID('target')) ~= (UnitGUID('mouseover')) then return true end
+ return false
+end
+
+--Props to MrTheSoulz for this code:  Check Mouseover and target are equal
+function NOC.mouseEqualTarget()
+   if (UnitGUID('target')) ~= (UnitGUID('mouseover')) then return false end
+ return true
 end
 
 function NOC.StaggerValue ()
