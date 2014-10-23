@@ -45,7 +45,7 @@ ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
 
   -- Cooldowns
   {{
-    { "Stampede" },
+    { "Stampede", "player.buff(Rapid Fire)" },
     { "Lifeblood" },
     { "Berserking" },
     { "Blood Fury" },
@@ -55,23 +55,69 @@ ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
 
   { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" },
 
+
+--[[
+# Pool max focus for rapid fire so we can spam AimedShot with Careful Aim buff
+actions+=/steady_shot,if=focus.deficit*cast_time%(14+cast_regen)>cooldown.rapid_fire.remains
+actions+=/focusing_shot,if=focus.deficit*cast_time%(50+cast_regen)>cooldown.rapid_fire.remains&focus<100
+
+# Cast a second shot for steady focus if that won't cap us.
+actions+=/steady_shot,if=buff.pre_steady_focus.up&(14+cast_regen+action.aimed_shot.cast_regen)<=focus.deficit
+actions+=/aimed_shot,if=talent.focusing_shot.enabled
+actions+=/aimed_shot,if=focus+cast_regen>=85
+actions+=/aimed_shot,if=buff.thrill_of_the_hunt.react&focus+cast_regen>=65
+
+# Allow FS to over-cap by 10 if we have nothing else to do
+actions+=/focusing_shot,if=50+cast_regen-10<focus.deficit
+actions+=/steady_shot
+
+AOE: actions.careful_aim=glaive_toss,if=active_enemies>4
+AOE: actions.careful_aim+=/powershot,if=active_enemies>1&cast_regen<focus.deficit
+AOE: actions.careful_aim+=/barrage,if=active_enemies>1
+actions.careful_aim+=/aimed_shot
+actions.careful_aim+=/focusing_shot,if=50+cast_regen<focus.deficit
+actions.careful_aim+=/steady_shot
+]]
+
+
   -- Shared
-  { "Dire Beast" },
-  { "Bestial Wrath", { "player.focus > 60", "!player.buff(Bestial Wrath)" }},
+  --actions+=/kill_shot,if=cast_regen+action.aimed_shot.cast_regen<focus.deficit
+  { "Kill Shot", "player.timetomax > 3" },
+
+  { "Chimaera Shot" },
+  { "Rapid Fire" },
+
+  -- Careful Aim
+  {{
+    -- AOE
+    {{
+
+    }, { "modifier.multitarget" },},
+    -- "modifier.enemies >= 3"
+
+    -- ST
+    {{
+
+    }, { "!modifier.multitarget" },},
+
+  }, { "player.buff(Careful Aim)" },},
+
+  { "A Murder of Crows" },
+  { "Dire Beast", "player.timetomax > 3" },
+  { "Glaive Toss" },
+  { "Powershot", "player.timetomax > 2.5" },
+  { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
+
 
   -- AoE
-  {{
     { "Barrage" },
     -- Multi-Shot
     { "Multi-Shot", "!player.buff(Beast Cleave)" },
     { "Cobra Shot" },
-  }, { "modifier.multitarget" }, },
-  -- "modifier.enemies >= 3"
+
 
   -- Single Target
-  {{
-    { "A Murder of Crows" },
-    { "Kill Shot" },
+  { "Bestial Wrath", { "player.focus > 60", "!player.buff(Bestial Wrath)" }},
     { "Kill Command" },
     { "Focusing Shot", "player.focus < 50" },
     { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 50" }},
@@ -83,7 +129,6 @@ ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
     { "Focus Fire", "player.buff(Frenzy).count = 5" },
     { "Arcane Shot", "player.focus >= 64" },
     { "Cobra Shot" },
-  }, { "!modifier.multitarget" }, }, -- Single Target
 },
 {
   -- Out of combat
