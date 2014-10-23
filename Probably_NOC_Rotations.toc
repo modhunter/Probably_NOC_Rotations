@@ -6,6 +6,6 @@
 library.lua
 hunter\beastmastery.lua
 hunter\survival.lua
+hunter\marksman.lua
 monk\brewmaster.lua
 monk\windwalker.lua
-

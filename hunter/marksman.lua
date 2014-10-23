@@ -1,6 +1,6 @@
 -- ProbablyEngine Rotation Packager
--- NO CARRIER's Beastmaster Hunter Rotation
-ProbablyEngine.rotation.register_custom(253, "NOC Beastmaster Hunter 6.0",
+-- NO CARRIER's Marksman Hunter Rotation
+ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
 {
   -- Combat
   { "pause", "modifier.lshift" },

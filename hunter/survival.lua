@@ -1,5 +1,5 @@
 -- ProbablyEngine Rotation Packager
--- Modified Hunter Rotation for BM/SV
+-- NO CARRIER's Survival Hunter Rotation
 ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0",
 {
   -- Combat
