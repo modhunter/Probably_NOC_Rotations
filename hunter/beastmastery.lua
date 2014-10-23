@@ -74,7 +74,7 @@ ProbablyEngine.rotation.register_custom(253, "NOC BeastMaster Hunter 6.0",
     { "Kill Shot" },
     { "Kill Command" },
     { "Focusing Shot", "player.focus < 50" },
-    { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
+    { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 50" }},
     { "Glaive Toss" },
     { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
     { "Powershot", "player.timetomax > 2.5" },
