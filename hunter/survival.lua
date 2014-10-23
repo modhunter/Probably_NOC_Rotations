@@ -73,11 +73,9 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0",
    { "Multi-Shot", { "player.buff(34720)", "player.focus > 50" }},
    --{ "Multi-Shot", "target.ttd < 4.5" },
    { "Multi-Shot", "target.debuff(Serpent Sting).duration <= 5" },
-
-
    { "Glaive Toss" },
    { "Powershot" },
-   { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 65" }},
+   { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
    { "2643", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
    { "Focusing Shot" },
    { "Cobra Shot" },
@@ -98,7 +96,7 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0",
     { "Glaive Toss" },
     { "Powershot" },
     { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
-    { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 65" }},
+    { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
     { "Arcane Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }},
     { "Focusing Shot" },
     { "Cobra Shot" },
