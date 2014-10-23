@@ -13,10 +13,10 @@ NOC Rotations
  - Level 100: under development
 - Hunter Survival
  - Updated for 6.x
- - **Level 100: raid ready**
+ - **Level 90 & 100: raid ready**
 - Hunter Beastmaster
  - Updated for 6.x
- - **Level 100: raid ready**
+ - **Level 90 & 100: raid ready**
 - Hunter Marksman
  - 6.x under development
 
@@ -63,7 +63,6 @@ NOC Rotations
 ### Issues/Todo
 ====================
 - Smart check for multi-target AOE missing
-- Logic for target's 'time to die' missing
 
 
 ## Windwalker Monk (6.x)
@@ -119,8 +118,6 @@ NOC Rotations
 ### Issues/Todo
 ====================
 - Smart check for multi-target AOE missing
-- Logic for target's 'time to die' missing
-- Logic to automatically suppress ranged abilities when needed is missing
 
 
 ## Brewmaster Monk (6.x)
@@ -180,4 +177,3 @@ NOC Rotations
 ### Issues/Todo
 ====================
 - Smart check for multi-target AOE missing
-- Logic for target's 'time to die' missing
