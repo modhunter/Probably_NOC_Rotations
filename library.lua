@@ -17,6 +17,7 @@ NOC.lastSEFTarget = nil
 NOC.HMDelay = nil
 NOC.HMTargetGUID = nil
 
+-- Props for Chumii for all of the messaging and toggle code below
 local function onUpdate(self,elapsed)
    if self.time < GetTime() - 2.5 then
       if self:GetAlpha() == 0 then self:Hide() else self:SetAlpha(self:GetAlpha() - .05) end
