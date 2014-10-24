@@ -18,10 +18,11 @@ NOC Rotations
  - Updated for 6.x
  - **Level 90 & 100: raid ready**
 - Hunter Marksman
- - 6.x under development
+ - Updated for 6.x
+ - **Level 90 & 100: raid ready**
 
 
-## Hunter (Survival (6.x) and BeastMaster (6.x))
+## Hunter (Survival (6.x), BeastMaster (6.x), & Marksman (6.x))
 ====================
 
 ### Features
