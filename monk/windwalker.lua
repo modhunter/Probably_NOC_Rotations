@@ -25,35 +25,46 @@ local ooc = {
 }
 
 local aoe = {
-  -- TODO: Implement Chi Explosion
+  { "Chi Explosion", "player.chi >= 4" },
 
   { "Rushing Jade Wind" }, -- Rushing Jade Wind
 
-  { "Rising Sun Kick", { "player.chi = 4", "!player.spell(Ascension).exists" }}, -- Rising Sun Kick
-  { "Rising Sun Kick", { "player.chi = 5", "player.spell(Ascension).exists" }}, -- Rising Sun Kick
+  { "Rising Sun Kick", "player.chidiff = 0" },
 
   { "Fists of Fury", {
      "!player.moving",
+     "player.lastmoved > 1",
      "player.spell(Rushing Jade Wind).exists",
      "player.timetomax > 4",
      "player.buff(Tiger Power).duration > 4",
      "target.debuff(Rising Sun Kick).duration > 4",
      "toggle.fof" }},
 
-  -- TODO: Implement Hurricane Strike
-  { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
-  { "Chi Wave", "player.timetomax > 2" }, -- Chi Wave (40yrd range!)
-  { "Chi Burst", { "!player.moving", "player.timetomax > 2" }}, -- Chi Burst (40yrd range!)
+  { "Hurricane Strike", {
+    "player.spell(Rushing Jade Wind).exists",
+    "talent(7,3)",
+    "player.timetomax > 2",
+    "target.debuff(Rising Sun Kick).duration > 2",
+    "!player.buff(Energizing Brew)" }},
 
-  { "Blackout Kick", { "player.spell(Rushing Jade Wind).exists", "player.buff(Combo Breaker: Blackout Kick)" }},
+  {{
+    { "Chi Wave" },
+    { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
+    { "Chi Burst", { "!player.moving", "talent(2,3)" }},
+  }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
+
+  {{
+    { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
+    { "Blackout Kick", "player.buff(Serenity).duration > 0" },
+  },{ "talent(6,1)", "!talent(7,2)" }},
 
   { "Tiger Palm", { "player.spell(Rushing Jade Wind).exists", "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
 
-  { "Blackout Kick", { "player.spell(Rushing Jade Wind).exists", "player.chi <= 2" }},
+  { "Blackout Kick", { "talent(6,1)", "!talent(7,2)", "player.chidiff < 2" }},
 
-  { "Spinning Crane Kick", "!player.spell(Rushing Jade Wind).exists" }, -- Spinning Crane Kick
+  { "Spinning Crane Kick", "!player.spell(Rushing Jade Wind).exists" },
 
-  { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chi <= 2" }},
+  { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 2" }},
 }
 
 local combat = {
@@ -116,7 +127,8 @@ local combat = {
   --{ "!115460", "@NOC.checkQueue(115460)", "ground" }, -- Healing Sphere
 
   -- Survival
-  { "Expel Harm", { "player.health <= 80", "player.chi < 4" }},
+  { "Expel Harm", { "player.health <= 80", "player.chidiff >= 2" }},
+  --{ "Surging Mist", { "player.health <= 70", "!player.moving" }},
   { "Chi Wave", "player.health <= 75" },
 
   { "Fortifying Brew", { -- Forifying Brew at < 30% health and when DM & DH buff is not up
@@ -159,28 +171,32 @@ local combat = {
       { "Chi Brew", { "!modifier.last(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
       { "Chi Brew", "target.ttd < 10" },
       { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.last(Chi Brew)" }},
-    }, {"player.chi <= 2", "player.buff(Tigereye Brew).count <= 16" }},
+    }, {"player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16" }},
 
     -- Tiger Palm
     { "Tiger Palm", "player.buff(Tiger Power).duration <= 3" },
     -- Tigereye Brew
     {{
       { "116740", "player.buff(125195).count = 20" },
+      { "116740", { "player.buff(125195).count >= 10", "player.buff(Serenity).duration > 0" }},
       {{
-        { "116740", { "player.chi >= 3", "player.buff(125195).count >= 10", "player.spell(Fists of Fury).cooldown < 1" }},
-          {{
-            { "116740", { "player.buff(125195).count >= 16" }},
-            { "116740", { "target.ttd < 40" }},
-          },{ "player.chi >= 2" }},
-      },{ "target.debuff(130320)", "player.buff(125359)" }},
+        {{
+          { "116740", "player.spell(Fists of Fury).cooldown = 0" },
+          { "116740", { "player.spell(Hurricane Strike).cooldown > 0", "talent(7,1)" }},
+        },{ "player.chi >= 3", "player.buff(125195).count >= 10" }},
+        {{
+          { "116740", { "player.buff(125195).count >= 16" }},
+          { "116740", { "target.ttd < 40" }},
+        },{ "player.chi >= 2" }},
+      },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
     },{ "!player.buff(116740)", "!modifier.last(116740)" }},
-    -- TODO: Implement TeB with Hurricane Strike & Serenity
 
     { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
     { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
 
     { "Tiger Palm", { "!player.buff(Tiger Power)", "target.debuff(Rising Sun Kick).duration > 1", "player.timetomax > 1" }},
-    -- TODO: Implement Serenity
+
+    { "Serenity", { "talent(7,3)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
 
     -- AoE
     -- No FH
@@ -193,55 +209,61 @@ local combat = {
     -- Fists of Fury
     { "Fists of Fury", {
        "!player.moving",
+       "player.lastmoved > 1",
        "target.debuff(Rising Sun Kick).duration > 4",
+       "!player.buff(Serenity)",
        "toggle.fof" }},
 
-    -- TODO: Implement Hurricane Strike
-
-    { "Energizing Brew", { "player.spell(Fists of Fury).cooldown > 6", "player.timetomax > 5" }},
-
-    { "Rising Sun Kick" }, -- Rising Sun Kick
+    { "Hurricane Strike", {
+      "talent(7,3)",
+      "player.timetomax > 2",
+      "target.debuff(Rising Sun Kick).duration > 2",
+      "!player.buff(Energizing Brew)" }},
 
     {{
-      { "Chi Wave" }, -- Chi Wave (40 yard range!)
+      { "Energizing Brew", "!talent(7,3)" },
+      { "Energizing Brew", { "!player.buff(Serenity)", "player.spell(Serenity).cooldown > 4" }},
+    },{ "player.spell(Fists of Fury).cooldown > 6", "player.timetomax > 5" }},
+
+    { "Rising Sun Kick", "!talent(7,2)" },
+
+    {{
+      { "Chi Wave" },
       { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
-      { "Chi Burst", "!player.moving" }, -- Chi Burst (40 yard range!)
-    }, "player.timetomax > 2" },
+      { "Chi Burst", { "!player.moving", "talent(2,3)" }},
+    }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
-    { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" }, -- Blackout Kick
+    {{
+      { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
+      { "Blackout Kick", "player.buff(Serenity)" },
+    }, "!talent(7,2)" },
 
-    -- TODO: Implement Chi Explosion
+    { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.buff(Combo Breaker: Chi Explosion)" }},
 
-    { "Tiger Palm", { "player.buff(125359)", "player.buff(125359).duration <= 2" }},
-    { "Tiger Palm",  "player.buff(Combo Breaker: Tiger Palm)" },
+    { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
 
-    { "Blackout Kick", { "player.chi <= 2" , "player.spell(Fists of Fury).cooldown > 2" , "!player.moving"}},
-    { "Blackout Kick", { "player.chi <= 2" , "player.moving"}},
-    { "Blackout Kick", { "player.chi <= 2" , "!toggle.fof" }},
+    { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2" }},
 
-    -- TODO: Implement Chi Explosion
+    { "Chi Explosion", { "talent(7,2)", "player.chi >= 3" }},
 
-    { "Jab", { "player.chi <= 2", "!player.spell(Ascension).exists" }},
-    { "Jab", { "player.chi <= 3", "player.spell(Ascension).exists" }},
-
+    { "Jab", "player.chidiff >= 2" },
 
   }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
 
   -- Ranged
-
   {{
-    -- Tiger's Lust if the target is at least 15 yards away and we are moving
-    { "Tiger's Lust", { "target.range >= 15", "player.moving" }},
+    -- Tiger's Lust if the target is at least 15 yards away and we are moving for at least 1 second
+    { "Tiger's Lust", { "target.range >= 15", "player.movingifor > 1", "target.alive" }},
 
-    { "Zen Sphere", "!target.debuff(Zen Sphere)" }, -- 40 yard range!
-    { "Chi Wave" }, -- Chi Wave (40yrd range!)
-    { "Chi Burst" }, -- Chi Burst (40yrd range!)
+    { "Zen Sphere", "!target.debuff(Zen Sphere)" },
+    { "Chi Wave" },
+    { "Chi Burst" },
 
     -- Crackling Jade Lightning
     { "Crackling Jade Lightning", { "target.range > 5", "target.range <= 40", "!player.moving" }},
 
-    { "Expel Harm", "player.chi < 4" } -- Expel Harm
+    { "Expel Harm", "player.chi < 4" }, -- Expel Harm
   }},
   -- TODO: re-add this check when I can figure out why it stopped working
   --}, "@NOC.immuneEvents" },

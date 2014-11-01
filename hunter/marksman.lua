@@ -22,7 +22,7 @@ ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
   { "109248" , "modifier.lcontrol", "ground" }, -- Binding Shot
 
   -- Interrupt(s)
-  { "147362", "target.interruptAt(30)" }, -- Counter Shot at 70% cast time left
+  { "147362", "target.interruptAt(30)" }, -- Counter Shot at 30% cast time left
 
   -- Survival
   { "109304", "player.health < 50" }, -- Exhiliration

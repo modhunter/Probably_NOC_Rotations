@@ -5,8 +5,7 @@ NOC Rotations
 ##Status
 - Monk Windwalker
  - Updated for 6.x
- - **Level 90: raid ready**
- - Level 100: under development
+ - **Level 90 & 100: raid ready**
 - Monk Brewmaster
  - Updated for 6.x
  - **Level 90: raid ready**
