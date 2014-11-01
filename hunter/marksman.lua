@@ -34,8 +34,8 @@ ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
 
   -- Misdirect to focus target or pet when threat is above a certain threshhold
   {{
-   { "34477", { "focus.exists", "!player.buff(34477)", "target.threat > 60" }, "focus" },
-   { "34477", { "pet.exists", "!pet.dead", "!player.buff(34477)", "!focus.exists", "target.threat > 85" }, "pet" },
+   { "34477", { "focus.exists", "!player.buff(35079)", "target.threat > 60" }, "focus" },
+   { "34477", { "pet.exists", "!pet.dead", "!player.buff(35079)", "!focus.exists", "target.threat > 85" }, "pet" },
   }, "toggle.md", },
 
   -- Master's Call when stuck
