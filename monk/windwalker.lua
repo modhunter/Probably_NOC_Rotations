@@ -199,10 +199,11 @@ local combat = {
     { "Serenity", { "talent(7,3)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
 
     -- AoE
+    { aoe, "toggle.multitarget" },
     -- No FH
-    { aoe, {"toggle.multitarget", "!player.firehack"}},
+    --{ aoe, {"toggle.multitarget", "!player.firehack"}},
     -- FH and when there is at least 3 enemies
-    { aoe, {"toggle.multitarget", "target.area(10).enemies >= 3", "player.firehack"}},
+    --{ aoe, {"toggle.multitarget", "target.area(10).enemies >= 3", "player.firehack"}},
 
     -- Single
 

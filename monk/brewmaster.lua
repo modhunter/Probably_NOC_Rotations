@@ -203,10 +203,11 @@ local combat = {
 		-- { "100787", "!player.spell(100780).usable" }, -- Tiger Palm if Jab isn't usable... ?
 
 		-- AoE
+		{ aoe, "toggle.multitarget" },
 		-- No FH
-		{ aoe, {"toggle.multitarget", "!player.firehack"}},
+		--{ aoe, {"toggle.multitarget", "!player.firehack"}},
 		-- FH and when there is at least 3 enemies
-		{ aoe, {"toggle.multitarget", "target.area(10).enemies >= 3", "player.firehack"}},
+		--{ aoe, {"toggle.multitarget", "target.area(10).enemies >= 3", "player.firehack"}},
 
 		{ "100787", "player.buff(125359).duration < 4" }, -- Tiger Palm if Tiger Power buff will last < 4 seconds
 		{ "100787", "player.energy <= 39"}, -- Tiger Palm when < 40 energy
