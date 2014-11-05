@@ -104,13 +104,11 @@ ProbablyEngine.module.combatTracker.cleanCT = function()
 end
 
 ProbablyEngine.module.combatTracker.remove = function(guid)
-  print("removing ".. guid)
   ProbablyEngine.module.combatTracker.enemy[guid] = nil
 end
 
 ProbablyEngine.module.combatTracker.tagUnit = function(guid, name)
   if not ProbablyEngine.module.combatTracker.blacklist[guid] then
-    print("inserting ".. name)
     ProbablyEngine.module.combatTracker.insert(guid, name)
   end
 end
