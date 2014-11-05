@@ -1,14 +1,3 @@
-ProbablyEngine.condition.register("petinmelee", function(target)
-   return (IsSpellInRange(GetSpellInfo(2649), target) == 1)
-end)
-
--- Implementing locally until it gets put into the engine
-ProbablyEngine.condition.register("chidiff", function(target, spell)
-    local max = UnitPowerMax(target, SPELL_POWER_CHI)
-    local curr = UnitPower(target, SPELL_POWER_CHI)
-    return (max - curr)
-end)
-
 local NOC = { }
 local DSL = ProbablyEngine.dsl.get
 

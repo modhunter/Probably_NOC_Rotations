@@ -65,8 +65,7 @@ ProbablyEngine.rotation.register_custom(253, "NOC Beastmaster Hunter 6.0",
     -- Multi-Shot
     { "Multi-Shot", "!player.buff(Beast Cleave)" },
     { "Cobra Shot" },
-  }, { "modifier.multitarget" }, },
-  -- "modifier.enemies >= 3"
+  }, { "modifier.multitarget", "modifier.enemies >= 3" }, },
 
   -- Single Target
   {{

@@ -203,7 +203,7 @@ local combat = {
 		-- { "100787", "!player.spell(100780).usable" }, -- Tiger Palm if Jab isn't usable... ?
 
 		-- AoE
-		{ aoe, "toggle.multitarget" },
+		{ aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 		-- No FH
 		--{ aoe, {"toggle.multitarget", "!player.firehack"}},
 		-- FH and when there is at least 3 enemies

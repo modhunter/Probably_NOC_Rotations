@@ -62,7 +62,6 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-- Smart check for multi-target AOE missing for non-FH usage
 
 
 ## Windwalker Monk (6.x)
@@ -117,7 +116,6 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-- Smart check for multi-target AOE missing for non-FH usage
 
 
 ## Brewmaster Monk (6.x)
@@ -176,4 +174,3 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-- Smart check for multi-target AOE missing for non-FH usage

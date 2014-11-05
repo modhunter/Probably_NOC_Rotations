@@ -69,8 +69,7 @@ ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
       { "Glaive Toss" },
       { "Powershot", "player.timetomax > 2.5" },
       { "Barrage" },
-    }, { "modifier.multitarget" },},
-    -- "modifier.enemies >= 3"
+    }, { "modifier.multitarget", "modifier.enemies >= 3" },},
 
     -- ST
     {{

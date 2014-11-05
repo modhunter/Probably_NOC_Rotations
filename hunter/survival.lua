@@ -79,8 +79,7 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0",
    { "2643", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
    { "Focusing Shot" },
    { "Cobra Shot" },
-  }, { "modifier.multitarget" }, },
-  -- "modifier.enemies >= 3"
+  }, { "modifier.multitarget", "modifier.enemies >= 3" }, },
 
 -- Single Target
   {{
