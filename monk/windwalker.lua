@@ -262,6 +262,7 @@ local combat = {
     { "Chi Burst" },
 
     -- Crackling Jade Lightning
+    --{"/stopcasting", { "target.range <= 5",  }},
     { "Crackling Jade Lightning", { "target.range > 5", "target.range <= 40", "!player.moving" }},
 
     { "Expel Harm", "player.chi < 4" }, -- Expel Harm
