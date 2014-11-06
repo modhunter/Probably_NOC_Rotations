@@ -1,7 +1,49 @@
 -- ProbablyEngine Rotation Packager
 -- NO CARRIER's Survival Hunter Rotation
-ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0",
-{
+
+local onLoad = function()
+ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
+ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')
+ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
+ProbablyEngine.toggle.create('autoAS', 'Interface\\Icons\\ability_hunter_quickshot', 'Mouseover Arcane Shot', 'Automatically apply Arcane Shot to mouseover units while in combat')
+end
+
+local ooc = {
+  -- Out of combat
+  { "pause", "modifier.lshift" },
+  { "pause","player.buff(5384)" }, -- Pause for Feign Death
+  { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
+  {{
+    { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
+    { "/cancelaura Aspect of the Cheetah", "!player.moving" },
+  }, "toggle.aspect" },
+  { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
+  { "82948", "modifier.lalt", "ground" }, -- Snake Trap
+  { "82941", "modifier.lalt", "ground" }, -- Ice Trap
+}
+
+local aoe = {
+  -- Explosive shot if LnL is up and Barrage is not ready
+  { "Explosive Shot", { "player.buff(56453)", "player.spell(Barrage).cooldown > 0" }},
+  { "Barrage" },
+  { "Explosive Shot" },
+  { "Black Arrow", "!target.debuff(3674)" },
+  { "A Murder of Crows" },
+  { "Dire Beast" },
+
+--/multishot,if=buff.thrill_of_the_hunt.react&focus>50&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
+  { "Multi-Shot", { "player.buff(34720)", "player.focus > 50" }},
+  { "Multi-Shot", "target.ttd < 4.5" },
+  { "Multi-Shot", "target.debuff(Serpent Sting).duration <= 5" },
+  { "Glaive Toss" },
+  { "Powershot" },
+  { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
+  { "2643", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
+  { "Focusing Shot" },
+  { "Cobra Shot" },
+}
+
+local combat = {
   -- Combat
   { "pause", "modifier.lshift" },
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
@@ -60,62 +102,24 @@ ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0",
   { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" },
 
   -- AoE
-  {{
-   -- Explosive shot if LnL is up and Barrage is not ready
-   { "Explosive Shot", { "player.buff(56453)", "player.spell(Barrage).cooldown > 0" }},
-   { "Barrage" },
-   { "Explosive Shot" },
-   { "Black Arrow", "!target.debuff(3674)" },
-   { "A Murder of Crows" },
-   { "Dire Beast" },
+  { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
---/multishot,if=buff.thrill_of_the_hunt.react&focus>50&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
-   { "Multi-Shot", { "player.buff(34720)", "player.focus > 50" }},
-   { "Multi-Shot", "target.ttd < 4.5" },
-   { "Multi-Shot", "target.debuff(Serpent Sting).duration <= 5" },
-   { "Glaive Toss" },
-   { "Powershot" },
-   { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
-   { "2643", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
-   { "Focusing Shot" },
-   { "Cobra Shot" },
-  }, { "modifier.multitarget", "modifier.enemies >= 3" }, },
+  { "Explosive Shot" },
+  { "Black Arrow", "!target.debuff(3674)" },
+  { "A Murder of Crows" },
+  { "Dire Beast" },
+  --actions+=/arcane_shot,if=buff.thrill_of_the_hunt.react&focus>35&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
+  -- Arcane Shot if ToTH buff is up and focus > 35 and ("cast_regen<=focus.deficit"??? or serpent sting dot will be up <= 5s or ttd < 4.5s)
+  { "Arcane Shot", { "player.buff(34720)", "player.focus > 35" }},
+  { "Arcane Shot", "target.ttd < 4.5" },
+  { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 5" },
+  { "Glaive Toss" },
+  { "Powershot" },
+  { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
+  { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
+  { "Arcane Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }},
+  { "Focusing Shot" },
+  { "Cobra Shot" },
+}
 
--- Single Target
-  {{
-    { "Explosive Shot" },
-    { "Black Arrow", "!target.debuff(3674)" },
-    { "A Murder of Crows" },
-    { "Dire Beast" },
-    --actions+=/arcane_shot,if=buff.thrill_of_the_hunt.react&focus>35&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
-    -- Arcane Shot if ToTH buff is up and focus > 35 and ("cast_regen<=focus.deficit"??? or serpent sting dot will be up <= 5s or ttd < 4.5s)
-    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35" }},
-    { "Arcane Shot", "target.ttd < 4.5" },
-    { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 5" },
-    { "Glaive Toss" },
-    { "Powershot" },
-    { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
-    { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
-    { "Arcane Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }},
-    { "Focusing Shot" },
-    { "Cobra Shot" },
-}, { "!modifier.multitarget" }, }, -- Single Target
-}, -- Combat
-{
-  -- Out of combat
-  { "pause", "modifier.lshift" },
-  { "pause","player.buff(5384)" }, -- Pause for Feign Death
-  { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
-  {{
-    { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
-    { "/cancelaura Aspect of the Cheetah", "!player.moving" },
-  }, "toggle.aspect" },
-  { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
-  { "82948", "modifier.lalt", "ground" }, -- Snake Trap
-  { "82941", "modifier.lalt", "ground" }, -- Ice Trap
-}, function()
-ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
-ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')
-ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
-ProbablyEngine.toggle.create('autoAS', 'Interface\\Icons\\ability_hunter_quickshot', 'Mouseover Arcane Shot', 'Automatically apply Arcane Shot to mouseover units while in combat')
-end)
+ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0", combat, ooc, onLoad)

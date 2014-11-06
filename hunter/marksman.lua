@@ -1,8 +1,32 @@
 -- ProbablyEngine Rotation Packager
 -- NO CARRIER's Marksman Hunter Rotation
-ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
-{
-  -- Combat
+
+local onLoad = function()
+ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
+ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')
+ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
+end
+
+local ooc = {
+  { "pause", "modifier.lshift" },
+  { "pause","player.buff(5384)" }, -- Pause for Feign Death
+  { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
+  {{
+    { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
+    { "/cancelaura Aspect of the Cheetah", "!player.moving" },
+  }, "toggle.aspect" },
+  { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
+  { "82948", "modifier.lalt", "ground" }, -- Snake Trap
+  { "82941", "modifier.lalt", "ground" }, -- Ice Trap
+}
+
+local aoe = {
+  { "Glaive Toss" },
+  { "Powershot", "player.timetomax > 2.5" },
+  { "Barrage" },
+}
+
+local combat = {
   { "pause", "modifier.lshift" },
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
 
@@ -64,20 +88,12 @@ ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
 
   -- Careful Aim
   {{
-    -- AOE
-    {{
-      { "Glaive Toss" },
-      { "Powershot", "player.timetomax > 2.5" },
-      { "Barrage" },
-    }, { "modifier.multitarget", "modifier.enemies >= 3" },},
-
+    -- AoE
+    { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
     -- ST
-    {{
-      { "Aimed Shot" },
-      { "Focusing Shot", "player.timetomax > 4" },
-      { "Steady Shot" },
-    }, { "!modifier.multitarget" },},
-
+    { "Aimed Shot" },
+    { "Focusing Shot", "player.timetomax > 4" },
+    { "Steady Shot" },
   }, { "player.buff(Careful Aim)" },},
 
   { "A Murder of Crows" },
@@ -86,10 +102,10 @@ ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
   { "Powershot", "player.timetomax > 2.5" },
   { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
 
--- TODO: Need to figure out how to implement this:
---# Pool max focus for rapid fire so we can spam AimedShot with Careful Aim buff
---actions+=/steady_shot,if=focus.deficit*cast_time%(14+cast_regen)>cooldown.rapid_fire.remains
---actions+=/focusing_shot,if=focus.deficit*cast_time%(50+cast_regen)>cooldown.rapid_fire.remains&focus<100
+  -- TODO: Need to figure out how to implement this:
+  --# Pool max focus for rapid fire so we can spam AimedShot with Careful Aim buff
+  --actions+=/steady_shot,if=focus.deficit*cast_time%(14+cast_regen)>cooldown.rapid_fire.remains
+  --actions+=/focusing_shot,if=focus.deficit*cast_time%(50+cast_regen)>cooldown.rapid_fire.remains&focus<100
   { "Steady Shot", "player.timetomax > player.spell(Rapid Fire).cooldown" },
   { "Focusing Shot", { "player.focus < 50" }},
   { "Steady Shot", { "player.buff(Steady Focus)", "player.timetomax > 5" }},
@@ -98,21 +114,6 @@ ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0",
   { "Aimed Shot", { "player.buff(34720)", "player.focus > 60" }},
   { "Focusing Shot", "player.focus < 50" },
   { "Steady Shot" },
-},
-{
-  -- Out of combat
-  { "pause", "modifier.lshift" },
-  { "pause","player.buff(5384)" }, -- Pause for Feign Death
-  { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
-  {{
-    { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
-    { "/cancelaura Aspect of the Cheetah", "!player.moving" },
-  }, "toggle.aspect" },
-  { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
-  { "82948", "modifier.lalt", "ground" }, -- Snake Trap
-  { "82941", "modifier.lalt", "ground" }, -- Ice Trap
-}, function()
-ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
-ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')
-ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
-end)
+}
+
+ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0", combat, ooc, onLoad)
