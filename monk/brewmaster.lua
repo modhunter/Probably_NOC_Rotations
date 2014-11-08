@@ -45,6 +45,7 @@ local aoe = {
 local combat = {
 	-- Hotkeys ---------------------------------------------------------------------------------------------------------
 	{ "pause", "modifier.lshift"},
+	{ "pause", "@NOC.pause()"},
 	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
 	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
 
@@ -129,17 +130,8 @@ local combat = {
 	{ "115450", { "player.dispellable(115450)" }, "player" }, -- Self Dispell (Detox)
 	{ "115450", { "!modifier.last(4987)", "mouseover.exists", "mouseover.alive", "mouseover.friend", "mouseover.range <= 40", "mouseover.dispellable(115450)" }, "mouseover" }, -- Detox on mouseover if needed
 
-	{ "137562", "player.state.disorient" }, -- 137562 = Nimble Brew
-	{ "137562", "player.state.fear" },
-	{ "137562", "player.state.stun" },
-	{ "137562", "player.state.root" },
-	{ "137562", "player.state.horror" },
-	{ "137562", "player.state.snare" },
-
-	{ "116841", "player.state.disorient" }, -- 116841 = Tiger's Lust
-	{ "116841", "player.state.stun" },
-	{ "116841", "player.state.root" },
-	{ "116841", "player.state.snare" },
+	{ "Nimble Brew", "@NOC.noControl()" },
+	{ "Tiger's Lust", "@NOC.noControl()" },
 
 	--Taunt on Encounter (needs focus on other tank)
 	{{
@@ -184,10 +176,7 @@ local combat = {
 
 	-- Main Rotation (melee)
 	{{
-		{{
-		{ "Keg Smash", { "player.chi < 3", "!player.spell(Ascension).exists" }}, -- Keg Smash when less then 3 Chi
-		{ "Keg Smash", { "player.chi < 4", "player.spell(Ascension).exists" }}, -- Keg Smash when less then 4 Chi (due to Ascension)
-		}, "toggle.kegsmash" },
+		{ "Keg Smash", { "player.chidiff >= 2", "toggle.kegsmash" }},
 
 		-- Blackout Kick
 		{ "100784", "!player.buff(115307)" },
@@ -216,7 +205,7 @@ local combat = {
 
 	}, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
-	{ "Tiger's Lust", { "target.range >= 15", "player.moving" }},
+	{ "Tiger's Lust", { "target.range >= 15", "player.moving", "player.movingifor > 1" }},
 }
 
 ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0|r", combat, ooc, onLoad)

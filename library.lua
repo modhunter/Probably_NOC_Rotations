@@ -36,29 +36,6 @@ function mww:message(message)
    self:Show()
 end
 
-local function onUpdate(self,elapsed)
-   if self.time < GetTime() - 2.8 then
-      if self:GetAlpha() == 0 then self:Hide() else self:SetAlpha(self:GetAlpha() - .05) end
-   end
-end
-mww = CreateFrame("Frame",nil,ChatFrame1)
-mww:SetSize(ChatFrame1:GetWidth(),30)
-mww:Hide()
-mww:SetScript("OnUpdate",onUpdate)
-mww:SetPoint("TOP",0,0)
-mww.text = mww:CreateFontString(nil,"OVERLAY","MovieSubtitleFont")
-mww.text:SetAllPoints()
-mww.texture = mww:CreateTexture()
-mww.texture:SetAllPoints()
-mww.texture:SetTexture(0,0,0,.50)
-mww.time = 0
-function mww:message(message)
-   self.text:SetText(message)
-   self:SetAlpha(1)
-   self.time = GetTime()
-   self:Show()
-end
-
 
 ------- "/mWW" handling ------
 ProbablyEngine.command.register('mWW', function(msg, box)
@@ -358,6 +335,7 @@ end
 
 
 function NOC.immuneEvents(unit)
+  if NOC.isDummy(unit) then return true end
   if not UnitAffectingCombat(unit) then return false end
   -- Crowd Control
   local cc = {
@@ -471,6 +449,79 @@ function NOC.DrinkStagger()
         end
     end
     return false
+end
+
+-- Props to CML? for this code
+function NOC.noControl()
+  local eventIndex = C_LossOfControl.GetNumEvents()
+	while (eventIndex > 0) do
+		local _, _, text = C_LossOfControl.GetEventInfo(eventIndex)
+	-- Hunter
+		if select(3, UnitClass("player")) == 3 then
+			if text == LOSS_OF_CONTROL_DISPLAY_ROOT or text == LOSS_OF_CONTROL_DISPLAY_SNARE then
+				return true
+			end
+		end
+	-- Monk
+		if select(3, UnitClass("player")) == 10 then
+			if text == LOSS_OF_CONTROL_DISPLAY_STUN or text == LOSS_OF_CONTROL_DISPLAY_FEAR or text == LOSS_OF_CONTROL_DISPLAY_ROOT or text == LOSS_OF_CONTROL_DISPLAY_HORROR then
+				return true
+			end
+		end
+	eventIndex = eventIndex - 1
+	end
+	return false
+end
+
+-- return true when the rotation should be paused
+function NOC.pause()
+	if (IsMounted() and getUnitID("target") ~= 56877)
+		or SpellIsTargeting()
+		or (not UnitCanAttack("player", "target") and not UnitIsPlayer("target") and UnitExists("target"))
+		or UnitCastingInfo("player")
+		or UnitChannelInfo("player")
+		or UnitIsDeadOrGhost("player")
+		or (UnitIsDeadOrGhost("target") and not UnitIsPlayer("target"))
+		or UnitBuff("player",80169) -- Eating
+		or UnitBuff("player",87959) -- Drinking
+		or UnitBuff("target",104934) --Eating
+	then
+		return true;
+	else
+		return false;
+	end
+end
+
+function NOC.isInCombat(Unit)
+  if UnitAffectingCombat(Unit) then return true; else return false; end
+end
+
+-- thanks to CML for this routine
+function NOC.isDummy(Unit)
+	if Unit == nil then Unit = "target"; else Unit = tostring(Unit) end
+    dummies = {
+        31144, --Training Dummy - Lvl 80
+        --31146, --Raider's Training Dummy - Lvl ??
+        32541, --Initiate's Training Dummy - Lvl 55 (Scarlet Enclave)
+        32542, --Disciple's Training Dummy - Lvl 65
+        32545, --Initiate's Training Dummy - Lvl 55
+        32546, --Ebon Knight's Training Dummy - Lvl 80
+        32666, --Training Dummy - Lvl 60
+        32667, --Training Dummy - Lvl 70
+        46647, --Training Dummy - Lvl 85
+        60197, --Scarlet Monastery Dummy
+        67127, --Training Dummy - Lvl 90
+    }
+    for i=1, #dummies do
+        if UnitExists(Unit) and UnitGUID(Unit) then
+            dummyID = tonumber(string.match(UnitGUID(Unit), "-(%d+)-%x+$"))
+        else
+            dummyID = 0
+        end
+        if dummyID == dummies[i] then
+            return true
+        end
+    end
 end
 
 ProbablyEngine.library.register("NOC", NOC)

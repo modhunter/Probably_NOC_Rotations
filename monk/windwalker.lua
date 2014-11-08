@@ -70,6 +70,7 @@ local aoe = {
 local combat = {
   -- Pause
   { "pause", "modifier.lshift" },
+  { "pause", "@NOC.pause()"},
 
    -- AutoTarget
   { "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" } },
@@ -126,6 +127,7 @@ local combat = {
   { "!Diffuse Magic", "@NOC.checkQueue(Diffuse Magic)" }, -- Diffuse Magic
   --{ "!115460", "@NOC.checkQueue(115460)", "ground" }, -- Healing Sphere
 
+{{
   -- Survival
   { "Expel Harm", { "player.health <= 80", "player.chidiff >= 2" }},
   --{ "Surging Mist", { "player.health <= 70", "!player.moving" }},
@@ -139,18 +141,8 @@ local combat = {
   { "#5512", "player.health < 40" }, -- Healthstone
 
   { "Detox", "player.dispellable(Detox)", "player" }, -- Detox yourself if you can be dispelled
-
-  { "Nimble Brew", "player.state.disorient" }, -- Nimble Brew = Nimble Brew
-  { "Nimble Brew", "player.state.fear" },
-  { "Nimble Brew", "player.state.stun" },
-  { "Nimble Brew", "player.state.root" },
-  { "Nimble Brew", "player.state.horror" },
-  { "Nimble Brew", "player.state.snare" },
-
-  { "Tiger's Lust", "player.state.disorient" }, -- Tiger's Lust = Tiger's Lust
-  { "Tiger's Lust", "player.state.stun" },
-  { "Tiger's Lust", "player.state.root" },
-  { "Tiger's Lust", "player.state.snare" },
+  { "Nimble Brew", "@NOC.noControl()" },
+  { "Tiger's Lust", "@NOC.noControl()" },
 
   -- Shared
   { "Chi Sphere", { "player.spell(Power Strikes).exists", "player.buff(Chi Sphere)", "player.chi < 4" }},
@@ -200,10 +192,6 @@ local combat = {
 
     -- AoE
     { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
-    -- No FH
-    --{ aoe, {"toggle.multitarget", "!player.firehack"}},
-    -- FH and when there is at least 3 enemies
-    --{ aoe, {"toggle.multitarget", "target.area(10).enemies >= 3", "player.firehack"}},
 
     -- Single
 
@@ -262,13 +250,12 @@ local combat = {
     { "Chi Burst" },
 
     -- Crackling Jade Lightning
-    --{"/stopcasting", { "target.range <= 5",  }},
+    --{"/stopcasting", { "target.range < 5" }},
     { "Crackling Jade Lightning", { "target.range > 5", "target.range <= 40", "!player.moving" }},
 
     { "Expel Harm", "player.chi < 4" }, -- Expel Harm
   }},
-  -- TODO: re-add this check when I can figure out why it stopped working
-  --}, "@NOC.immuneEvents" },
+}, "@NOC.immuneEvents('target')" },
 }
 
 ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|r", combat, ooc, onLoad)
