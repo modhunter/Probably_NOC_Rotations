@@ -161,6 +161,57 @@ local combat = {
 
 	-- Main Rotation ---------------------------------------------------------------------------------------------------
 
+--[[
+ctions+=/chi_brew,if=talent.chi_brew.enabled&chi.max-chi>=2&buff.elusive_brew_stacks.stack<=10
+actions+=/gift_of_the_ox,if=buff.gift_of_the_ox.react&incoming_damage_1500ms
+actions+=/diffuse_magic,if=incoming_damage_1500ms&buff.fortifying_brew.down
+actions+=/dampen_harm,if=incoming_damage_1500ms&buff.fortifying_brew.down&buff.elusive_brew_activated.down
+actions+=/fortifying_brew,if=incoming_damage_1500ms&(buff.dampen_harm.down|buff.diffuse_magic.down)&buff.               elusive_brew_activated.down
+actions+=/elusive_brew,if=buff.elusive_brew_stacks.react>=9&(buff.dampen_harm.down|buff.diffuse_magic.down)&buff.elusive_brew_activated.down
+actions+=/invoke_xuen,if=talent.invoke_xuen.enabled&time>5
+actions+=/serenity,if=talent.serenity.enabled&energy<=40
+actions+=/call_action_list,name=st,if=active_enemies<3
+actions+=/call_action_list,name=aoe,if=active_enemies>=3
+
+actions.st=blackout_kick,if=buff.shuffle.down
+actions.st+=/purifying_brew,if=!talent.chi_explosion.enabled&stagger.heavy
+actions.st+=/purifying_brew,if=!buff.serenity.up
+actions.st+=/guard
+actions.st+=/keg_smash,if=chi.max-chi>=2&!buff.serenity.remains
+actions.st+=/chi_burst,if=talent.chi_burst.enabled&energy.time_to_max>3
+actions.st+=/chi_wave,if=talent.chi_wave.enabled&energy.time_to_max>3
+actions.st+=/zen_sphere,cycle_targets=1,if=talent.zen_sphere.enabled&!dot.zen_sphere.ticking
+actions.st+=/chi_explosion,if=chi>=3
+actions.st+=/blackout_kick,if=buff.shuffle.remains<=3&cooldown.keg_smash.remains>=gcd
+actions.st+=/blackout_kick,if=buff.serenity.up
+actions.st+=/blackout_kick,if=chi>=4
+actions.st+=/expel_harm,if=chi.max-chi>=1&cooldown.keg_smash.remains>=gcd
+actions.st+=/jab,if=chi.max-chi>=1&cooldown.keg_smash.remains>=gcd&cooldown.expel_harm.remains>=gcd
+actions.st+=/purifying_brew,if=!talent.chi_explosion.enabled&stagger.moderate&buff.shuffle.remains>=6
+actions.st+=/tiger_palm,if=(energy+(energy.regen*(cooldown.keg_smash.remains)))>=40
+actions.st+=/tiger_palm,if=cooldown.keg_smash.remains>=gcd
+
+actions.aoe=guard
+actions.aoe+=/breath_of_fire,if=chi>=3&buff.shuffle.remains>=6&dot.breath_of_fire.remains<=gcd
+actions.aoe+=/chi_explosion,if=chi>=4
+actions.aoe+=/rushing_jade_wind,if=chi.max-chi>=1&talent.rushing_jade_wind.enabled
+actions.aoe+=/purifying_brew,if=!talent.chi_explosion.enabled&stagger.heavy
+actions.aoe+=/guard
+actions.aoe+=/keg_smash,if=chi.max-chi>=2&!buff.serenity.remains
+actions.aoe+=/chi_burst,if=talent.chi_burst.enabled&energy.time_to_max>3
+actions.aoe+=/chi_wave,if=talent.chi_wave.enabled&energy.time_to_max>3
+actions.aoe+=/zen_sphere,cycle_targets=1,if=talent.zen_sphere.enabled&!dot.zen_sphere.ticking
+actions.aoe+=/blackout_kick,if=talent.rushing_jade_wind.enabled&buff.shuffle.remains<=3&cooldown.keg_smash.remains>=gcd
+actions.aoe+=/blackout_kick,if=talent.rushing_jade_wind.enabled&buff.serenity.up
+actions.aoe+=/blackout_kick,if=talent.rushing_jade_wind.enabled&chi>=4
+actions.aoe+=/expel_harm,if=chi.max-chi>=1&cooldown.keg_smash.remains>=gcd&(energy+(energy.regen*(cooldown.keg_smash.remains)))>=40
+actions.aoe+=/spinning_crane_kick,if=chi.max-chi>=1&!talent.rushing_jade_wind.enabled
+actions.aoe+=/jab,if=talent.rushing_jade_wind.enabled&chi.max-chi>=1&cooldown.keg_smash.remains>=gcd&cooldown.expel_harm.remains>=gcd
+actions.aoe+=/purifying_brew,if=!talent.chi_explosion.enabled&talent.rushing_jade_wind.enabled&stagger.moderate&buff.shuffle.remains>=6
+actions.aoe+=/tiger_palm,if=talent.rushing_jade_wind.enabled&(energy+(energy.regen*(cooldown.keg_smash.remains)))>=40
+actions.aoe+=/tiger_palm,if=talent.rushing_jade_wind.enabled&cooldown.keg_smash.remains>=gcd
+]]
+
 	-- Automatically cast Dizzying Haze at the ground as long as it's an enemy who is aggroing another player
 	{ "115180", {
 		"toggle.dh",
