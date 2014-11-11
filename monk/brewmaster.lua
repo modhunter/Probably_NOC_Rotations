@@ -12,16 +12,8 @@ local ooc = {
 	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
 	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
 	{ "Expel Harm", "player.health < 100" }, -- Expel Harm when not at full health
-	{ "Legacy of the White Tiger", { -- Legacy of the White Tiger
-		"!player.buff(Legacy of the White Tiger).any",
-		"!player.buff(17007).any",
-		"!player.buff(1459).any",
-		"!player.buff(61316).any",
-		"!player.buff(24604).any",
-		"!player.buff(90309).any",
-		"!player.buff(126373).any",
-		"!player.buff(126309).any"
-	}},
+	{ "Legacy of the White Tiger", "!player.buffs.stats" },
+	{ "Legacy of the White Tiger", "!player.buffs.crit" },
 }
 
 local aoe = {
@@ -55,16 +47,8 @@ local combat = {
 	{ "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" } },
 
 	-- Buffs -----------------------------------------------------------------------------------------------------------
-	{ "Legacy of the White Tiger", { -- Legacy of the White Tiger
-		"!player.buff(Legacy of the White Tiger).any",
-		"!player.buff(17007).any",
-		"!player.buff(1459).any",
-		"!player.buff(61316).any",
-		"!player.buff(24604).any",
-		"!player.buff(90309).any",
-		"!player.buff(126373).any",
-		"!player.buff(126309).any"
-	}},
+	{ "Legacy of the White Tiger", "!player.buffs.stats" },
+	{ "Legacy of the White Tiger", "!player.buffs.crit" },
 
 	-- Queued Spells ---------------------------------------------------------------------------------------------------
 	{ "!123402", "@NOC.checkQueue(123402)" }, -- Guard

@@ -10,16 +10,8 @@ end
 
 local ooc = {
   -- Buffs
-  { "Legacy of the White Tiger", {
-    "!player.buff(Legacy of the White Tiger).any",
-    "!player.buff(17007).any",
-    "!player.buff(1459).any",
-    "!player.buff(61316).any",
-    "!player.buff(24604).any",
-    "!player.buff(90309).any",
-    "!player.buff(126373).any",
-    "!player.buff(126309).any"
-  }},
+  { "Legacy of the White Tiger", "!player.buffs.stats" },
+  { "Legacy of the White Tiger", "!player.buffs.crit" },
   { "Expel Harm", "player.health < 100" },
   { "Expel Harm", "toggle.chistacker" },
 }
@@ -79,6 +71,10 @@ local combat = {
   -- Keyboard modifiers
   { "Leg Sweep", "modifier.lcontrol" },              -- Leg Sweep
   { "Touch of Karma", "modifier.lalt" },              -- Touch of Karma
+
+
+  { "Legacy of the White Tiger", "!player.buffs.stats" },
+  { "Legacy of the White Tiger", "!player.buffs.crit" },
 
   -- SEF on mouseover
   {{
