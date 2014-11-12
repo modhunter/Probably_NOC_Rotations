@@ -16,44 +16,63 @@ local ooc = {
 	{ "Legacy of the White Tiger", "!player.buffs.crit" },
 }
 
-
---[[
-actions.aoe=guard
-actions.aoe+=/breath_of_fire,if=chi>=3&buff.shuffle.remains>=6&dot.breath_of_fire.remains<=gcd
-actions.aoe+=/chi_explosion,if=chi>=4
-actions.aoe+=/rushing_jade_wind,if=chi.max-chi>=1&talent.rushing_jade_wind.enabled
-actions.aoe+=/purifying_brew,if=!talent.chi_explosion.enabled&stagger.heavy
-actions.aoe+=/guard
-actions.aoe+=/keg_smash,if=chi.max-chi>=2&!buff.serenity.remains
-actions.aoe+=/chi_burst,if=talent.chi_burst.enabled&energy.time_to_max>3
-actions.aoe+=/chi_wave,if=talent.chi_wave.enabled&energy.time_to_max>3
-actions.aoe+=/zen_sphere,cycle_targets=1,if=talent.zen_sphere.enabled&!dot.zen_sphere.ticking
-actions.aoe+=/blackout_kick,if=talent.rushing_jade_wind.enabled&buff.shuffle.remains<=3&cooldown.keg_smash.remains>=gcd
-actions.aoe+=/blackout_kick,if=talent.rushing_jade_wind.enabled&buff.serenity.up
-actions.aoe+=/blackout_kick,if=talent.rushing_jade_wind.enabled&chi>=4
-actions.aoe+=/expel_harm,if=chi.max-chi>=1&cooldown.keg_smash.remains>=gcd&(energy+(energy.regen*(cooldown.keg_smash.remains)))>=40
-actions.aoe+=/spinning_crane_kick,if=chi.max-chi>=1&!talent.rushing_jade_wind.enabled
-actions.aoe+=/jab,if=talent.rushing_jade_wind.enabled&chi.max-chi>=1&cooldown.keg_smash.remains>=gcd&cooldown.expel_harm.remains>=gcd
-actions.aoe+=/purifying_brew,if=!talent.chi_explosion.enabled&talent.rushing_jade_wind.enabled&stagger.moderate&buff.shuffle.remains>=6
-actions.aoe+=/tiger_palm,if=talent.rushing_jade_wind.enabled&(energy+(energy.regen*(cooldown.keg_smash.remains)))>=40
-actions.aoe+=/tiger_palm,if=talent.rushing_jade_wind.enabled&cooldown.keg_smash.remains>=gcd
-]]
 local aoe = {
+	{ "Guard" }, -- why always on CD?
+
 	{ "Breath of Fire", {
-			"target.debuff(Dizzying Haze)",
+			--"target.debuff(Dizzying Haze)",
+			"player.buff(115307).duration >= 6"
 			"!target.debuff(Breath of Fire)",
-			"player.chi >= 2",
+			"player.chi >= 3",
+
 	}},
-	--Spinning Crane Kick
-	{ "101546", {
-		"!player.spell(116847).exists",
-		"player.buff(115307).duration >= 3",
-	}},
-	--Rushing Jade Wind
-	{ "116847", {
+
+	{ "Chi Explosion", "player.chi >= 4" },
+
+	{ "Rushing Jade Wind", {
+		"player.chidiff >= 1",
 		"!player.buff(116847)",
-		"player.buff(115307).duration >= 3",
 	}},
+
+	{ "Guard" }, -- why always on CD again?
+
+	{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
+
+	{ "Chi Burst", "player.timetomax > 3"},
+
+	-- TODO: Which approach to take?
+	--{ "Chi Wave", { "player.chidiff >= 2", "player.energy < 40", "player.buff(Tiger Power)" }},
+	{ "Chi Wave", "player.timetomax > 3"},
+
+	{{
+		{ "Blackout Kick", { "player.buff(115307).duration <= 3", "player.spell(Keg Smash).cooldown > 0" }},
+		{ "Blackout Kick", "!player.buff(115307)" },
+		{ "Blackout Kick", "player.buff(Serenity)" },
+		{ "Blackout Kick",  "player.chi >= 4" },
+	}, "player.spell(116847).exists" },
+
+	{ "Expel Harm", {
+		"player.health <= 85",
+		"player.chidiff >= 1",
+		"player.spell(Keg Smash).cooldown > 0",
+		"@NOC.KSEnergy >= 40"
+	}},
+
+	{ "Spinning Crane Kick", {
+		"player.chidiff >= 1",
+		"!player.spell(116847).exists",
+	}},
+
+	{{
+		{ "Jab", {
+			"player.chidiff >= 1",
+			"player.spell(Keg Smash).cooldown > 0",
+			"player.spell(Expel Harm).cooldown > 0"
+		}},
+
+		{ "Tiger Palm", "@NOC.KSEnergy >= 40" },
+		{ "Tiger Palm", "player.spell(Keg Smash).cooldown > 0" },
+	}, "player.spell(116847).exists" },
 }
 
 local combat = {
@@ -63,7 +82,6 @@ local combat = {
 	{ "pause", "@NOC.zenMed()" }, -- Pause for Zen Meditation
 	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
 	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
-
 
 	-- AutoTarget
 	{ "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" } },
@@ -119,28 +137,33 @@ local combat = {
 		{ "116705" }, -- Spear Hand Strike
 	}, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
 
-
 	-- Selfheal Talents T2
-	{ "115098", { "player.health < 85" }, "player" }, -- Chi Wave
-	{ "123986", "player.health < 85" }, -- Chi Burst
+	--{ "115098", { "player.health < 85" }, "player" }, -- Chi Wave
+	--{ "123986", "player.health < 85" }, -- Chi Burst
 	{ "124081", { "player.buff(124081)", "!focus.buff(124081)" }, "focus" }, -- Zen Sphere on focus if buff is already on player and we are above 90% health
 	{ "124081", { "!player.buff(124081)" }, "player" }, -- Zen Sphere on player
 	{ "#5512", "player.health < 40"}, --Healthstone when less than 40% health
 
 	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
+	-- TODO: Should this be moved down into the rotation?
 	{ "Purifying Brew", "@NOC.DrinkStagger" },
 
 	-- Defensives
 	-- Fortifying Brew when < 35% health
+	-- TODO: add check for buff.elusive_brew_activated.down
 	{ "Fortifying Brew", { "player.health <= 30", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "toggle.def" }, "player" },
 
+	-- TODO: Should this be moved down into the rotations?
 	-- Guard when glyphed and not active (basically on CD)
 	{ "Guard", { "player.glyph(123401)", "!player.buff(123402)", "toggle.def" }, "player" },
 	-- Guard when not glyphed, not ative, and <= 70% health
 	{ "Guard", { "!player.glyph(123401)", "player.health <= 70", "toggle.def", "!player.buff(115295)" }, "player" },
 
-	{ "115308", { "player.buff(128939).count >= 6", "player.health <= 80", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)" }}, --Elusive Brew at 6+ Stacks and under 80% health
-	{ "115308", "player.buff(128939).count >= 14" }, -- Elusive Brew at 14+ stacks no matter what
+	-- TODO: add check for buff.elusive_brew_activated.down
+	--Elusive Brew at 8+ Stacks and under 80% health
+	{ "115308", { "player.buff(128939).count >= 8", "player.health <= 80", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)" }},
+	-- Elusive Brew at 14+ stacks no matter what
+	{ "115308", "player.buff(128939).count >= 14" },
 
 	--Purify when under healing elixirs buff and <= 80% health
 	{ "Purifying Brew", { "player.health <= 80", "player.buff(134563)" }},
@@ -167,49 +190,6 @@ local combat = {
 	}, "modifier.cooldowns" },
 
 	-- Main Rotation
---[[
-actions+=/serenity,if=talent.serenity.enabled&energy<=40
-actions+=/call_action_list,name=aoe,if=active_enemies>=3
-
-actions.aoe=guard
-actions.aoe+=/breath_of_fire,if=chi>=3&buff.shuffle.remains>=6&dot.breath_of_fire.remains<=gcd
-actions.aoe+=/chi_explosion,if=chi>=4
-actions.aoe+=/rushing_jade_wind,if=chi.max-chi>=1&talent.rushing_jade_wind.enabled
-actions.aoe+=/purifying_brew,if=!talent.chi_explosion.enabled&stagger.heavy
-actions.aoe+=/guard
-actions.aoe+=/keg_smash,if=chi.max-chi>=2&!buff.serenity.remains
-actions.aoe+=/chi_burst,if=talent.chi_burst.enabled&energy.time_to_max>3
-actions.aoe+=/chi_wave,if=talent.chi_wave.enabled&energy.time_to_max>3
-actions.aoe+=/zen_sphere,cycle_targets=1,if=talent.zen_sphere.enabled&!dot.zen_sphere.ticking
-actions.aoe+=/blackout_kick,if=talent.rushing_jade_wind.enabled&buff.shuffle.remains<=3&cooldown.keg_smash.remains>=gcd
-actions.aoe+=/blackout_kick,if=talent.rushing_jade_wind.enabled&buff.serenity.up
-actions.aoe+=/blackout_kick,if=talent.rushing_jade_wind.enabled&chi>=4
-actions.aoe+=/expel_harm,if=chi.max-chi>=1&cooldown.keg_smash.remains>=gcd&(energy+(energy.regen*(cooldown.keg_smash.remains)))>=40
-actions.aoe+=/spinning_crane_kick,if=chi.max-chi>=1&!talent.rushing_jade_wind.enabled
-actions.aoe+=/jab,if=talent.rushing_jade_wind.enabled&chi.max-chi>=1&cooldown.keg_smash.remains>=gcd&cooldown.expel_harm.remains>=gcd
-actions.aoe+=/purifying_brew,if=!talent.chi_explosion.enabled&talent.rushing_jade_wind.enabled&stagger.moderate&buff.shuffle.remains>=6
-actions.aoe+=/tiger_palm,if=talent.rushing_jade_wind.enabled&(energy+(energy.regen*(cooldown.keg_smash.remains)))>=40
-actions.aoe+=/tiger_palm,if=talent.rushing_jade_wind.enabled&cooldown.keg_smash.remains>=gcd
-
-actions.st=blackout_kick,if=buff.shuffle.down
-actions.st+=/purifying_brew,if=!talent.chi_explosion.enabled&stagger.heavy
-actions.st+=/purifying_brew,if=!buff.serenity.up
-actions.st+=/guard
-actions.st+=/keg_smash,if=chi.max-chi>=2&!buff.serenity.remains
-actions.st+=/chi_burst,if=talent.chi_burst.enabled&energy.time_to_max>3
-actions.st+=/chi_wave,if=talent.chi_wave.enabled&energy.time_to_max>3
-actions.st+=/zen_sphere,cycle_targets=1,if=talent.zen_sphere.enabled&!dot.zen_sphere.ticking
-actions.st+=/chi_explosion,if=chi>=3
-actions.st+=/blackout_kick,if=buff.shuffle.remains<=3&cooldown.keg_smash.remains>=gcd
-actions.st+=/blackout_kick,if=buff.serenity.up
-actions.st+=/blackout_kick,if=chi>=4
-actions.st+=/expel_harm,if=chi.max-chi>=1&cooldown.keg_smash.remains>=gcd
-actions.st+=/jab,if=chi.max-chi>=1&cooldown.keg_smash.remains>=gcd&cooldown.expel_harm.remains>=gcd
-actions.st+=/purifying_brew,if=!talent.chi_explosion.enabled&stagger.moderate&buff.shuffle.remains>=6
-actions.st+=/tiger_palm,if=(energy+(energy.regen*(cooldown.keg_smash.remains)))>=40
-actions.st+=/tiger_palm,if=cooldown.keg_smash.remains>=gcd
-]]
-
 	-- Automatically cast Dizzying Haze at the ground as long as it's an enemy who is aggroing another player
 	{ "115180", {
 		"mouseover.exists",
@@ -224,38 +204,67 @@ actions.st+=/tiger_palm,if=cooldown.keg_smash.remains>=gcd
 
 	-- Main Rotation (melee)
 	{{
-		{ "Keg Smash", { "player.chidiff >= 2", "toggle.kegsmash" }},
+		-- During the first 10 seconds of combat, consider these items as a priority
+		{{
+			{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
 
-		-- Blackout Kick
-		{ "100784", "!player.buff(115307)" },
-		{ "100784", "player.buff(115307).duration < 3" },
-		{ "100784",  "player.chi >= 4" },
+			-- Blackout Kick
+			{ "Blackout Kick", "!player.buff(115307)" },
+			{ "Blackout Kick", "player.buff(115307).duration < 3" },
+			{ "Blackout Kick",  "player.chi >= 4" },
+		}, "player.time < 10"},
 
 		{ "Chi Brew", {"player.chidiff >= 2", "player.buff(128939).count <= 10" }},
 
+		{ "Serenity", "player.energy <= 40" },
+
 		{ "Touch of Death", "player.buff(Death Note)" },
-
-		--{ "Chi Burst", "player.timetomax > 3"},
-
-		-- TODO: Which approach to take?
-		--{ "Chi Wave", { "player.chidiff >= 2", "player.energy < 40", "player.buff(Tiger Power)" }},
-		--{ "Chi Wave", "player.timetomax > 3"},
-
-		{ "Expel Harm", "player.health <= 85"}, -- Expel Harm if < 85
-
-		-- { "100787", "!player.spell(100780).usable" }, -- Tiger Palm if Jab isn't usable... ?
 
 		-- AoE
 		{ aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
-		-- No FH
-		--{ aoe, {"toggle.multitarget", "!player.firehack"}},
-		-- FH and when there is at least 3 enemies
-		--{ aoe, {"toggle.multitarget", "target.area(10).enemies >= 3", "player.firehack"}},
 
-		{ "100787", "player.buff(125359).duration < 4" }, -- Tiger Palm if Tiger Power buff will last < 4 seconds
-		{ "100787", "player.energy <= 39"}, -- Tiger Palm when < 40 energy
+		{ "Blackout Kick", "!player.buff(115307)" },
 
-		{ "100780", "player.energy >= 40"}, -- Jab when we have at least 40 energy
+
+--buff.serenity.down = !player.buff(Serenity)
+--"talent(7,3)", -- serenity
+--"talent(7,2)", -- Chi Explosion
+--"talent(7,1)", -- Soul Dance
+		--actions.st+=/purifying_brew,if=!talent.chi_explosion.enabled&stagger.heavy
+		--{ "Purifying Brew", { "!talent(7,2)", "@NOC.DrinkStagger" }},
+
+		--{ "Guard" }, -- Guard on CD?
+		-- Guard when glyphed and not active (basically on CD)
+		{ "Guard", { "player.glyph(123401)", "!player.buff(123402)", "toggle.def" }, "player" },
+		-- Guard when not glyphed, not ative, and <= 70% health
+		{ "Guard", { "!player.glyph(123401)", "player.health <= 70", "toggle.def", "!player.buff(115295)" }, "player" },
+
+		{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
+
+		{ "Chi Burst", "player.timetomax > 3"},
+
+		-- TODO: Which approach to take?
+		--{ "Chi Wave", { "player.chidiff >= 2", "player.energy < 40", "player.buff(Tiger Power)" }},
+		{ "Chi Wave", "player.timetomax > 3"},
+
+		{ "Chi Explosion", "player.chi >= 3" },
+
+		{ "Blackout Kick", { "player.buff(115307).duration <= 3", "player.spell(Keg Smash).cooldown > 0" }},
+		{ "Blackout Kick", "!player.buff(115307)" },
+		{ "Blackout Kick", "player.buff(Serenity)" },
+		{ "Blackout Kick",  "player.chi >= 4" },
+
+		{ "Expel Harm", { "player.health <= 85", "player.chidiff >= 1", "player.spell(Keg Smash).cooldown > 0" }},
+
+		{ "Jab", { "player.chidiff >= 1", "player.spell(Keg Smash).cooldown > 0", "player.spell(Expel Harm).cooldown > 0" }},
+
+		{ "Tiger Palm", "@NOC.KSEnergy >= 40" },
+		{ "Tiger Palm", "player.spell(Keg Smash).cooldown > 0" },
+
+-- Old
+--		{ "Tiger Palm", "player.buff(125359).duration < 4" }, -- Tiger Palm if Tiger Power buff will last < 4 seconds
+--		{ "Tiger Palm", "player.energy <= 39"}, -- Tiger Palm when < 40 energy
+--		{ "Jab", "player.energy >= 40"}, -- Jab when we have at least 40 energy
 
 	}, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
