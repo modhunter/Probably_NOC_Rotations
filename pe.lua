@@ -8,7 +8,7 @@ ProbablyEngine.condition.register("modifier.enemies", function()
   return count
 end)
 
--- Implementing locally until it gets put into the engine
+-- Returns the number of chi you have left till max (e.g. you have a max of 5 chi and 3 chi now, so it will return 2)
 ProbablyEngine.condition.register("chidiff", function(target, spell)
     local max = UnitPowerMax(target, SPELL_POWER_CHI)
     local curr = UnitPower(target, SPELL_POWER_CHI)

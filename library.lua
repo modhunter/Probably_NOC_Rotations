@@ -6,12 +6,10 @@ NOC.flagged = GetTime()
 NOC.unflagged = GetTime()
 NOC.queueSpell = nil
 NOC.queueTime = 0
-NOC.sefUnits = {}
-NOC.lastSEFCount = 0
-NOC.lastSEFTarget = nil
-NOC.HMDelay = nil
-NOC.HMTargetGUID = nil
 
+------------------------------------
+--TODO: replace all of following messaging and queuing logic below with the new 'UI' - look at MrTheSoulz for examples
+------------------------------------
 -- Props for Chumii for all of the messaging and toggle code below
 local function onUpdate(self,elapsed)
    if self.time < GetTime() - 2.5 then
@@ -135,7 +133,6 @@ end)
 ------- "/mBM" handling ------
 ProbablyEngine.command.register('mBM', function(msg, box)
   local command, text = msg:match("^(%S*)%s*(.-)$")
--- Toggle -------------------------------------------------------------------------------------------------------
   if command == 'toggle' then
     if ProbablyEngine.config.read('button_states', 'MasterToggle', false) then
         ProbablyEngine.buttons.toggle('MasterToggle')
@@ -246,7 +243,6 @@ ProbablyEngine.command.register('mBM', function(msg, box)
   if NOC.queueSpell ~= nil then NOC.queueTime = GetTime() end
 end)
 
-
 NOC.checkQueue = function (spellId)
     if (GetTime() - NOC.queueTime) > 10 then
         NOC.queueTime = 0
@@ -265,7 +261,13 @@ NOC.checkQueue = function (spellId)
     end
     return false
 end
+------------------------------------
 
+
+
+------------------------------------
+-- TODO: Can all of this even handling stuff be removed? It's leagacy support for item usage and not sure if really necessary anymore
+------------------------------------
 
 NOC.setFlagged = function (self, ...)
   NOC.flagged = GetTime()
@@ -278,7 +280,6 @@ NOC.setUnflagged = function (self, ...)
     NOC.items[77589].exp = NOC.unflagged + 60
   end
 end
-
 
 NOC.eventHandler = function(self, ...)
   local subEvent		= select(1, ...)
@@ -298,14 +299,16 @@ NOC.eventHandler = function(self, ...)
   end
 end
 
-
 ProbablyEngine.listener.register("NOC", "COMBAT_LOG_EVENT_UNFILTERED", NOC.eventHandler)
 ProbablyEngine.listener.register("NOC", "PLAYER_REGEN_DISABLED", NOC.setFlagged)
 ProbablyEngine.listener.register("NOC", "PLAYER_REGEN_DISABLED", NOC.resetLists)
 ProbablyEngine.listener.register("NOC", "PLAYER_REGEN_DISABLED", NOC.setUnflagged)
 ProbablyEngine.listener.register("NOC", "PLAYER_REGEN_ENABLED", NOC.resetLists)
+------------------------------------
 
 
+
+-- TODO: Deprecated, should remove
 function NOC.spellCooldown(spell)
   local spellName = GetSpellInfo(spell)
   if spellName then
@@ -321,6 +324,7 @@ function NOC.spellCooldown(spell)
 end
 
 
+-- TODO: Deprecated, should remove
 function NOC.fillBlackout()
   local energy = UnitPower("player")
   local regen = select(2, GetPowerRegen("player"))
@@ -333,7 +337,7 @@ function NOC.fillBlackout()
   return 0
 end
 
-
+-- TODO: clean-up this function and update for WoD wher enecessary
 function NOC.immuneEvents(unit)
   if NOC.isDummy(unit) then return true end
   if not UnitAffectingCombat(unit) then return false end
@@ -375,7 +379,6 @@ function NOC.immuneEvents(unit)
   return true
 end
 
-
 function NOC.hasDebuffTable(target, spells)
   for i = 1, 40 do
     local _,_,_,_,_,_,_,_,_,_,spellId = _G['UnitDebuff'](target, i)
@@ -385,46 +388,11 @@ function NOC.hasDebuffTable(target, spells)
   end
 end
 
--- TODO: Deprecated, should remove
-function NOC.SEF()
-  if (UnitGUID('target') ~= nil) then
-	  local count = DSL('buff.count')('player', '137639')
-	  if count > NOC.lastSEFCount and NOC.lastSEFTarget then
-		NOC.sefUnits[NOC.lastSEFTarget], NOC.lastSEFCount, NOC.lastSEFTarget = true, count, nil
-	  end
-	  if count < 2 and DSL('enemy')('mouseover') then
-		local mouseover, target = UnitGUID('mouseover'), UnitGUID('target')
-		if mouseover and target ~= mouseover and not NOC.sefUnits[mouseover] then
-		  NOC.lastSEFTarget = mouseover
-		  return true
-		end
-	  end
-	  if (count == 0) then
-		NOC.sefUnits, NOC.lastSEFCount, NOC.lastSEFTarget = {}, 0, nil
-	  end
-  end
-  return false
-end
-
-function NOC.cancelSEF()
-  if DSL('buff')('player', '137639') then
-     --and DSL('modifier.enemies')() < 2 then
-    NOC.sefUnits, NOC.lastSEFCount, NOC.lastSEFTarget = {}, 0, nil
-    return true
-  end
-  return false
-end
 
 -- Props to MrTheSoulz for this code: Check Mouseover and target are not equal
 function NOC.mouseNotEqualTarget()
    if (UnitGUID('target')) ~= (UnitGUID('mouseover')) then return true end
  return false
-end
-
---Props to MrTheSoulz for this code:  Check Mouseover and target are equal
-function NOC.mouseEqualTarget()
-   if (UnitGUID('target')) ~= (UnitGUID('mouseover')) then return false end
- return true
 end
 
 function NOC.StaggerValue ()
@@ -436,7 +404,6 @@ function NOC.StaggerValue ()
     local ticksTotal=(valueStaggerLight or valueStaggerLight or valueStaggerLight or 0)
     return percentOfHealth;
 end
-
 
 function NOC.DrinkStagger()
     if (UnitPower("player", 12) >= 1 or UnitBuff("player", GetSpellInfo(138237))) then
@@ -522,6 +489,23 @@ function NOC.isDummy(Unit)
             return true
         end
     end
+end
+
+-- Check to see if we are channeling Zen Meditation
+function NOC.zenMed()
+  if UnitChannelInfo("player") == GetSpellInfo(115176) then
+    return true
+  else
+    return false
+  end
+end
+
+-- Return the amount of energy you will have by the time KS is ready to use
+function NOC.KSEnergy()
+  local MyNRG = UnitPower("player", 3)
+  local MyNRGregen = select(2, GetPowerRegen("player"))
+  local NRGforKS = MyNRG + (MyNRGregen * GetSpellCD(121253))
+  return NRGforKS
 end
 
 ProbablyEngine.library.register("NOC", NOC)
