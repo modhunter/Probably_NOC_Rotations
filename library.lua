@@ -491,12 +491,13 @@ function NOC.isDummy(Unit)
     end
 end
 
--- Check to see if we are channeling Zen Meditation
-function NOC.zenMed()
-  if UnitChannelInfo("player") == GetSpellInfo(115176) then
-    return true
+function GetSpellCD(MySpell)
+  if GetSpellCooldown(MySpell) == 0 then
+     return 0
   else
-    return false
+     local Start ,CD = GetSpellCooldown(MySpell)
+     local MyCD = Start + CD - GetTime()
+     return MyCD
   end
 end
 

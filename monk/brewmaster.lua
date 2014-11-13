@@ -17,14 +17,11 @@ local ooc = {
 }
 
 local aoe = {
-	{ "Guard" }, -- why always on CD?
-
 	{ "Breath of Fire", {
 			--"target.debuff(Dizzying Haze)",
 			"player.buff(115307).duration >= 6"
 			"!target.debuff(Breath of Fire)",
 			"player.chi >= 3",
-
 	}},
 
 	{ "Chi Explosion", "player.chi >= 4" },
@@ -34,15 +31,12 @@ local aoe = {
 		"!player.buff(116847)",
 	}},
 
-	{ "Guard" }, -- why always on CD again?
-
 	{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
 
-	{ "Chi Burst", "player.timetomax > 3"},
-
-	-- TODO: Which approach to take?
-	--{ "Chi Wave", { "player.chidiff >= 2", "player.energy < 40", "player.buff(Tiger Power)" }},
-	{ "Chi Wave", "player.timetomax > 3"},
+	{{
+		{ "Chi Burst" },
+		{ "Chi Wave" },
+	}, "player.timetomax > 3" },
 
 	{{
 		{ "Blackout Kick", { "player.buff(115307).duration <= 3", "player.spell(Keg Smash).cooldown > 0" }},
@@ -63,13 +57,13 @@ local aoe = {
 		"!player.spell(116847).exists",
 	}},
 
-	{{
-		{ "Jab", {
-			"player.chidiff >= 1",
-			"player.spell(Keg Smash).cooldown > 0",
-			"player.spell(Expel Harm).cooldown > 0"
-		}},
+	{ "Jab", {
+		"player.chidiff >= 1",
+		"player.spell(Keg Smash).cooldown > 0",
+		"player.spell(Expel Harm).cooldown > 0"
+	}},
 
+	{{
 		{ "Tiger Palm", "@NOC.KSEnergy >= 40" },
 		{ "Tiger Palm", "player.spell(Keg Smash).cooldown > 0" },
 	}, "player.spell(116847).exists" },
@@ -79,7 +73,7 @@ local combat = {
 	-- Hotkeys
 	{ "pause", "modifier.lshift" },
 	{ "pause", "@NOC.pause()" },
-	{ "pause", "@NOC.zenMed()" }, -- Pause for Zen Meditation
+	{ "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
 	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
 	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
 
@@ -137,15 +131,12 @@ local combat = {
 		{ "116705" }, -- Spear Hand Strike
 	}, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
 
-	-- Selfheal Talents T2
-	--{ "115098", { "player.health < 85" }, "player" }, -- Chi Wave
-	--{ "123986", "player.health < 85" }, -- Chi Burst
+	-- Selfheal
 	{ "124081", { "player.buff(124081)", "!focus.buff(124081)" }, "focus" }, -- Zen Sphere on focus if buff is already on player and we are above 90% health
 	{ "124081", { "!player.buff(124081)" }, "player" }, -- Zen Sphere on player
 	{ "#5512", "player.health < 40"}, --Healthstone when less than 40% health
 
 	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
-	-- TODO: Should this be moved down into the rotation?
 	{ "Purifying Brew", "@NOC.DrinkStagger" },
 
 	-- Defensives
@@ -153,7 +144,6 @@ local combat = {
 	-- TODO: add check for buff.elusive_brew_activated.down
 	{ "Fortifying Brew", { "player.health <= 30", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "toggle.def" }, "player" },
 
-	-- TODO: Should this be moved down into the rotations?
 	-- Guard when glyphed and not active (basically on CD)
 	{ "Guard", { "player.glyph(123401)", "!player.buff(123402)", "toggle.def" }, "player" },
 	-- Guard when not glyphed, not ative, and <= 70% health
@@ -225,27 +215,12 @@ local combat = {
 
 		{ "Blackout Kick", "!player.buff(115307)" },
 
-
---buff.serenity.down = !player.buff(Serenity)
---"talent(7,3)", -- serenity
---"talent(7,2)", -- Chi Explosion
---"talent(7,1)", -- Soul Dance
-		--actions.st+=/purifying_brew,if=!talent.chi_explosion.enabled&stagger.heavy
-		--{ "Purifying Brew", { "!talent(7,2)", "@NOC.DrinkStagger" }},
-
-		--{ "Guard" }, -- Guard on CD?
-		-- Guard when glyphed and not active (basically on CD)
-		{ "Guard", { "player.glyph(123401)", "!player.buff(123402)", "toggle.def" }, "player" },
-		-- Guard when not glyphed, not ative, and <= 70% health
-		{ "Guard", { "!player.glyph(123401)", "player.health <= 70", "toggle.def", "!player.buff(115295)" }, "player" },
-
 		{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
 
-		{ "Chi Burst", "player.timetomax > 3"},
-
-		-- TODO: Which approach to take?
-		--{ "Chi Wave", { "player.chidiff >= 2", "player.energy < 40", "player.buff(Tiger Power)" }},
-		{ "Chi Wave", "player.timetomax > 3"},
+		{{
+			{ "Chi Burst" },
+			{ "Chi Wave" },
+		}, "player.timetomax > 3" },
 
 		{ "Chi Explosion", "player.chi >= 3" },
 
@@ -260,12 +235,6 @@ local combat = {
 
 		{ "Tiger Palm", "@NOC.KSEnergy >= 40" },
 		{ "Tiger Palm", "player.spell(Keg Smash).cooldown > 0" },
-
--- Old
---		{ "Tiger Palm", "player.buff(125359).duration < 4" }, -- Tiger Palm if Tiger Power buff will last < 4 seconds
---		{ "Tiger Palm", "player.energy <= 39"}, -- Tiger Palm when < 40 energy
---		{ "Jab", "player.energy >= 40"}, -- Jab when we have at least 40 energy
-
 	}, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
 	{ "Tiger's Lust", { "target.range >= 15", "player.moving", "player.movingifor > 1" }},
