@@ -19,7 +19,7 @@ local ooc = {
 local aoe = {
 	{ "Breath of Fire", {
 			--"target.debuff(Dizzying Haze)",
-			"player.buff(115307).duration >= 6"
+			"player.buff(115307).duration >= 6",
 			"!target.debuff(Breath of Fire)",
 			"player.chi >= 3",
 	}},
