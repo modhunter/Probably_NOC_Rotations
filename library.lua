@@ -268,7 +268,7 @@ end
 ------------------------------------
 -- TODO: Can all of this even handling stuff be removed? It's leagacy support for item usage and not sure if really necessary anymore
 ------------------------------------
-
+--[[
 NOC.setFlagged = function (self, ...)
   NOC.flagged = GetTime()
 end
@@ -336,6 +336,7 @@ function NOC.fillBlackout()
   end
   return 0
 end
+]]
 
 -- TODO: clean-up this function and update for WoD wher enecessary
 function NOC.immuneEvents(unit)

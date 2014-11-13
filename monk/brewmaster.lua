@@ -224,14 +224,18 @@ local combat = {
 
 		{ "Chi Explosion", "player.chi >= 3" },
 
-		{ "Blackout Kick", { "player.buff(115307).duration <= 3", "player.spell(Keg Smash).cooldown > 0" }},
+		{ "Blackout Kick", { "player.buff(115307).duration <= 6", "player.spell(Keg Smash).cooldown > 0" }},
 		{ "Blackout Kick", "!player.buff(115307)" },
 		{ "Blackout Kick", "player.buff(Serenity)" },
 		{ "Blackout Kick",  "player.chi >= 4" },
 
 		{ "Expel Harm", { "player.health <= 85", "player.chidiff >= 1", "player.spell(Keg Smash).cooldown > 0" }},
 
-		{ "Jab", { "player.chidiff >= 1", "player.spell(Keg Smash).cooldown > 0", "player.spell(Expel Harm).cooldown > 0" }},
+		{ "Jab", {
+			"player.chidiff >= 1",
+			"player.spell(Keg Smash).cooldown > 0",
+			--"player.spell(Expel Harm).cooldown > 0" 
+		}},
 
 		{ "Tiger Palm", "@NOC.KSEnergy >= 40" },
 		{ "Tiger Palm", "player.spell(Keg Smash).cooldown > 0" },
