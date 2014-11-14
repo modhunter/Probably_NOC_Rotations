@@ -28,7 +28,7 @@ local aoe = {
 
 	{ "Rushing Jade Wind", {
 		"player.chidiff >= 1",
-		"!player.buff(116847)",
+		"talent(6,1)",
 	}},
 
 	{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
@@ -54,7 +54,7 @@ local aoe = {
 
 	{ "Spinning Crane Kick", {
 		"player.chidiff >= 1",
-		"!player.spell(116847).exists",
+		"!talent(6,1)",
 	}},
 
 	{ "Jab", {
@@ -229,12 +229,12 @@ local combat = {
 		{ "Blackout Kick", "player.buff(Serenity)" },
 		{ "Blackout Kick",  "player.chi >= 4" },
 
-		{ "Expel Harm", { "player.health <= 85", "player.chidiff >= 1", "player.spell(Keg Smash).cooldown > 0" }},
+		{ "Expel Harm", { "player.health < 100", "player.chidiff >= 1", "player.spell(Keg Smash).cooldown > 0" }},
 
 		{ "Jab", {
 			"player.chidiff >= 1",
-			"player.spell(Keg Smash).cooldown > 0",
-			--"player.spell(Expel Harm).cooldown > 0" 
+			--"player.spell(Keg Smash).cooldown > 0",
+			--"player.spell(Expel Harm).cooldown > 0"
 		}},
 
 		{ "Tiger Palm", "@NOC.KSEnergy >= 40" },

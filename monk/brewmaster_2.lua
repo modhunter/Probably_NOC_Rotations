@@ -21,12 +21,12 @@ local aoe = {
 
 	{ "Rushing Jade Wind", {
 		"player.chidiff >= 1",
-		"!player.buff(116847)",
+		"talent(6,1)",
 	}},
 
 	{ "Spinning Crane Kick", {
 		"player.chidiff >= 1",
-		"!player.spell(116847).exists",
+		"!talent(6,1)",
 	}},
 }
 

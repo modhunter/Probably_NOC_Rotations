@@ -106,7 +106,8 @@ local combat = {
 
 	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
 	{ "Purifying Brew", "@NOC.DrinkStagger" },
-	{ "Purifying Brew", "player.buff(Serenity).duration <= 1" },
+	-- Purify if Serenity is about to fall-off
+	{ "Purifying Brew", {"player.buff(157558)", "player.buff(157558).duration <= 1" }},
 
 	-- Defensives
 	-- Fortifying Brew when < 35% health and DM/DH are not being used
@@ -161,19 +162,19 @@ local combat = {
 	{{
 		-- During the first 10 seconds of combat, consider these items as a priority
 		{{
-			{ "Keg Smash", { "!player.buff(Serenity)", "toggle.kegsmash" }},
+			{ "Keg Smash", { "!player.buff(157558)", "toggle.kegsmash" }},
 			{ "Serenity" },
 			{ "Tiger Palm", "!player.buff(Tiger Power)" },
 			{ "Blackout Kick", "!player.buff(115307)" },
 			{ "Blackout Kick", "player.buff(115307).duration < 3" },
-			{ "Blackout Kick",  "player.chi >= 4" },
+			--{ "Blackout Kick",  "player.chi >= 4" },
 		}, "player.time < 10"},
 
 		{ "Serenity", { "player.chidiff >= 1", "player.buff(Tiger Power).duration >= 10" }},
 
 		{ "Keg Smash", { "player.chidiff >= 2", "toggle.kegsmash" }},
 
-		{ "Blackout Kick", "player.buff(Serenity)" },
+		{ "Blackout Kick", "player.buff(157558)" },
 
 		{ "Chi Brew", {
 			"player.chidiff >= 2",
@@ -192,19 +193,19 @@ local combat = {
 		{ "Chi Burst" },
 		{ "Chi Wave" },
 
-		{ "Blackout Kick", "player.chidiff >= 0" },
-
 		{ aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
 		{ "Expel Harm", "player.health < 100 "},
+
+		{ "Blackout Kick", "player.chidiff = 0" },
 
 		--TODO: Revisit to see if this causes the rotation to get 'stuck' not taking any action?
 		-- Use Jab when we are not chi-capped and Keg Smash and Expel Harm are on CD
 		{ "Jab", {
 			"player.chidiff >= 1",
-			"player.spell(Keg Smash).cooldown > 0",
-			"player.spell(Expel Harm).cooldown > 0",
-			--"player.energy > 70",
+			--"player.spell(Keg Smash).cooldown > 0",
+			--"player.spell(Expel Harm).cooldown > 0",
+			"player.energy > 70",
 		}},
 
 		{ "Tiger Palm" },

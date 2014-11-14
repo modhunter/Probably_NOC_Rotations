@@ -10,4 +10,5 @@ hunter\survival.lua
 hunter\marksman.lua
 monk\brewmaster.lua
 monk\brewmaster_2.lua
+monk\brewmaster_3.lua
 monk\windwalker.lua
