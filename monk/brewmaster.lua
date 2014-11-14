@@ -17,56 +17,24 @@ local ooc = {
 }
 
 local aoe = {
+	{ "Chi Explosion", "player.chi >= 4" },
+
 	{ "Breath of Fire", {
-			--"target.debuff(Dizzying Haze)",
-			"player.buff(115307).duration >= 6",
+			"player.buff(115307).duration >= 9",
 			"!target.debuff(Breath of Fire)",
 			"player.chi >= 3",
+			"!talent(7,2)",
 	}},
-
-	{ "Chi Explosion", "player.chi >= 4" },
 
 	{ "Rushing Jade Wind", {
 		"player.chidiff >= 1",
 		"talent(6,1)",
 	}},
 
-	{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
-
-	{{
-		{ "Chi Burst" },
-		{ "Chi Wave" },
-	}, "player.timetomax > 3" },
-
-	{{
-		{ "Blackout Kick", { "player.buff(115307).duration <= 3", "player.spell(Keg Smash).cooldown > 0" }},
-		{ "Blackout Kick", "!player.buff(115307)" },
-		{ "Blackout Kick", "player.buff(Serenity)" },
-		{ "Blackout Kick",  "player.chi >= 4" },
-	}, "player.spell(116847).exists" },
-
-	{ "Expel Harm", {
-		"player.health <= 85",
-		"player.chidiff >= 1",
-		"player.spell(Keg Smash).cooldown > 0",
-		"@NOC.KSEnergy >= 40"
-	}},
-
 	{ "Spinning Crane Kick", {
 		"player.chidiff >= 1",
 		"!talent(6,1)",
 	}},
-
-	{ "Jab", {
-		"player.chidiff >= 1",
-		"player.spell(Keg Smash).cooldown > 0",
-		"player.spell(Expel Harm).cooldown > 0"
-	}},
-
-	{{
-		{ "Tiger Palm", "@NOC.KSEnergy >= 40" },
-		{ "Tiger Palm", "player.spell(Keg Smash).cooldown > 0" },
-	}, "player.spell(116847).exists" },
 }
 
 local combat = {
@@ -131,18 +99,19 @@ local combat = {
 		{ "116705" }, -- Spear Hand Strike
 	}, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
 
-	-- Selfheal
-	{ "124081", { "player.buff(124081)", "!focus.buff(124081)" }, "focus" }, -- Zen Sphere on focus if buff is already on player and we are above 90% health
-	{ "124081", { "!player.buff(124081)" }, "player" }, -- Zen Sphere on player
+	-- Self Heal
+	{ "Zen Sphere", { "player.buff(124081)", "!focus.buff(124081)" }, "focus" }, -- Zen Sphere on focus if buff is already on player and we are above 90% health
+	{ "Zen Sphere", { "!player.buff(124081)" }, "player" }, -- Zen Sphere on player
 	{ "#5512", "player.health < 40"}, --Healthstone when less than 40% health
 
 	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
 	{ "Purifying Brew", "@NOC.DrinkStagger" },
+	-- Purify if Serenity is about to fall-off
+	{ "Purifying Brew", {"player.buff(157558)", "player.buff(157558).duration <= 1" }},
 
 	-- Defensives
-	-- Fortifying Brew when < 35% health
-	-- TODO: add check for buff.elusive_brew_activated.down
-	{ "Fortifying Brew", { "player.health <= 30", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "toggle.def" }, "player" },
+	-- Fortifying Brew when < 35% health and DM/DH are not being used
+	{ "Fortifying Brew", { "player.health <= 35", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "toggle.def" }, "player" },
 
 	-- Guard when glyphed and not active (basically on CD)
 	{ "Guard", { "player.glyph(123401)", "!player.buff(123402)", "toggle.def" }, "player" },
@@ -155,12 +124,9 @@ local combat = {
 	-- Elusive Brew at 14+ stacks no matter what
 	{ "115308", "player.buff(128939).count >= 14" },
 
-	--Purify when under healing elixirs buff and <= 80% health
-	{ "Purifying Brew", { "player.health <= 80", "player.buff(134563)" }},
-
-	--Expel Harm
-	{ "Expel Harm", "player.health <= 35" },
-	{ "Expel Harm", { "player.health <= 90 ", "@NOC.KSEnergy >= 80", "player.chidiff >= 2" }},
+	--Always attempt Expel Harm when < 30% health
+	--TODO: Only consider this if we are using the glyph?
+	{ "Expel Harm", "player.health < 35" },
 
 	{ "Detox", { "player.dispellable(115450)" }, "player" }, -- Self Dispell (Detox)
 	{ "Detox", { "!modifier.last(4987)", "mouseover.exists", "mouseover.alive", "mouseover.friend", "mouseover.range <= 40", "mouseover.dispellable(115450)" }, "mouseover" }, -- Detox on mouseover if needed
@@ -196,52 +162,56 @@ local combat = {
 	{{
 		-- During the first 10 seconds of combat, consider these items as a priority
 		{{
-			{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
-
-			-- Blackout Kick
+			{ "Keg Smash", { "!player.buff(157558)", "toggle.kegsmash" }},
+			{ "Serenity" },
+			{ "Tiger Palm", "!player.buff(Tiger Power)" },
 			{ "Blackout Kick", "!player.buff(115307)" },
 			{ "Blackout Kick", "player.buff(115307).duration < 3" },
-			{ "Blackout Kick",  "player.chi >= 4" },
+			--{ "Blackout Kick",  "player.chi >= 4" },
 		}, "player.time < 10"},
 
-		{ "Chi Brew", {"player.chidiff >= 2", "player.buff(128939).count <= 10" }},
+		{ "Serenity", { "player.chidiff >= 1", "player.buff(Tiger Power).duration >= 10" }},
 
-		{ "Serenity", "player.energy <= 40" },
+		{ "Keg Smash", { "player.chidiff >= 2", "toggle.kegsmash" }},
 
-		{ "Touch of Death", "player.buff(Death Note)" },
+		{ "Blackout Kick", "player.buff(157558)" },
 
-		-- AoE
-		{ aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
+		{ "Chi Brew", {
+			"player.chidiff >= 2",
+			"player.buff(128939).count <= 10",
+		}},
 
 		{ "Blackout Kick", "!player.buff(115307)" },
-
-		{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
-
-		{{
-			{ "Chi Burst" },
-			{ "Chi Wave" },
-		}, "player.timetomax > 3" },
+		{ "Blackout Kick", "player.buff(115307).duration < 3" },
 
 		{ "Chi Explosion", "player.chi >= 3" },
 
-		{ "Blackout Kick", { "player.buff(115307).duration <= 6", "player.spell(Keg Smash).cooldown > 0" }},
-		{ "Blackout Kick", "!player.buff(115307)" },
-		{ "Blackout Kick", "player.buff(Serenity)" },
-		{ "Blackout Kick",  "player.chi >= 4" },
+		{ "Tiger Palm", "!player.buff(Tiger Power)" },
 
-		{ "Expel Harm", { "player.health < 100", "player.chidiff >= 1", "player.spell(Keg Smash).cooldown > 0" }},
+		{ "Touch of Death", "player.buff(Death Note)" },
 
+		{ "Chi Burst" },
+		{ "Chi Wave" },
+
+		{ aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
+
+		{ "Expel Harm", "player.health < 100 "},
+
+		{ "Blackout Kick", "player.chidiff = 0" },
+
+		--TODO: Revisit to see if this causes the rotation to get 'stuck' not taking any action?
+		-- Use Jab when we are not chi-capped and Keg Smash and Expel Harm are on CD
 		{ "Jab", {
 			"player.chidiff >= 1",
 			--"player.spell(Keg Smash).cooldown > 0",
-			--"player.spell(Expel Harm).cooldown > 0"
+			--"player.spell(Expel Harm).cooldown > 0",
+			"player.energy > 70",
 		}},
 
-		{ "Tiger Palm", "@NOC.KSEnergy >= 40" },
-		{ "Tiger Palm", "player.spell(Keg Smash).cooldown > 0" },
+		{ "Tiger Palm" },
 	}, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
 	{ "Tiger's Lust", { "target.range >= 15", "player.moving", "player.movingifor > 1" }},
 }
 
-ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0|r", combat, ooc, onLoad)
+ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0 (simple)|r", combat, ooc, onLoad)
