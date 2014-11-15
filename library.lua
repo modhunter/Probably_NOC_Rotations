@@ -479,6 +479,11 @@ function NOC.isDummy(Unit)
         46647, --Training Dummy - Lvl 85
         60197, --Scarlet Monastery Dummy
         67127, --Training Dummy - Lvl 90
+        87761, --Dungeoneer's Training Dummy <Damage>
+        88314, --Dungeoneer's Training Dummy <Tanking>
+        88316, --Training Dummy <Healing>
+        89078, --Training Dummy (Garrison)
+        87318 --Dungeoneer's Training Dummy <Damage>        
     }
     for i=1, #dummies do
         if UnitExists(Unit) and UnitGUID(Unit) then
@@ -508,6 +513,14 @@ function NOC.KSEnergy()
   local MyNRGregen = select(2, GetPowerRegen("player"))
   local NRGforKS = MyNRG + (MyNRGregen * GetSpellCD(121253))
   return NRGforKS
+end
+
+function NOC.isAttackingPlayer()
+  if ( UnitIsUnit("targettarget", "player") ) then
+    return true
+  else
+    return false
+  end
 end
 
 ProbablyEngine.library.register("NOC", NOC)

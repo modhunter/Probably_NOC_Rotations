@@ -211,7 +211,7 @@ local combat = {
 		{ "Tiger Palm" },
 	}, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
-	{ "Tiger's Lust", { "target.range >= 15", "player.moving", "player.movingifor > 1" }},
+	{ "Tiger's Lust", { "target.range >= 15", "player.moving", "player.movingfor > 1" }},
 }
 
 ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0 (simple)|r", combat, ooc, onLoad)

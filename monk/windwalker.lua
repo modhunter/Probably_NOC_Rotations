@@ -235,22 +235,15 @@ local combat = {
 
   }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
-
-  -- Ranged
-  {{
     -- Tiger's Lust if the target is at least 15 yards away and we are moving for at least 1 second
-    { "Tiger's Lust", { "target.range >= 15", "player.movingifor > 1", "target.alive" }},
-
-    { "Zen Sphere", "!target.debuff(Zen Sphere)" },
-    { "Chi Wave" },
-    { "Chi Burst" },
+    { "Tiger's Lust", { "target.range >= 15", "player.movingfor > 1", "target.alive" }},
 
     -- Crackling Jade Lightning
     --{"/stopcasting", { "target.range < 5" }},
-    { "Crackling Jade Lightning", { "target.range > 5", "target.range <= 40", "!player.moving" }},
+    { "Crackling Jade Lightning", { "target.range > 5", "target.range <= 40", "!player.moving", "@NOC.isAttackingPlayer()" }},
 
     { "Expel Harm", "player.chi < 4" }, -- Expel Harm
-  }},
+
 }, "@NOC.immuneEvents('target')" },
 }
 
