@@ -10,8 +10,20 @@ end
 
 local ooc = {
   -- Buffs
-  { "Legacy of the White Tiger", "!player.buffs.stats" },
-  { "Legacy of the White Tiger", "!player.buffs.crit" },
+    { "Legacy of the White Tiger", { -- Legacy of the White Tiger
+    "!player.buff(Legacy of the White Tiger).any",
+    "!player.buff(17007).any",
+    "!player.buff(1459).any",
+    "!player.buff(61316).any",
+    "!player.buff(24604).any",
+    "!player.buff(90309).any",
+    "!player.buff(126373).any",
+    "!player.buff(126309).any",
+    "!player.buff(117666).any",
+    "!player.buff(1126).any",
+    "!player.buff(20217).any",
+    "!player.buff(90363).any"
+  }},
   { "Expel Harm", "player.health < 100" },
   { "Expel Harm", "toggle.chistacker" },
 }
@@ -235,14 +247,14 @@ local combat = {
 
   }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
-    -- Tiger's Lust if the target is at least 15 yards away and we are moving for at least 1 second
-    { "Tiger's Lust", { "target.range >= 15", "player.movingfor > 1", "target.alive" }},
+  -- Tiger's Lust if the target is at least 15 yards away and we are moving for at least 1 second
+  { "Tiger's Lust", { "target.range >= 15", "player.movingfor > 1", "target.alive" }},
 
-    -- Crackling Jade Lightning
-    --{"/stopcasting", { "target.range < 5" }},
-    { "Crackling Jade Lightning", { "target.range > 5", "target.range <= 40", "!player.moving", "@NOC.isAttackingPlayer()" }},
+  -- Crackling Jade Lightning
+  --{"/stopcasting", "target.range < 5" },
+  { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "@NOC.isAttackingPlayer()" }},
 
-    { "Expel Harm", "player.chi < 4" }, -- Expel Harm
+  { "Expel Harm", "player.chi < 4" }, -- Expel Harm
 
 }, "@NOC.immuneEvents('target')" },
 }
