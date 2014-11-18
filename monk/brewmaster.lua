@@ -182,11 +182,15 @@ local combat = {
 			--{ "Blackout Kick",  "player.chi >= 4" },
 		}, "player.time < 10"},
 
-		{ "Serenity", { "player.chidiff >= 1", "player.buff(Tiger Power).duration >= 10" }},
+		{ "Serenity", { "player.chidiff >= 1", "player.buff(Tiger Power).duration >= 10", "modifier.cooldowns" }},
 
 		{ "Keg Smash", { "player.chidiff >= 2", "toggle.kegsmash" }},
 
 		{ "Blackout Kick", "player.buff(157558)" },
+
+		{ "Hurricane Strike", {
+			"talent(7,3)",
+			"!player.buff(Energizing Brew)" }},
 
 		{ "Chi Brew", {
 			"player.chidiff >= 2",

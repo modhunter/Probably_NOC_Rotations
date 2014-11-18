@@ -35,14 +35,15 @@ local aoe = {
 
   { "Rising Sun Kick", "player.chidiff = 0" },
 
-  { "Fists of Fury", {
-     "!player.moving",
-     "player.lastmoved > 1",
-     "player.spell(Rushing Jade Wind).exists",
-     "player.timetomax > 4",
-     "player.buff(Tiger Power).duration > 4",
-     "target.debuff(Rising Sun Kick).duration > 4",
-     "toggle.fof" }},
+  {{
+    { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.gylph(159490)" }},
+    { "Fists of Fury", "player.gylph(159490)" },
+  }, {
+    "player.spell(Rushing Jade Wind).exists",
+    "player.timetomax > 4",
+    "player.buff(Tiger Power).duration > 4",
+    "target.debuff(Rising Sun Kick).duration > 4",
+    "toggle.fof" }},
 
   { "Hurricane Strike", {
     "player.spell(Rushing Jade Wind).exists",
@@ -196,20 +197,20 @@ local combat = {
 
     { "Tiger Palm", { "!player.buff(Tiger Power)", "target.debuff(Rising Sun Kick).duration > 1", "player.timetomax > 1" }},
 
-    { "Serenity", { "talent(7,3)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
+    { "Serenity", { "talent(7,3)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
     -- AoE
     { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
     -- Single
+    {{
+      { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.gylph(159490)" }},
+      { "Fists of Fury", "player.gylph(159490)" },
+    }, {
+      "!player.buff(Serenity)",
+      "target.debuff(Rising Sun Kick).duration > 4",
+      "toggle.fof" }},
 
-    -- Fists of Fury
-    { "Fists of Fury", {
-       "!player.moving",
-       "player.lastmoved > 1",
-       "target.debuff(Rising Sun Kick).duration > 4",
-       "!player.buff(Serenity)",
-       "toggle.fof" }},
 
     { "Hurricane Strike", {
       "talent(7,3)",
