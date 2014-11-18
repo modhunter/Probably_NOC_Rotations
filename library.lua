@@ -265,79 +265,6 @@ end
 
 
 
-------------------------------------
--- TODO: Can all of this even handling stuff be removed? It's leagacy support for item usage and not sure if really necessary anymore
-------------------------------------
---[[
-NOC.setFlagged = function (self, ...)
-  NOC.flagged = GetTime()
-end
-
-
-NOC.setUnflagged = function (self, ...)
-  NOC.unflagged = GetTime()
-  if NOC.items[77589] then
-    NOC.items[77589].exp = NOC.unflagged + 60
-  end
-end
-
-NOC.eventHandler = function(self, ...)
-  local subEvent		= select(1, ...)
-  local source		= select(4, ...)
-  local destGUID		= select(7, ...)
-  local spellID		= select(11, ...)
-  local failedType = select(14, ...)
-  if UnitName("player") == source then
-    if subEvent == "SPELL_CAST_SUCCESS" then
-      if spellID == 5512 then -- Healthstone
-        NOC.items[5512] = { lastCast = GetTime() }
-      end
-      if spellID == 124199 then -- Landshark (itemId 77589)
-        NOC.items[77589] = { lastCast = GetTime(), exp = 0 }
-      end
-    end
-  end
-end
-
-ProbablyEngine.listener.register("NOC", "COMBAT_LOG_EVENT_UNFILTERED", NOC.eventHandler)
-ProbablyEngine.listener.register("NOC", "PLAYER_REGEN_DISABLED", NOC.setFlagged)
-ProbablyEngine.listener.register("NOC", "PLAYER_REGEN_DISABLED", NOC.resetLists)
-ProbablyEngine.listener.register("NOC", "PLAYER_REGEN_DISABLED", NOC.setUnflagged)
-ProbablyEngine.listener.register("NOC", "PLAYER_REGEN_ENABLED", NOC.resetLists)
-------------------------------------
-
-
-
--- TODO: Deprecated, should remove
-function NOC.spellCooldown(spell)
-  local spellName = GetSpellInfo(spell)
-  if spellName then
-    local spellCDstart,spellCDduration,_ = GetSpellCooldown(spellName)
-    if spellCDduration == 0 then
-      return 0
-    elseif spellCDduration > 0 then
-      local spellCD = spellCDstart + spellCDduration - GetTime()
-      return spellCD
-    end
-  end
-  return 0
-end
-
-
--- TODO: Deprecated, should remove
-function NOC.fillBlackout()
-  local energy = UnitPower("player")
-  local regen = select(2, GetPowerRegen("player"))
-  local start, duration, enabled = GetSpellCooldown(107428)
-  if not start then return false end
-  if start ~= 0 then
-    local remains = start + duration - GetTime()
-    return (energy + regen * remains) >= 40
-  end
-  return 0
-end
-]]
-
 -- TODO: clean-up this function and update for WoD wher enecessary
 function NOC.immuneEvents(unit)
   if NOC.isDummy(unit) then return true end
@@ -390,10 +317,34 @@ function NOC.hasDebuffTable(target, spells)
 end
 
 
--- Props to MrTheSoulz for this code: Check Mouseover and target are not equal
-function NOC.mouseNotEqualTarget()
-   if (UnitGUID('target')) ~= (UnitGUID('mouseover')) then return true end
- return false
+-- Props to CML for this function
+-- if getCreatureType(Unit) == true then
+function getCreatureType(Unit)
+   local CreatureTypeList = {"Critter", "Totem", "Non-combat Pet", "Wild Pet"}
+   for i=1, #CreatureTypeList do
+      if UnitCreatureType(Unit) == CreatureTypeList[i]
+      then
+        return false
+      end
+   end
+   if UnitIsBattlePet(Unit) and UnitIsWildBattlePet(Unit)
+   then
+     return false
+   else
+     return true
+   end
+end
+
+-- Various checks to ensure that we can SEF the mouseover unit
+function NOC.canSEF()
+  if (UnitGUID('target')) ~= (UnitGUID('mouseover'))
+    and UnitCanAttack("player", "mouseover")
+    and not UnitIsDeadOrGhost("mouseover")
+    and getCreatureType("mouseover")
+  then
+    return true
+  end
+  return false
 end
 
 function NOC.StaggerValue ()
@@ -444,18 +395,18 @@ end
 -- return true when the rotation should be paused
 function NOC.pause()
 	if (IsMounted() and ((getUnitID("target") ~= 56877) or (UnitBuffID("player",164222) == nil) or (UnitBuffID("player",165803) == nil)))
-		or SpellIsTargeting()
-      or UnitInVehicle("Player")
-		or (not UnitCanAttack("player", "target") and not UnitIsPlayer("target") and UnitExists("target"))
-		or UnitCastingInfo("player")
-		or UnitChannelInfo("player")
-		or UnitIsDeadOrGhost("player")
-		or (UnitIsDeadOrGhost("target") and not UnitIsPlayer("target"))
-		or UnitBuff("player",80169) -- Eating
-		or UnitBuff("player",87959) -- Drinking
-		or UnitBuff("target",104934) --Eating
-      or UnitBuffID("player",11392) ~= nil
-      or UnitBuffID("player",9265) ~= nil then -- Deep Sleep(SM)
+    or SpellIsTargeting()
+    or UnitInVehicle("Player")
+    or (not UnitCanAttack("player", "target") and not UnitIsPlayer("target") and UnitExists("target"))
+    or UnitCastingInfo("player")
+    or UnitChannelInfo("player")
+    or UnitIsDeadOrGhost("player")
+    or (UnitIsDeadOrGhost("target") and not UnitIsPlayer("target"))
+    or UnitBuff("player",80169) -- Eating
+    or UnitBuff("player",87959) -- Drinking
+    or UnitBuff("target",104934) --Eating
+    or UnitBuffID("player",11392)
+    or UnitBuffID("player",9265) -- Deep Sleep(SM)
 	then
 		return true;
 	else
@@ -486,7 +437,7 @@ function NOC.isDummy(Unit)
         88314, --Dungeoneer's Training Dummy <Tanking>
         88316, --Training Dummy <Healing>
         89078, --Training Dummy (Garrison)
-        87318 --Dungeoneer's Training Dummy <Damage>        
+        87318 --Dungeoneer's Training Dummy <Damage>
     }
     for i=1, #dummies do
         if UnitExists(Unit) and UnitGUID(Unit) then

@@ -111,7 +111,6 @@ NOC Rotations
 ### Issues/Todo
 ====================
 - Cancel CJL when target <= 5 yards (not working?)
-- Mark truly 'tagged' enemies as a flag in the enemies table such that we can ignore a target that is not 'tagged' - look at API UnitIsTappedByPlayer()
 
 
 ## Brewmaster Monk (6.x)

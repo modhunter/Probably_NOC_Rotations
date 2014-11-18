@@ -31,7 +31,7 @@ local ooc = {
 local aoe = {
   { "Chi Explosion", "player.chi >= 4" },
 
-  { "Rushing Jade Wind" }, -- Rushing Jade Wind
+  { "Rushing Jade Wind" },
 
   { "Rising Sun Kick", "player.chidiff = 0" },
 
@@ -82,16 +82,16 @@ local combat = {
   { "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" } },
 
   -- Keyboard modifiers
-  { "Leg Sweep", "modifier.lcontrol" },              -- Leg Sweep
-  { "Touch of Karma", "modifier.lalt" },              -- Touch of Karma
+  { "Leg Sweep", "modifier.lcontrol" },
+  { "Touch of Karma", "modifier.lalt" },
 
-
+  -- Buffs
   { "Legacy of the White Tiger", "!player.buffs.stats" },
   { "Legacy of the White Tiger", "!player.buffs.crit" },
 
-  -- SEF on mouseover
+  -- SEF on mouseover when enabled
   {{
-    { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.mouseNotEqualTarget()" }, "mouseover" },
+    { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },
     { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }}
   }, "toggle.autosef" },
 
@@ -124,7 +124,7 @@ local combat = {
        "!modifier.last(Spear Hand Strike)"
     }},
     { "Spear Hand Strike" }, -- Spear Hand Strike
-  }, "target.interruptAt(30)" }, -- Interrupt when 30% into the cast time
+  }, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
 
   -- Queued Spells
   { "!122470", "@NOC.checkQueue(122470)" }, -- Touch of Karma
@@ -134,130 +134,132 @@ local combat = {
   { "!Tiger's Lust", "@NOC.checkQueue(Tiger's Lust)" }, -- Tiger's Lust
   { "!Dampen Harm", "@NOC.checkQueue(Dampen Harm)" }, -- Dampen Harm
   { "!Diffuse Magic", "@NOC.checkQueue(Diffuse Magic)" }, -- Diffuse Magic
-  --{ "!115460", "@NOC.checkQueue(115460)", "ground" }, -- Healing Sphere
 
-{{
-  -- Survival
-  { "Expel Harm", { "player.health <= 80", "player.chidiff >= 2" }},
-  --{ "Surging Mist", { "player.health <= 70", "!player.moving" }},
-  { "Chi Wave", "player.health <= 75" },
+  -- Self-Healing & Defensives
+  { "Expel Harm", { "player.health <= 80", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
+  { "Surging Mist", { "player.health <= 70", "!player.moving" }, "player" }, -- 30 energy, 0 chi
 
-  { "Fortifying Brew", { -- Forifying Brew at < 30% health and when DM & DH buff is not up
+  -- Forifying Brew at < 30% health and when DM & DH buff is not up
+  { "Fortifying Brew", {
     "player.health < 30",
-    "!player.buff(Diffuse Magic)", --DM
-    "!player.buff(Dampen Harm)" --DH
+    "!player.buff(Diffuse Magic)",
+    "!player.buff(Dampen Harm)"
   }},
-  { "#5512", "player.health < 40" }, -- Healthstone
 
-  { "Detox", "player.dispellable(Detox)", "player" }, -- Detox yourself if you can be dispelled
+  { "#5512", "player.health < 40" }, -- Healthstone
+  --TODO: Add support for healing potions
+
+  { "Detox", "player.dispellable(Detox)", "player" },
   { "Nimble Brew", "@NOC.noControl()" },
   { "Tiger's Lust", "@NOC.noControl()" },
-
-  -- Shared
   { "Chi Sphere", { "player.spell(Power Strikes).exists", "player.buff(Chi Sphere)", "player.chi < 4" }},
-  {{
-     -- Cooldowns/Racials
-     { "Lifeblood" },
-     { "Berserking" },
-     { "Blood Fury" },
-     { "Bear Hug" },
-     { "Invoke Xuen, the White Tiger" },
-  }, "modifier.cooldowns" },
 
-  -- Melee range only
+  -- wrapper for "@NOC.immuneEvents" which prevents the following from occuring when the target is CCed or otherwise not allowed to be attacked
   {{
-    { "Touch of Death", "player.buff(Death Note)" },
+    -- TODO: remove chi wave cast when < % health and simply use the one in the rotation below?
+    --{ "Chi Wave", {"player.health <= 75", "!player.buff(Serenity)" }}, -- 40 yard range 0 energy, 0 chi
 
     {{
-      { "Chi Brew", { "!modifier.last(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
-      { "Chi Brew", "target.ttd < 10" },
-      { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.last(Chi Brew)" }},
-    }, {"player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16" }},
+       -- Cooldowns/Racials
+       { "Lifeblood" },
+       { "Berserking" },
+       { "Blood Fury" },
+       { "Bear Hug" },
+       { "Invoke Xuen, the White Tiger" },
+       { "#trinket1" },
+       { "#trinket2" },
+    }, "modifier.cooldowns" },
 
-    -- Tiger Palm
-    { "Tiger Palm", "player.buff(Tiger Power).duration <= 3" },
-    -- Tigereye Brew
+    -- Melee range only
     {{
-      { "116740", "player.buff(125195).count = 20" },
-      { "116740", { "player.buff(125195).count >= 10", "player.buff(Serenity).duration > 0" }},
+      { "Touch of Death", "player.buff(Death Note)" },
+
       {{
+        { "Chi Brew", { "!modifier.last(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
+        { "Chi Brew", "target.ttd < 10" },
+        { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.last(Chi Brew)" }},
+      }, {"player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16" }},
+
+      { "Tiger Palm", "player.buff(Tiger Power).duration <= 3" },
+
+      -- Tigereye Brew
+      {{
+        { "116740", "player.buff(125195).count = 20" },
+        { "116740", { "player.buff(125195).count >= 10", "player.buff(Serenity).duration > 0" }},
         {{
-          { "116740", "player.spell(Fists of Fury).cooldown = 0" },
-          { "116740", { "player.spell(Hurricane Strike).cooldown > 0", "talent(7,1)" }},
-        },{ "player.chi >= 3", "player.buff(125195).count >= 10" }},
-        {{
-          { "116740", { "player.buff(125195).count >= 16" }},
-          { "116740", { "target.ttd < 40" }},
-        },{ "player.chi >= 2" }},
-      },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
-    },{ "!player.buff(116740)", "!modifier.last(116740)" }},
+          {{
+            { "116740", "player.spell(Fists of Fury).cooldown = 0" },
+            { "116740", { "player.spell(Hurricane Strike).cooldown > 0", "talent(7,1)" }},
+          },{ "player.chi >= 3", "player.buff(125195).count >= 10" }},
+          {{
+            { "116740", { "player.buff(125195).count >= 16" }},
+            { "116740", { "target.ttd < 40" }},
+          },{ "player.chi >= 2" }},
+        },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
+      },{ "!player.buff(116740)", "!modifier.last(116740)" }},
 
-    { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
-    { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
+      { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
+      { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
 
-    { "Tiger Palm", { "!player.buff(Tiger Power)", "target.debuff(Rising Sun Kick).duration > 1", "player.timetomax > 1" }},
+      { "Tiger Palm", { "!player.buff(Tiger Power)", "target.debuff(Rising Sun Kick).duration > 1", "player.timetomax > 1" }},
 
-    { "Serenity", { "talent(7,3)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
+      { "Serenity", { "talent(7,3)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
-    -- AoE
-    { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
+      -- AoE
+      { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
-    -- Single
-    {{
-      { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.gylph(159490)" }},
-      { "Fists of Fury", "player.gylph(159490)" },
-    }, {
-      "!player.buff(Serenity)",
-      "target.debuff(Rising Sun Kick).duration > 4",
-      "toggle.fof" }},
+      -- Single
+      {{
+        { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.gylph(159490)" }},
+        { "Fists of Fury", "player.gylph(159490)" },
+      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 4", "toggle.fof" }},
 
 
-    { "Hurricane Strike", {
-      "talent(7,3)",
-      "player.timetomax > 2",
-      "target.debuff(Rising Sun Kick).duration > 2",
-      "!player.buff(Energizing Brew)" }},
+      { "Hurricane Strike", {
+        "talent(7,3)",
+        "player.timetomax > 2",
+        "target.debuff(Rising Sun Kick).duration > 2",
+        "!player.buff(Energizing Brew)" }},
 
-    {{
-      { "Energizing Brew", "!talent(7,3)" },
-      { "Energizing Brew", { "!player.buff(Serenity)", "player.spell(Serenity).cooldown > 4" }},
-    },{ "player.spell(Fists of Fury).cooldown > 6", "player.timetomax > 5" }},
+      {{
+        { "Energizing Brew", "!talent(7,3)" },
+        { "Energizing Brew", { "!player.buff(Serenity)", "player.spell(Serenity).cooldown > 4" }},
+      },{ "player.spell(Fists of Fury).cooldown > 6", "player.timetomax > 5" }},
 
-    { "Rising Sun Kick", "!talent(7,2)" },
+      { "Rising Sun Kick", "!talent(7,2)" },
 
-    {{
-      { "Chi Wave" },
-      { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
-      { "Chi Burst", { "!player.moving", "talent(2,3)" }},
-    }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
+      {{
+        { "Chi Wave" },
+        { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
+        { "Chi Burst", { "!player.moving", "talent(2,3)" }},
+      }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
-    {{
-      { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
-      { "Blackout Kick", "player.buff(Serenity)" },
-    }, "!talent(7,2)" },
+      {{
+        { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
+        { "Blackout Kick", "player.buff(Serenity)" },
+      }, "!talent(7,2)" },
 
-    { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.buff(Combo Breaker: Chi Explosion)" }},
+      { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.buff(Combo Breaker: Chi Explosion)" }},
 
-    { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
+      { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
 
-    { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2" }},
+      { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2" }},
 
-    { "Chi Explosion", { "talent(7,2)", "player.chi >= 3" }},
+      { "Chi Explosion", { "talent(7,2)", "player.chi >= 3" }},
 
-    { "Jab", "player.chidiff >= 2" },
+      { "Jab", "player.chidiff >= 2" },
 
-  }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
+    }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
-  -- Tiger's Lust if the target is at least 15 yards away and we are moving for at least 1 second
-  { "Tiger's Lust", { "target.range >= 15", "player.movingfor > 1", "target.alive" }},
+    -- Tiger's Lust if the target is at least 15 yards away and we are moving for at least 1 second
+    { "Tiger's Lust", { "target.range >= 15", "player.movingfor > 1", "target.alive" }},
 
-  -- Crackling Jade Lightning
-  --{"/stopcasting", "target.range < 5" },
-  { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "@NOC.isAttackingPlayer()" }},
+    -- Crackling Jade Lightning
+    -- TODO: figure out a way to stop casting this when the target gets too close
+    {"/run SpellStopCasting()", { "target.range < 5", "player.casting(Crackling Jade Lightning)" }},
+    { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "@NOC.isAttackingPlayer()" }},
 
-  { "Expel Harm", "player.chi < 4" }, -- Expel Harm
-
-}, "@NOC.immuneEvents('target')" },
+  }, "@NOC.immuneEvents('target')" },
 }
 
 ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|r", combat, ooc, onLoad)

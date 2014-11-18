@@ -115,6 +115,7 @@ local combat = {
 	{ "Zen Sphere", { "player.buff(124081)", "!focus.buff(124081)" }, "focus" }, -- Zen Sphere on focus if buff is already on player and we are above 90% health
 	{ "Zen Sphere", { "!player.buff(124081)" }, "player" }, -- Zen Sphere on player
 	{ "#5512", "player.health < 40"}, --Healthstone when less than 40% health
+	--TODO: Add support for healing potions
 
 	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
 	{ "Purifying Brew", "@NOC.DrinkStagger" },
@@ -155,6 +156,8 @@ local combat = {
 			{ "Blood Fury" },
 			{ "Bear Hug" },
 			{ "Invoke Xuen, the White Tiger", "player.time > 5" },
+			{ "#trinket1" },
+			{ "#trinket2" },
 	}, "modifier.cooldowns" },
 
 	-- Main Rotation
@@ -215,7 +218,6 @@ local combat = {
 
 		{ "Blackout Kick", "player.chidiff = 0" },
 
-		--TODO: Revisit to see if this causes the rotation to get 'stuck' not taking any action?
 		-- Use Jab when we are not chi-capped and Keg Smash and Expel Harm are on CD
 		{ "Jab", {
 			"player.chidiff >= 1",
@@ -230,4 +232,4 @@ local combat = {
 	{ "Tiger's Lust", { "target.range >= 15", "player.moving", "player.movingfor > 1" }},
 }
 
-ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0 (simple)|r", combat, ooc, onLoad)
+ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0|r", combat, ooc, onLoad)
