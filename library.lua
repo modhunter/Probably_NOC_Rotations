@@ -405,8 +405,8 @@ function NOC.pause()
     or UnitBuff("player",80169) -- Eating
     or UnitBuff("player",87959) -- Drinking
     or UnitBuff("target",104934) --Eating
-    or UnitBuffID("player",11392)
-    or UnitBuffID("player",9265) -- Deep Sleep(SM)
+    or UnitBuff("player",11392)
+    or UnitBuff("player",9265) -- Deep Sleep(SM)
 	then
 		return true;
 	else
