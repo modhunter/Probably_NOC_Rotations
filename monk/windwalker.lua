@@ -37,8 +37,8 @@ local aoe = {
   { "Rising Sun Kick", "player.chidiff = 0" },
 
   {{
-    { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.gylph(159490)" }},
-    { "Fists of Fury", "player.gylph(159490)" },
+    { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(159490)" }},
+    { "Fists of Fury", "player.glyph(159490)" },
   }, {
     "player.spell(Rushing Jade Wind).exists",
     "player.timetomax > 4",
@@ -156,7 +156,6 @@ local combat = {
   { "Detox", "player.dispellable(Detox)", "player" },
   { "Nimble Brew", "@NOC.noControl()" },
   { "Tiger's Lust", "@NOC.noControl()" },
-  { "Chi Sphere", { "player.spell(Power Strikes).exists", "player.buff(Chi Sphere)", "player.chi < 4" }},
 
   -- wrapper for "@NOC.immuneEvents" which prevents the following from occuring when the target is CCed or otherwise not allowed to be attacked
   {{
@@ -214,8 +213,8 @@ local combat = {
 
       -- Single
       {{
-        { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.gylph(159490)" }},
-        { "Fists of Fury", "player.gylph(159490)" },
+        { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(159490)" }},
+        { "Fists of Fury", "player.glyph(159490)" },
       }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 4", "toggle.fof" }},
 
 
