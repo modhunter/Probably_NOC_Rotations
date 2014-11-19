@@ -8,10 +8,7 @@ local onLoad = function()
 	ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
 end
 
-local ooc = {
-	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
-	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
-	{ "Expel Harm", "player.health < 100" }, -- Expel Harm when not at full health
+local buffs = {
 	{ "Legacy of the White Tiger", { -- Legacy of the White Tiger
 	"!player.buff(Legacy of the White Tiger).any",
 	"!player.buff(17007).any",
@@ -25,7 +22,14 @@ local ooc = {
 	"!player.buff(1126).any",
 	"!player.buff(20217).any",
 	"!player.buff(90363).any"
-}},
+	}},
+}
+
+local ooc = {
+	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
+	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
+	{ "Expel Harm", "player.health < 100" }, -- Expel Harm when not at full health
+	{ buffs, },
 }
 
 local aoe = {
@@ -62,8 +66,7 @@ local combat = {
 	{ "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" } },
 
 	-- Buffs
-	{ "Legacy of the White Tiger", "!player.buffs.stats" },
-	{ "Legacy of the White Tiger", "!player.buffs.crit" },
+	{ buffs, },
 
 	-- Queued Spells
 	-- TODO: Remediate this

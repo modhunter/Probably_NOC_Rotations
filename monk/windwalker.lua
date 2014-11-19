@@ -8,22 +8,27 @@ local onLoad = function()
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
 end
 
+local buffs = {
+  { "Legacy of the White Tiger", { -- Legacy of the White Tiger
+  "!player.buff(Legacy of the White Tiger).any",
+  "!player.buff(17007).any",
+  "!player.buff(1459).any",
+  "!player.buff(61316).any",
+  "!player.buff(24604).any",
+  "!player.buff(90309).any",
+  "!player.buff(126373).any",
+  "!player.buff(126309).any",
+  "!player.buff(117666).any",
+  "!player.buff(1126).any",
+  "!player.buff(20217).any",
+  "!player.buff(90363).any"
+  }},
+}
+
 local ooc = {
   -- Buffs
-    { "Legacy of the White Tiger", { -- Legacy of the White Tiger
-    "!player.buff(Legacy of the White Tiger).any",
-    "!player.buff(17007).any",
-    "!player.buff(1459).any",
-    "!player.buff(61316).any",
-    "!player.buff(24604).any",
-    "!player.buff(90309).any",
-    "!player.buff(126373).any",
-    "!player.buff(126309).any",
-    "!player.buff(117666).any",
-    "!player.buff(1126).any",
-    "!player.buff(20217).any",
-    "!player.buff(90363).any"
-  }},
+  { buffs, },
+
   { "Expel Harm", "player.health < 100" },
   { "Expel Harm", "toggle.chistacker" },
 }
@@ -90,8 +95,7 @@ local combat = {
   { "Touch of Karma", "modifier.lalt" },
 
   -- Buffs
-  { "Legacy of the White Tiger", "!player.buffs.stats" },
-  { "Legacy of the White Tiger", "!player.buffs.crit" },
+  { buffs, },
 
   -- SEF on mouseover when enabled
   {{
