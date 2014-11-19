@@ -31,7 +31,8 @@ local ooc = {
 local aoe = {
   { "Chi Explosion", "player.chi >= 4" },
 
-  { "Rushing Jade Wind" },
+  -- Only use this is we have the RJW talent and do not have chex talent
+  { "Rushing Jade Wind", { "talent(6,1)", "!talent(7,2)" }},
 
   { "Rising Sun Kick", "player.chidiff = 0" },
 
@@ -58,6 +59,7 @@ local aoe = {
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
   }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
+  -- Only do this if we have RJW talent and not chex talent
   {{
     { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
     { "Blackout Kick", "player.buff(Serenity).duration > 0" },
@@ -65,9 +67,11 @@ local aoe = {
 
   { "Tiger Palm", { "player.spell(Rushing Jade Wind).exists", "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
 
+  -- Only do this if we have RJW talent and not chex talent
   { "Blackout Kick", { "talent(6,1)", "!talent(7,2)", "player.chidiff < 2" }},
 
-  { "Spinning Crane Kick", "!player.spell(Rushing Jade Wind).exists" },
+  -- Only do this if we do not have RJW talent and not chex talent
+  { "Spinning Crane Kick", { "!talent(6,1)", "!talent(7,2)" }},
 
   { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 2" }},
 }
@@ -137,7 +141,7 @@ local combat = {
 
   -- Self-Healing & Defensives
   { "Expel Harm", { "player.health <= 80", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
-  { "Surging Mist", { "player.health <= 70", "!player.moving" }, "player" }, -- 30 energy, 0 chi
+  { "Surging Mist", { "player.health <= 25", "!player.moving", "player.lastmoved > 1" }, "player" }, -- 30 energy, 0 chi
 
   -- Forifying Brew at < 30% health and when DM & DH buff is not up
   { "Fortifying Brew", {
