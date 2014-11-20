@@ -263,7 +263,7 @@ local combat = {
 
     -- Crackling Jade Lightning
     -- TODO: figure out a way to stop casting this when the target gets too close
-    {"/stopcasting\n/stopcasting", { "target.range <= 8", "player.casting(Crackling Jade Lightning)" }},
+    {"/stopcasting", { "target.range <= 5", "player.casting(Crackling Jade Lightning)" }},
     { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "target.combat" }},
 
   }, "@NOC.immuneEvents('target')" },
