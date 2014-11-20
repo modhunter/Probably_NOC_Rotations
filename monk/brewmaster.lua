@@ -179,7 +179,6 @@ local combat = {
 		-- During the first 10 seconds of combat, consider these items as a priority
 		{{
 			{ "Keg Smash", { "!player.buff(157558)", "toggle.kegsmash" }},
-			{ "Serenity" },
 			{ "Tiger Palm", "!player.buff(Tiger Power)" },
 			{ "Blackout Kick", "!player.buff(115307)" },
 			{ "Blackout Kick", "player.buff(115307).duration < 3" },
@@ -202,7 +201,7 @@ local combat = {
 		}},
 
 		{ "Blackout Kick", "!player.buff(115307)" },
-		{ "Blackout Kick", "player.buff(115307).duration < 3" },
+		{ "Blackout Kick", "player.buff(115307).duration < 6" },
 
 		{ "Chi Explosion", "player.chi >= 3" },
 
