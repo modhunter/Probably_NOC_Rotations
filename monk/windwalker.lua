@@ -254,10 +254,7 @@ local combat = {
 
       { "Chi Explosion", { "talent(7,2)", "player.chi >= 3" }},
 
-      {{
-        { "Jab", "player.chidiff >= 2" },
-        { "Jab", "player.chi = 0" },
-      }, "player.energy >= 45"},
+      { "Jab", { "player.chidiff >= 2", "player.energy >= 45" }},
 
     }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
