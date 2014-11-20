@@ -12,7 +12,7 @@ local ooc = {
   -- Out of combat
   { "pause", "modifier.lshift" },
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
-  { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
+  { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)", "!talent(7,3)" }}, -- Mend Pet
   {{
     { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
     { "/cancelaura Aspect of the Cheetah", "!player.moving" },
@@ -53,9 +53,11 @@ local combat = {
   { "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" } },
 
   -- Pet
-  { "883", { "!pet.dead", "!pet.exists" }}, -- Call Pet 1
-  { "55709", "pet.dead" }, -- Heart of the Phoenix (55709)
-  { "982", "pet.dead" }, -- Revive Pet
+  {{
+    { "883", { "!pet.dead", "!pet.exists" }}, -- Call Pet 1
+    { "55709", "pet.dead" }, -- Heart of the Phoenix (55709)
+    { "982", "pet.dead" }, -- Revive Pet
+  }, "!talent(7,3)" },
 
   { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
   { "82948", "modifier.lalt", "ground" }, -- Snake Trap
@@ -76,18 +78,20 @@ local combat = {
 
   -- This is still broken if the potion is on cooldown
   { "#76097", "player.health < 40" }, -- Master Healing Potion
-  { "136", { "pet.health <= 75", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
+  { "136", { "pet.health <= 75", "pet.exists", "!pet.dead", "!pet.buff(136)", "!talent(7,3)" }}, -- Mend Pet
 
   -- Misdirect to focus target or pet when threat is above a certain threshhold
   {{
    { "34477", { "focus.exists", "!player.buff(35079)", "target.threat > 60" }, "focus" },
-   { "34477", { "pet.exists", "!pet.dead", "!player.buff(35079)", "!focus.exists", "target.threat > 85" }, "pet" },
+   { "34477", { "pet.exists", "!pet.dead", "!player.buff(35079)", "!focus.exists", "target.threat > 85", "!talent(7,3)" }, "pet" },
   }, "toggle.md", },
 
   -- Master's Call when stuck
-  { "53271", "player.state.stun" },
-  { "53271", "player.state.root" },
-  { "53271", "player.state.snare" },
+  {{
+    { "53271", "player.state.stun" },
+    { "53271", "player.state.root" },
+    { "53271", "player.state.snare" },
+  }, "!talent(7,3)" },
 
   -- Cooldowns
   {{
