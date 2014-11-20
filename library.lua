@@ -399,14 +399,14 @@ function NOC.pause()
     or SpellIsTargeting()
     or UnitInVehicle("Player")
     or (not UnitCanAttack("player", "target") and not UnitIsPlayer("target") and UnitExists("target"))
-    or UnitCastingInfo("player")
-    or UnitChannelInfo("player")
+    --or UnitCastingInfo("player")
+    --or UnitChannelInfo("player")
     or UnitIsDeadOrGhost("player")
     or (UnitIsDeadOrGhost("target") and not UnitIsPlayer("target"))
     or UnitBuff("player",80169) -- Eating
     or UnitBuff("player",87959) -- Drinking
-    or UnitBuff("target",104934) --Eating
-    or UnitBuff("player",11392)
+    or UnitBuff("target",104934) -- Eating
+    or UnitBuff("player",11392) -- Invisibility
     or UnitBuff("player",9265) -- Deep Sleep(SM)
 	then
 		return true;
