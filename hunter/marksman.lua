@@ -28,6 +28,7 @@ local aoe = {
 
 local combat = {
   { "pause", "modifier.lshift" },
+  { "pause", "@NOC.pause()"},
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
 
   -- AutoTarget
@@ -71,53 +72,56 @@ local combat = {
     { "53271", "player.state.snare" },
   }, "!talent(7,3)" },
 
-  -- Cooldowns
+  -- Wrap the entire block in an 'immuneEvents' check
   {{
-    { "Stampede", "player.buff(Rapid Fire)" },
-    { "Lifeblood" },
-    { "Berserking" },
-    { "Blood Fury" },
-    { "Bear Hug" },
-    -- { "53401" }, -- Rabid
-  }, "modifier.cooldowns" },
+    -- Cooldowns
+    {{
+      { "Stampede", "player.buff(Rapid Fire)" },
+      { "Lifeblood" },
+      { "Berserking" },
+      { "Blood Fury" },
+      { "Bear Hug" },
+      -- { "53401" }, -- Rabid
+    }, "modifier.cooldowns" },
 
-  { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" },
+    { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" },
 
-  -- Shared
-  --actions+=/kill_shot,if=cast_regen+action.aimed_shot.cast_regen<focus.deficit
-  { "Kill Shot", "player.timetomax > 3" },
+    -- Shared
+    --actions+=/kill_shot,if=cast_regen+action.aimed_shot.cast_regen<focus.deficit
+    { "Kill Shot", "player.timetomax > 3" },
 
-  { "Chimaera Shot" },
-  { "Rapid Fire" },
+    { "Chimaera Shot" },
+    { "Rapid Fire" },
 
-  -- Careful Aim
-  {{
-    -- AoE
-    { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
-    -- ST
-    { "Aimed Shot" },
-    { "Focusing Shot", "player.timetomax > 4" },
+    -- Careful Aim
+    {{
+      -- AoE
+      { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
+      -- ST
+      { "Aimed Shot" },
+      { "Focusing Shot", "player.timetomax > 4" },
+      { "Steady Shot" },
+    }, { "player.buff(Careful Aim)" },},
+
+    { "A Murder of Crows" },
+    { "Dire Beast", "player.timetomax > 3" },
+    { "Glaive Toss" },
+    { "Powershot", "player.timetomax > 2.5" },
+    { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
+
+    -- TODO: Need to figure out how to implement this:
+    --# Pool max focus for rapid fire so we can spam AimedShot with Careful Aim buff
+    --actions+=/steady_shot,if=focus.deficit*cast_time%(14+cast_regen)>cooldown.rapid_fire.remains
+    --actions+=/focusing_shot,if=focus.deficit*cast_time%(50+cast_regen)>cooldown.rapid_fire.remains&focus<100
+    { "Steady Shot", "player.timetomax > player.spell(Rapid Fire).cooldown" },
+    { "Focusing Shot", { "player.focus < 50" }},
+    { "Steady Shot", { "player.buff(Steady Focus)", "player.timetomax > 5" }},
+    { "Aimed Shot", "player.spell(Focusing Shot).exists" },
+    { "Aimed Shot", "player.focus > 80" },
+    { "Aimed Shot", { "player.buff(34720)", "player.focus > 60" }},
+    { "Focusing Shot", "player.focus < 50" },
     { "Steady Shot" },
-  }, { "player.buff(Careful Aim)" },},
-
-  { "A Murder of Crows" },
-  { "Dire Beast", "player.timetomax > 3" },
-  { "Glaive Toss" },
-  { "Powershot", "player.timetomax > 2.5" },
-  { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
-
-  -- TODO: Need to figure out how to implement this:
-  --# Pool max focus for rapid fire so we can spam AimedShot with Careful Aim buff
-  --actions+=/steady_shot,if=focus.deficit*cast_time%(14+cast_regen)>cooldown.rapid_fire.remains
-  --actions+=/focusing_shot,if=focus.deficit*cast_time%(50+cast_regen)>cooldown.rapid_fire.remains&focus<100
-  { "Steady Shot", "player.timetomax > player.spell(Rapid Fire).cooldown" },
-  { "Focusing Shot", { "player.focus < 50" }},
-  { "Steady Shot", { "player.buff(Steady Focus)", "player.timetomax > 5" }},
-  { "Aimed Shot", "player.spell(Focusing Shot).exists" },
-  { "Aimed Shot", "player.focus > 80" },
-  { "Aimed Shot", { "player.buff(34720)", "player.focus > 60" }},
-  { "Focusing Shot", "player.focus < 50" },
-  { "Steady Shot" },
+  }, "@NOC.immuneEvents('target')" },
 }
 
 ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter 6.0", combat, ooc, onLoad)

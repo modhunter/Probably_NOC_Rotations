@@ -46,6 +46,7 @@ local aoe = {
 local combat = {
   -- Combat
   { "pause", "modifier.lshift" },
+  { "pause", "@NOC.pause()"},
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
 
   -- AutoTarget
@@ -93,37 +94,40 @@ local combat = {
     { "53271", "player.state.snare" },
   }, "!talent(7,3)" },
 
-  -- Cooldowns
+  -- Wrap the entire block in an 'immuneEvents' check
   {{
-    { "Stampede" },
-    { "Lifeblood" },
-    { "Berserking" },
-    { "Blood Fury" },
-    { "Bear Hug" },
-    -- { "53401" }, -- Rabid
-  }, "modifier.cooldowns" },
+    -- Cooldowns
+    {{
+      { "Stampede" },
+      { "Lifeblood" },
+      { "Berserking" },
+      { "Blood Fury" },
+      { "Bear Hug" },
+      -- { "53401" }, -- Rabid
+    }, "modifier.cooldowns" },
 
-  { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" },
+    { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" },
 
-  -- AoE
-  { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
+    -- AoE
+    { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
-  { "Explosive Shot" },
-  { "Black Arrow", "!target.debuff(3674)" },
-  { "A Murder of Crows" },
-  { "Dire Beast" },
-  --actions+=/arcane_shot,if=buff.thrill_of_the_hunt.react&focus>35&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
-  -- Arcane Shot if ToTH buff is up and focus > 35 and ("cast_regen<=focus.deficit"??? or serpent sting dot will be up <= 5s or ttd < 4.5s)
-  { "Arcane Shot", { "player.buff(34720)", "player.focus > 35" }},
-  { "Arcane Shot", "target.ttd < 4.5" },
-  { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 5" },
-  { "Glaive Toss" },
-  { "Powershot" },
-  { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
-  { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
-  { "Arcane Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }},
-  { "Focusing Shot" },
-  { "Cobra Shot" },
+    { "Explosive Shot" },
+    { "Black Arrow", "!target.debuff(3674)" },
+    { "A Murder of Crows" },
+    { "Dire Beast" },
+    --actions+=/arcane_shot,if=buff.thrill_of_the_hunt.react&focus>35&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
+    -- Arcane Shot if ToTH buff is up and focus > 35 and ("cast_regen<=focus.deficit"??? or serpent sting dot will be up <= 5s or ttd < 4.5s)
+    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35" }},
+    { "Arcane Shot", "target.ttd < 4.5" },
+    { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 5" },
+    { "Glaive Toss" },
+    { "Powershot" },
+    { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
+    { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
+    { "Arcane Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }},
+    { "Focusing Shot" },
+    { "Cobra Shot" },
+  }, "@NOC.immuneEvents('target')" },
 }
 
 ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0", combat, ooc, onLoad)
