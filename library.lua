@@ -470,12 +470,5 @@ function NOC.KSEnergy()
   return NRGforKS
 end
 
-function NOC.isAttackingPlayer()
-  if ( UnitIsUnit("targettarget", "player") ) then
-    return true
-  else
-    return false
-  end
-end
 
 ProbablyEngine.library.register("NOC", NOC)

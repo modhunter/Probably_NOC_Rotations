@@ -132,7 +132,7 @@ local combat = {
        "!modifier.last(Spear Hand Strike)"
     }},
     { "Spear Hand Strike" }, -- Spear Hand Strike
-  }, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
+  }, "target.interruptsAt(40)" }, -- Interrupt when 40% into the cast time
 
   -- Queued Spells
   { "!122470", "@NOC.checkQueue(122470)" }, -- Touch of Karma
@@ -144,12 +144,12 @@ local combat = {
   { "!Diffuse Magic", "@NOC.checkQueue(Diffuse Magic)" }, -- Diffuse Magic
 
   -- Self-Healing & Defensives
-  { "Expel Harm", { "player.health <= 80", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
-  { "Surging Mist", { "player.health <= 25", "!player.moving", "player.lastmoved > 1" }, "player" }, -- 30 energy, 0 chi
+  { "Expel Harm", { "player.health <= 70", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
+  { "Surging Mist", { "player.health <= 20", "!player.moving", "player.lastmoved > 1" }, "player" }, -- 30 energy, 0 chi
 
   -- Forifying Brew at < 30% health and when DM & DH buff is not up
   { "Fortifying Brew", {
-    "player.health < 30",
+    "player.health <= 25",
     "!player.buff(Diffuse Magic)",
     "!player.buff(Dampen Harm)"
   }},
@@ -267,7 +267,7 @@ local combat = {
     -- Crackling Jade Lightning
     -- TODO: figure out a way to stop casting this when the target gets too close
     {"/run SpellStopCasting()", { "target.range < 5", "player.casting(Crackling Jade Lightning)" }},
-    { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "@NOC.isAttackingPlayer()" }},
+    { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "target.combat" }},
 
   }, "@NOC.immuneEvents('target')" },
 }

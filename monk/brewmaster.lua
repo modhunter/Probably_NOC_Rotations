@@ -115,7 +115,7 @@ local combat = {
 	}, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
 
 	-- Self Heal
-	{ "Zen Sphere", { "player.buff(124081)", "!focus.buff(124081)" }, "focus" }, -- Zen Sphere on focus if buff is already on player and we are above 90% health
+	{ "Zen Sphere", { "player.buff(124081)", "!focus.buff(124081)",  }, "focus" }, -- Zen Sphere on focus if buff is already on player
 	{ "Zen Sphere", { "!player.buff(124081)" }, "player" }, -- Zen Sphere on player
 	{ "#5512", "player.health < 40"}, --Healthstone when less than 40% health
 	--TODO: Add support for healing potions
@@ -127,12 +127,12 @@ local combat = {
 
 	-- Defensives
 	-- Fortifying Brew when < 35% health and DM/DH are not being used
-	{ "Fortifying Brew", { "player.health <= 35", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "toggle.def" }, "player" },
+	{ "Fortifying Brew", { "player.health <= 25", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "toggle.def" }, "player" },
 
 	-- Guard when glyphed and not active (basically on CD)
 	{ "Guard", { "player.glyph(123401)", "!player.buff(123402)", "toggle.def" }, "player" },
 	-- Guard when not glyphed, not ative, and <= 70% health
-	{ "Guard", { "!player.glyph(123401)", "player.health <= 70", "toggle.def", "!player.buff(115295)" }, "player" },
+	{ "Guard", { "!player.glyph(123401)", "player.health <= 60", "toggle.def", "!player.buff(115295)" }, "player" },
 
 	-- TODO: add check for buff.elusive_brew_activated.down
 	--Elusive Brew at 8+ Stacks and under 80% health
@@ -140,7 +140,7 @@ local combat = {
 	-- Elusive Brew at 14+ stacks no matter what
 	{ "115308", "player.buff(128939).count >= 14" },
 
-	--Always attempt Expel Harm when < 30% health
+	--Always attempt Expel Harm when < 35% health
 	--TODO: Only consider this if we are using the glyph?
 	{ "Expel Harm", "player.health < 35" },
 
@@ -169,8 +169,6 @@ local combat = {
 		"mouseover.exists",
 		"mouseover.enemy",
 		"mouseover.combat",
-		"mouseovertarget.exists",
-		"mouseovertarget.player",
 		"mouseover.spell(115546).range",
 		"mouseover.threat < 100",
 		"mouseover.range > 10"
@@ -217,7 +215,7 @@ local combat = {
 
 		{ aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
-		{ "Expel Harm", "player.health < 100 "},
+		{ "Expel Harm", "player.health <= 75 "},
 
 		{ "Blackout Kick", "player.chidiff = 0" },
 
