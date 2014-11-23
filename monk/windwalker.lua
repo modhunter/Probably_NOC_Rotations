@@ -200,7 +200,7 @@ local combat = {
           },{ "player.chi >= 3", "player.buff(125195).count >= 10" }},
           {{
             { "116740", { "player.buff(125195).count >= 16" }},
-            { "116740", { "target.ttd < 40" }},
+            --{ "116740", { "target.ttd < 40" }},
           },{ "player.chi >= 2" }},
         },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
       },{ "!player.buff(116740)", "!modifier.last(116740)" }},
