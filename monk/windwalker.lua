@@ -183,7 +183,7 @@ local combat = {
 
       {{
         { "Chi Brew", { "!modifier.last(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
-        { "Chi Brew", "target.ttd < 10" },
+        --{ "Chi Brew", "target.ttd < 10" },
         { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.last(Chi Brew)" }},
       }, {"player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16" }},
 

@@ -270,7 +270,6 @@ function NOC.immuneEvents(unit)
   if NOC.isDummy(unit) then return true end
   if not UnitAffectingCombat(unit) then return false end
   -- Crowd Control
-  --local CC = {118,28272,28271,61305,61721,61780,9484,3355,19386,339,6770,6358,20066,51514,115078,115268}
   local cc = {
     49203, -- Hungering Cold
      6770, -- Sap
@@ -295,6 +294,8 @@ function NOC.immuneEvents(unit)
      9484, -- Shackle Undead
      1513, -- Scare Beast
    115268, -- Mesmerize
+     6358, -- Seduction
+      339, -- Entangling Roots
   }
   if NOC.hasDebuffTable(unit, cc) then return false end
   if UnitAura(unit,GetSpellInfo(116994))

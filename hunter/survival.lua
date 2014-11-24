@@ -33,7 +33,7 @@ local aoe = {
 
 --/multishot,if=buff.thrill_of_the_hunt.react&focus>50&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
   { "Multi-Shot", { "player.buff(34720)", "player.focus > 50" }},
-  { "Multi-Shot", "target.ttd < 4.5" },
+  --{ "Multi-Shot", "target.ttd < 4.5" },
   { "Multi-Shot", "target.debuff(Serpent Sting).duration <= 5" },
   { "Glaive Toss" },
   { "Powershot" },
@@ -120,7 +120,7 @@ local combat = {
     --actions+=/arcane_shot,if=buff.thrill_of_the_hunt.react&focus>35&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
     -- Arcane Shot if ToTH buff is up and focus > 35 and ("cast_regen<=focus.deficit"??? or serpent sting dot will be up <= 5s or ttd < 4.5s)
     { "Arcane Shot", { "player.buff(34720)", "player.focus > 35" }},
-    { "Arcane Shot", "target.ttd < 4.5" },
+    --{ "Arcane Shot", "target.ttd < 4.5" },
     { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 5" },
     { "Glaive Toss" },
     { "Powershot" },
