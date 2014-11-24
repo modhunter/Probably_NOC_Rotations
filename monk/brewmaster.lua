@@ -123,15 +123,15 @@ local combat = {
 	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
 	{ "Purifying Brew", "@NOC.DrinkStagger" },
 	-- Purify if Serenity is about to fall-off
-	{ "Purifying Brew", {"player.buff(157558)", "player.buff(157558).duration <= 1" }},
+	{ "Purifying Brew", {"player.buff(157558)", "player.buff(157558).duration <= 2" }},
 
 	-- Defensives
-	-- Fortifying Brew when < 35% health and DM/DH are not being used
+	-- Fortifying Brew when < 25% health and DM/DH are not being used
 	{ "Fortifying Brew", { "player.health <= 25", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "toggle.def" }, "player" },
 
 	-- Guard when glyphed and not active (basically on CD)
 	{ "Guard", { "player.glyph(123401)", "!player.buff(123402)", "toggle.def" }, "player" },
-	-- Guard when not glyphed, not ative, and <= 70% health
+	-- Guard when not glyphed, not ative, and <= 60% health
 	{ "Guard", { "!player.glyph(123401)", "player.health <= 60", "toggle.def", "!player.buff(115295)" }, "player" },
 
 	-- TODO: add check for buff.elusive_brew_activated.down
