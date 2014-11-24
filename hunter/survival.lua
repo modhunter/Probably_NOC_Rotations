@@ -104,6 +104,8 @@ local combat = {
       { "Blood Fury" },
       { "Bear Hug" },
       -- { "53401" }, -- Rabid
+      { "#trinket1" },
+      { "#trinket2" },
     }, "modifier.cooldowns" },
 
     { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" },
