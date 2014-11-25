@@ -103,7 +103,7 @@ local combat = {
       { "Aimed Shot" },
       { "Focusing Shot", "player.timetomax > 4" },
       { "Steady Shot" },
-    }, { "player.buff(Careful Aim)" },},
+    }, { "target.health < 80", "!player.buff(Rapid Fire)" }},
 
     { "A Murder of Crows" },
     { "Dire Beast", "player.timetomax > 3" },
