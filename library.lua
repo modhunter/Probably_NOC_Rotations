@@ -305,6 +305,7 @@ function NOC.immuneEvents(unit)
 		or UnitAura(unit,GetSpellInfo(110945))
 		or UnitAura(unit,GetSpellInfo(143593)) -- General Nazgrim: Defensive Stance
     or UnitAura(unit,GetSpellInfo(143574)) -- Heroic Immerseus: Swelling Corruption
+    --or UnitAura(unit,GetSpellInfo(166591)) -- Sanguine Sphere?
 		then return false end
   return true
 end
@@ -397,6 +398,7 @@ end
 -- return true when the rotation should be paused
 function NOC.pause()
 	if (IsMounted() and ((getUnitID("target") ~= 56877) or (not UnitBuffID("player",164222)) or (not UnitBuffID("player",165803))))
+  --if (IsMounted() and getUnitID("target") ~= 56877 and not UnitBuffID("player",164222) and not UnitBuffID("player",165803))
     or SpellIsTargeting()
     or UnitInVehicle("Player")
     or (not UnitCanAttack("player", "target") and not UnitIsPlayer("target") and UnitExists("target"))
