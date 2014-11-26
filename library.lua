@@ -397,7 +397,7 @@ end
 
 -- return true when the rotation should be paused
 function NOC.pause()
-	if (IsMounted() and ((getUnitID("target") ~= 56877) or (not UnitBuffID("player",164222)) or (not UnitBuffID("player",165803))))
+	if (IsMounted() and not UnitBuffID("player",164222) and not UnitBuffID("player",165803))
   --if (IsMounted() and getUnitID("target") ~= 56877 and not UnitBuffID("player",164222) and not UnitBuffID("player",165803))
     or SpellIsTargeting()
     or UnitInVehicle("Player")
@@ -427,7 +427,7 @@ function NOC.isDummy(Unit)
 	if Unit == nil then Unit = "target"; else Unit = tostring(Unit) end
     dummies = {
         31144, --Training Dummy - Lvl 80
-        --31146, --Raider's Training Dummy - Lvl ??
+        31146, --Raider's Training Dummy - Lvl ??
         32541, --Initiate's Training Dummy - Lvl 55 (Scarlet Enclave)
         32542, --Disciple's Training Dummy - Lvl 65
         32545, --Initiate's Training Dummy - Lvl 55
@@ -441,7 +441,9 @@ function NOC.isDummy(Unit)
         88314, --Dungeoneer's Training Dummy <Tanking>
         88316, --Training Dummy <Healing>
         89078, --Training Dummy (Garrison)
-        87318 --Dungeoneer's Training Dummy <Damage>
+        87318, --Dungeoneer's Training Dummy <Damage>
+        76585, --Ragewing <Boss in UBRS>
+        76267 --Solar Zealot <Skyreach Final Boss Mob>
     }
     for i=1, #dummies do
         if UnitExists(Unit) and UnitGUID(Unit) then
