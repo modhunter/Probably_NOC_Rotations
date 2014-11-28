@@ -397,9 +397,9 @@ end
 
 -- return true when the rotation should be paused
 function NOC.pause()
-	if (IsMounted() and not UnitBuffID("player",164222) and not UnitBuffID("player",165803))
+	--if (IsMounted() and not UnitBuffID("player",164222) and not UnitBuffID("player",165803))
   --if (IsMounted() and getUnitID("target") ~= 56877 and not UnitBuffID("player",164222) and not UnitBuffID("player",165803))
-    or SpellIsTargeting()
+  if SpellIsTargeting()
     or UnitInVehicle("Player")
     or (not UnitCanAttack("player", "target") and not UnitIsPlayer("target") and UnitExists("target"))
     --or UnitCastingInfo("player")
