@@ -267,7 +267,7 @@ end
 
 -- TODO: clean-up this function and update for WoD wher enecessary
 function NOC.immuneEvents(unit)
-  if NOC.isDummy(unit) then return true end
+  if NOC.isException(unit) then return true end
   if not UnitAffectingCombat(unit) then return false end
   -- Crowd Control
   local cc = {
@@ -423,7 +423,7 @@ function NOC.isInCombat(Unit)
 end
 
 -- thanks to CML for this routine
-function NOC.isDummy(Unit)
+function NOC.isException(Unit)
 	if Unit == nil then Unit = "target"; else Unit = tostring(Unit) end
     dummies = {
         31144, --Training Dummy - Lvl 80
@@ -443,7 +443,9 @@ function NOC.isDummy(Unit)
         89078, --Training Dummy (Garrison)
         87318, --Dungeoneer's Training Dummy <Damage>
         76585, --Ragewing <Boss in UBRS>
-        76267 --Solar Zealot <Skyreach Final Boss Mob>
+        76267, --Solar Zealot <Skyreach Final Boss Mob>
+        76598, --Ritual of Bones?
+        76518 --Ritual of Bones?
     }
     for i=1, #dummies do
         if UnitExists(Unit) and UnitGUID(Unit) then
