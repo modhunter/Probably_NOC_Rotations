@@ -26,6 +26,15 @@ local aoe = {
   { "Barrage" },
 }
 
+local careful_aim = {
+  -- AoE
+  { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
+  -- ST
+  { "Aimed Shot" },
+  { "Focusing Shot", "player.timetomax > 4" },
+  { "Steady Shot" },
+}
+
 local combat = {
   { "pause", "modifier.lshift" },
   { "pause", "@NOC.pause()"},
@@ -96,33 +105,30 @@ local combat = {
     { "Rapid Fire" },
 
     -- Careful Aim
+    { careful_aim, "target.health >= 80" },
+    { careful_aim, "player.buff(Rapid Fire)" },
+
     {{
-      -- AoE
-      { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
-      -- ST
-      { "Aimed Shot" },
-      { "Focusing Shot", "player.timetomax > 4" },
+      { "A Murder of Crows" },
+      { "Dire Beast", "player.timetomax > 3" },
+      { "Glaive Toss" },
+      { "Powershot", "player.timetomax > 2.5" },
+      { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
+
+      -- TODO: Need to figure out how to implement this:
+      --# Pool max focus for rapid fire so we can spam AimedShot with Careful Aim buff
+      --actions+=/steady_shot,if=focus.deficit*cast_time%(14+cast_regen)>cooldown.rapid_fire.remains
+      --actions+=/focusing_shot,if=focus.deficit*cast_time%(50+cast_regen)>cooldown.rapid_fire.remains&focus<100
+      { "Steady Shot", "player.timetomax > player.spell(Rapid Fire).cooldown" },
+      { "Focusing Shot", { "player.focus < 50" }},
+      { "Steady Shot", { "player.buff(Steady Focus)", "player.timetomax > 5" }},
+      { "Aimed Shot", "player.spell(Focusing Shot).exists" },
+      { "Aimed Shot", "player.focus > 80" },
+      { "Aimed Shot", { "player.buff(34720)", "player.focus > 60" }},
+      { "Focusing Shot", "player.focus < 50" },
       { "Steady Shot" },
     }, { "target.health < 80", "!player.buff(Rapid Fire)" }},
 
-    { "A Murder of Crows" },
-    { "Dire Beast", "player.timetomax > 3" },
-    { "Glaive Toss" },
-    { "Powershot", "player.timetomax > 2.5" },
-    { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
-
-    -- TODO: Need to figure out how to implement this:
-    --# Pool max focus for rapid fire so we can spam AimedShot with Careful Aim buff
-    --actions+=/steady_shot,if=focus.deficit*cast_time%(14+cast_regen)>cooldown.rapid_fire.remains
-    --actions+=/focusing_shot,if=focus.deficit*cast_time%(50+cast_regen)>cooldown.rapid_fire.remains&focus<100
-    { "Steady Shot", "player.timetomax > player.spell(Rapid Fire).cooldown" },
-    { "Focusing Shot", { "player.focus < 50" }},
-    { "Steady Shot", { "player.buff(Steady Focus)", "player.timetomax > 5" }},
-    { "Aimed Shot", "player.spell(Focusing Shot).exists" },
-    { "Aimed Shot", "player.focus > 80" },
-    { "Aimed Shot", { "player.buff(34720)", "player.focus > 60" }},
-    { "Focusing Shot", "player.focus < 50" },
-    { "Steady Shot" },
   }, "@NOC.immuneEvents('target')" },
 }
 
