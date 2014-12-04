@@ -6,6 +6,7 @@ local onLoad = function()
   ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
   ProbablyEngine.toggle.create('fof', 'Interface\\Icons\\monk_ability_fistoffury', 'Fists of Fury', 'Enable use of Fists of Fury')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
+  ProbablyEngine.toggle.create('autosef2', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF 2', 'Automatically cast SEF on valid targets')
 end
 
 local buffs = {
@@ -100,6 +101,7 @@ local combat = {
   -- SEF on mouseover when enabled
   {{
     { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },
+    { "!Storm, Earth, and Fire", { "!player.buff(137639).count = 2", "@NOC.autoSEF()", "toggle.autosef2" }},
     { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }}
   }, "toggle.autosef" },
 
