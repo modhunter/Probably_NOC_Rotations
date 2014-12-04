@@ -57,6 +57,7 @@ ProbablyEngine.module.register("combatTracker", {
   units = { },
 })
 
+-- TODO: merge this with aquireRange so we accomplish both in the same function
 ProbablyEngine.module.combatTracker.aquireHealth = function(guid, maxHealth, name)
   if maxHealth then health = UnitHealthMax else health = UnitHealth end
   local inGroup = GetNumGroupMembers()
@@ -95,6 +96,38 @@ ProbablyEngine.module.combatTracker.aquireHealth = function(guid, maxHealth, nam
   return false
 end
 
+ProbablyEngine.module.combatTracker.aquireRange = function(guid)
+  range = ProbablyEngine.condition["distance"]
+  local inGroup = GetNumGroupMembers()
+  if inGroup then
+    if IsInRaid("player") then
+      for i=1,inGroup do
+        if guid == UnitGUID("RAID".. i .. "TARGET") then
+          return range("RAID".. i .. "TARGET")
+        end
+      end
+    else
+      for i=1,inGroup do
+        if guid == UnitGUID("PARTY".. i .. "TARGET") then
+          return range("PARTY".. i .. "TARGET")
+        end
+      end
+      if guid == UnitGUID("PLAYERTARGET") then
+        return range("PLAYERTARGET")
+      end
+    end
+  else
+    print(guid, UnitGUID("PLAYERTARGET"))
+    if guid == UnitGUID("PLAYERTARGET") then
+      return range("PLAYERTARGET")
+    end
+    if guid == UnitGUID("MOUSEOVER") then
+      return range("MOUSEOVER")
+    end
+  end
+  return false
+end
+
 ProbablyEngine.module.combatTracker.combatCheck = function()
   local inGroup = GetNumGroupMembers()
   local inCombat = false
@@ -115,6 +148,7 @@ ProbablyEngine.module.combatTracker.combatCheck = function()
   return false
 end
 
+-- TODO: rename this to just updateCT
 ProbablyEngine.timer.register("updateCTHealth", function()
   if ProbablyEngine.module.combatTracker.combatCheck() then
     for guid,table in pairs(ProbablyEngine.module.combatTracker.enemy) do
@@ -126,6 +160,10 @@ ProbablyEngine.timer.register("updateCTHealth", function()
           ProbablyEngine.module.combatTracker.enemy[guid]['maxHealth'] = ProbablyEngine.module.combatTracker.           aquireHealth(guid, true, name)
         end
         ProbablyEngine.module.combatTracker.enemy[guid].health = health
+      end
+      local range = ProbablyEngine.module.combatTracker.aquireRange(guid)
+      if range then
+        ProbablyEngine.module.combatTracker.enemy[guid].range = range
       end
     end
   else
@@ -139,16 +177,13 @@ ProbablyEngine.module.combatTracker.insert = function(guid, unitname, timestamp)
 
     local maxHealth = ProbablyEngine.module.combatTracker.aquireHealth(guid, true, unitname)
     local health = ProbablyEngine.module.combatTracker.aquireHealth(guid)
+    local range = ProbablyEngine.module.combatTracker.aquireRange(guid)
 
     ProbablyEngine.module.combatTracker.enemy[guid] = { }
     ProbablyEngine.module.combatTracker.enemy[guid]['maxHealth'] = maxHealth
     ProbablyEngine.module.combatTracker.enemy[guid]['health'] = health
+    ProbablyEngine.module.combatTracker.enemy[guid]['range'] = range
     ProbablyEngine.module.combatTracker.enemy[guid]['name'] = unitname
-
-    -- TODO: This is new code for handling range...
-    -- This doesn't update currently..
-    ProbablyEngine.module.combatTracker.enemy[guid]['range'] = ProbablyEngine.condition["distance"](guid)
-
     ProbablyEngine.module.combatTracker.enemy[guid]['time'] = false
 
     if maxHealth then
