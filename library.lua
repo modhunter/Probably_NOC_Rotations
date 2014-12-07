@@ -479,8 +479,8 @@ end
 
 
 function NOC.autoSEF()
-  local enemies = ProbablyEngine.module.combatTracker.enemy
-  if enemies == nil then enemies = 0 end
+  --local enemies = ProbablyEngine.module.combatTracker.enemy
+  --if enemies == nil then enemies = 0 end
 
 --  if not myenemiesTimer or myenemiesTimer <= GetTime() - 1 then
 --    enemies, myenemiesTimer = getEnemies("player",40), GetTime()
@@ -494,30 +494,30 @@ function NOC.autoSEF()
   targets = {}
 
   -- loop through all of the combatTracker enemies and insert only those that are qualified targets
-  for i=1,#enemies do
-    if UnitExists(enemies[i])
-    and NOC.immuneEvents(enemies[i])
-    and getCreatureType(enemies[i])
-    and UnitCanAttack("player",enemies[i])
-    and not UnitIsDeadOrGhost(enemies[i])
-    and (isInCombat(enemies[i]) or isDummy(enemies[i]))
-    and ProbablyEngine.parser.can_cast(32379, enemies[i], false)
-    and UnitGUID(enemies[i])~=currtar
-    then
+  --for i=1,#enemies do
+--    if UnitExists(enemies[i])
+--    and NOC.immuneEvents(enemies[i])
+--    and getCreatureType(enemies[i])
+--    and UnitCanAttack("player",enemies[i])
+--    and not UnitIsDeadOrGhost(enemies[i])
+--    and (isInCombat(enemies[i]) or isDummy(enemies[i]))
+--    and ProbablyEngine.parser.can_cast(32379, enemies[i], false)
+--    and UnitGUID(enemies[i])~=currtar
+--    then
       --table.insert( targets,{ Name = UnitName(enemies[i]), Unit = enemies[i], HP = UnitHealth(enemies[i]), Range = getDistance("player",enemies[i]) })
-      table.insert( targets, enemies[i] )
-    end
-  end
+      --table.insert( targets, enemies[i] )
+--    end
+  --end
 
   -- sort the qualified targets by health
-  table.sort(targets, function(x,y) return x.health > y.health end)
+  --table.sort(targets, function(x,y) return x.health > y.health end)
 
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
-  if #targets>0 then
-    ProbablyEngine.dsl.parsedTarget = targets[1]
+  if #ProbablyEngine.module.combatTracker.enemy >0 then
+    ProbablyEngine.dsl.parsedTarget = ProbablyEngine.module.combatTracker.enemy[1]
   end
-  if #targets>1 then
-    ProbablyEngine.dsl.parsedTarget = targets[2]
+  if #ProbablyEngine.module.combatTracker.enemy >1 then
+    ProbablyEngine.dsl.parsedTarget = ProbablyEngine.module.combatTracker.enemy[2]
   end
 end
 
