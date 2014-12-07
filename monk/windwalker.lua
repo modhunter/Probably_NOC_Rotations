@@ -36,8 +36,11 @@ local ooc = {
 local aoe = {
   { "Chi Explosion", "player.chi >= 4" },
 
-  -- Only use this is we have the RJW talent and there are more than 7 enemies
-  { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 7" }},
+  -- Only use this is we have the RJW talent and there are more than 6 enemies
+  { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 6" }},
+  -- Otherwise, use it 'normally' if we aren't using chi explosion
+  { "Rushing Jade Wind", { "!talent(6,1)", "!talent(7,2)" }},
+
 
   { "Rising Sun Kick", "player.chidiff = 0" },
 
@@ -75,8 +78,10 @@ local aoe = {
   -- Only do this if we have RJW talent and not chex talent
   { "Blackout Kick", { "talent(6,1)", "!talent(7,2)", "player.chidiff < 2" }},
 
-  -- Only do this if we do not have RJW talent and there are more than 7 enemies
-  { "Spinning Crane Kick", { "!talent(6,1)", "modifier.enemies > 7" }},
+  -- Only do this if we do not have RJW talent and there are more than 6 enemies
+  { "Spinning Crane Kick", { "!talent(6,1)", "modifier.enemies > 6" }},
+  -- Otherwise, use it 'normally' if we aren't using chi explosion
+  { "Spinning Crane Kick", { "!talent(6,1)", "!talent(7,2)" }},
 
   { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 2" }},
 }
@@ -145,7 +150,8 @@ local combat = {
 
   -- Self-Healing & Defensives
   { "Expel Harm", { "player.health <= 70", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
-  { "Surging Mist", { "player.health <= 20", "!player.moving", "player.lastmoved > 1" }, "player" }, -- 30 energy, 0 chi
+  -- TODO: This locks up the rotation, need to investigate
+  --{ "Surging Mist", { "player.health <= 20", "!player.moving", "player.lastmoved > 1" }, "player" }, -- 30 energy, 0 chi
 
   -- Forifying Brew at < 30% health and when DM & DH buff is not up
   { "Fortifying Brew", {
