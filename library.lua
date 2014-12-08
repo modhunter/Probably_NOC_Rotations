@@ -477,10 +477,18 @@ function NOC.KSEnergy()
   return NRGforKS
 end
 
+function tablelength(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
+end
 
 function NOC.autoSEF()
-  --local enemies = ProbablyEngine.module.combatTracker.enemy
-  --if enemies == nil then enemies = 0 end
+  local enemies = ProbablyEngine.module.combatTracker.enemy
+  if enemies == nil then enemies = 0 end
+  local numEnemies = 0
+  for _ in pairs(enemies) do numEnemies = numEnemies + 1 end
+
 
 --  if not myenemiesTimer or myenemiesTimer <= GetTime() - 1 then
 --    enemies, myenemiesTimer = getEnemies("player",40), GetTime()
@@ -491,8 +499,9 @@ function NOC.autoSEF()
   elseif UnitExists("target") then
     currtar = UnitGUID("target")
   end
-  targets = {}
 
+
+--  targets = {}
   -- loop through all of the combatTracker enemies and insert only those that are qualified targets
   --for i=1,#enemies do
 --    if UnitExists(enemies[i])
@@ -513,11 +522,11 @@ function NOC.autoSEF()
   --table.sort(targets, function(x,y) return x.health > y.health end)
 
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
-  if #ProbablyEngine.module.combatTracker.enemy >0 then
-    ProbablyEngine.dsl.parsedTarget = ProbablyEngine.module.combatTracker.enemy[1]
+  if count >0 then
+    ProbablyEngine.dsl.parsedTarget = enemies[1]
   end
-  if #ProbablyEngine.module.combatTracker.enemy >1 then
-    ProbablyEngine.dsl.parsedTarget = ProbablyEngine.module.combatTracker.enemy[2]
+  if count >1 then
+    ProbablyEngine.dsl.parsedTarget = enemies[2]
   end
 end
 
