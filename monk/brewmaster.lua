@@ -201,7 +201,7 @@ local combat = {
 		}},
 
 		{ "Blackout Kick", "!player.buff(115307)" },
-		{ "Blackout Kick", "player.buff(115307).duration < 6" },
+		{ "Blackout Kick", "player.buff(115307).duration < 9" },
 
 		{ "Chi Explosion", "player.chi >= 3" },
 
