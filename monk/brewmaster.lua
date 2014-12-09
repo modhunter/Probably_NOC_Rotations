@@ -26,8 +26,8 @@ local buffs = {
 }
 
 local ooc = {
-	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
-	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
+	{ "115180", "modifier.lcontrol", "mouseover.ground" }, -- Dizzying Haze
+	{ "115315", "modifier.lalt", "mouseover.ground" }, -- Black Ox Statue
 	{ "Expel Harm", "player.health < 100" }, -- Expel Harm when not at full health
 	{ buffs, },
 }
