@@ -505,18 +505,20 @@ function NOC.autoSEF()
   -- loop through all of the combatTracker enemies and insert only those that are qualified targets
   --for i=1,#enemies do
   for i,_ in pairs(ProbablyEngine.module.combatTracker.enemy) do
---    if UnitExists(enemies[i])
---    and NOC.immuneEvents(enemies[i])
---    and getCreatureType(enemies[i])
---    and UnitCanAttack("player",enemies[i])
---    and not UnitIsDeadOrGhost(enemies[i])
---    and (isInCombat(enemies[i]) or isDummy(enemies[i]))
---    and ProbablyEngine.parser.can_cast(32379, enemies[i], false)
---    and UnitGUID(enemies[i])~=currtar
---    then
-      table.insert(targets, ProbablyEngine.module.combatTracker.enemy[i])
+    local guid = ProbablyEngine.module.combatTracker.enemy[i]['guid']
+    if UnitGUID(guid)~=currtar
+      --and UnitExists(guid)
+      --and NOC.immuneEvents(guid)
+      --and getCreatureType(guid)
+      --and UnitCanAttack("player",guid)
+      --and not UnitIsDeadOrGhost(guid)
+      --and (isInCombat(guid) or isDummy(guid))
+      --and ProbablyEngine.parser.can_cast(137639, guid, false)
+      --and UnitGUID(guid)~=currtar
+    then
+      table.insert(targets, guid)
       --table.insert( targets,{ Name = UnitName(enemies[i]), Unit = enemies[i], HP = UnitHealth(enemies[i]), Range = getDistance("player",enemies[i]) })
---    end
+    end
   end
 
   -- sort the qualified targets by health
@@ -524,14 +526,17 @@ function NOC.autoSEF()
 
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
   if #targets > 0 then
-    ProbablyEngine.dsl.parsedTarget = targets[1]
+    --ProbablyEngine.dsl.parsedTarget = targets[1]
+    Cast(137639,targets[1])
+    print('returning 1:'..targets[1])
     return true
   end
   if #targets > 1 then
-    ProbablyEngine.dsl.parsedTarget = targets[2]
+    --ProbablyEngine.dsl.parsedTarget = targets[2]
+    Cast(137639,targets[2])
+    print('returning 2:'..targets[2])
     return true
   end
-
   return false
 end
 

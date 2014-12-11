@@ -185,6 +185,7 @@ ProbablyEngine.module.combatTracker.insert = function(guid, unitname, timestamp)
     ProbablyEngine.module.combatTracker.enemy[guid]['range'] = range
     ProbablyEngine.module.combatTracker.enemy[guid]['name'] = unitname
     ProbablyEngine.module.combatTracker.enemy[guid]['time'] = false
+    ProbablyEngine.module.combatTracker.enemy[guid]['guid'] = guid
 
     if maxHealth then
       -- we got a health value from aquire, store it for later usage
