@@ -123,6 +123,9 @@ ProbablyEngine.command.register('mWW', function(msg, box)
         NOC.queueSpell = 122783 -- Diffuse Magic
         mww.message("Diffuse Magic queued")
     end
+  elseif command == "qtr" or command == 101643 then
+      NOC.queueSpell = 101643 -- Transcendence
+      mww.message("Transcendencet queued")
   else
     NOC.queueSpell = nil
   end
@@ -237,6 +240,10 @@ ProbablyEngine.command.register('mBM', function(msg, box)
         NOC.queueSpell = 122783
         mww:message("Diffuse Magic queued")
     end
+  elseif command == "qtr" or command == 101643 then
+    NOC.queueSpell = 101643 -- Transcendence
+    mww.message("Transcendencet queued")
+  else
   else
     NOC.queueSpell = nil
   end

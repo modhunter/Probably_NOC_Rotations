@@ -80,6 +80,7 @@ local combat = {
 	{ "!122280", "@NOC.checkQueue(122280)" }, -- Healing Elixers
 	{ "!122278", "@NOC.checkQueue(122278)" }, -- Dampen Harm
 	{ "!122783", "@NOC.checkQueue(122783)" }, -- Diffuse Magic
+	{ "!101643", "@NOC.checkQueue(101643)" }, -- Transcendence
 	{ "!115078", "@NOC.checkQueue(115078)", "mouseover" }, -- Paralysis
 	{ "!115315", "@NOC.checkQueue(115315)", "ground" }, -- Summon Black Ox Statue
 
