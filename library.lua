@@ -491,17 +491,6 @@ function tablelength(T)
 end
 
 function NOC.autoSEF()
-
-  --local enemies = ProbablyEngine.module.combatTracker.enemy
-  --if enemies == nil then enemies = 0 end
-
-  --local numEnemies = 0
-  --for _ in pairs(enemies) do numEnemies = numEnemies + 1 end
-
---  if not myenemiesTimer or myenemiesTimer <= GetTime() - 1 then
---    enemies, myenemiesTimer = getEnemies("player",40), GetTime()
---  end
-
   if currtar == nil then
     currtar = UnitGUID("player")
   elseif UnitExists("target") then
@@ -513,6 +502,7 @@ function NOC.autoSEF()
   --for i=1,#enemies do
   for i,_ in pairs(ProbablyEngine.module.combatTracker.enemy) do
     local guid = ProbablyEngine.module.combatTracker.enemy[i]['guid']
+
     if UnitGUID(guid)~=currtar
       --and UnitExists(guid)
       --and NOC.immuneEvents(guid)
@@ -523,24 +513,24 @@ function NOC.autoSEF()
       --and ProbablyEngine.parser.can_cast(137639, guid, false)
       --and UnitGUID(guid)~=currtar
     then
-      table.insert(targets, guid)
+      table.insert(targets, { Name = UnitName(guid), Unit = guid, HP = UnitHealth(guid) } )
       --table.insert( targets,{ Name = UnitName(enemies[i]), Unit = enemies[i], HP = UnitHealth(enemies[i]), Range = getDistance("player",enemies[i]) })
     end
   end
 
   -- sort the qualified targets by health
-  --table.sort(targets, function(x,y) return x.health > y.health end)
+  --table.sort(targets, function(x,y) return x.HP > y.HP end)
 
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
   if #targets > 0 then
     --ProbablyEngine.dsl.parsedTarget = targets[1]
-    Cast(137639,targets[1])
+    Cast(137639,targets[1].Unit)
     print('returning 1:'..targets[1])
     return true
   end
   if #targets > 1 then
     --ProbablyEngine.dsl.parsedTarget = targets[2]
-    Cast(137639,targets[2])
+    Cast(137639,targets[2].Unit)
     print('returning 2:'..targets[2])
     return true
   end
