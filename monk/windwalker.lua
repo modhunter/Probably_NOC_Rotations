@@ -5,6 +5,7 @@ local onLoad = function()
   ProbablyEngine.toggle.create('chistacker', 'Interface\\Icons\\ability_monk_expelharm', 'Stack Chi', 'Keep Chi at full even OoC...')
   ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
   ProbablyEngine.toggle.create('fof', 'Interface\\Icons\\monk_ability_fistoffury', 'Fists of Fury', 'Enable use of Fists of Fury')
+  ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
   ProbablyEngine.toggle.create('autosef2', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF 2', 'Automatically cast SEF on valid targets')
 end
@@ -102,6 +103,11 @@ local combat = {
 
   -- Buffs
   { buffs, },
+
+  -- Queued Spells
+  -- TODO: Remediate this
+  ---------------------------------------------------------------------------------------------------
+  { "!101643", "@NOC.checkQueue(101643)" }, -- Transcendence
 
   -- SEF on mouseover when enabled
   {{
@@ -274,10 +280,11 @@ local combat = {
     -- Tiger's Lust if the target is at least 15 yards away and we are moving for at least 1 second
     { "Tiger's Lust", { "target.range >= 15", "player.movingfor > 1", "target.alive" }},
 
-    -- Crackling Jade Lightning
-    -- TODO: figure out a way to stop casting this when the target gets too close
-    {"/stopcasting", { "target.range <= 5", "player.casting(Crackling Jade Lightning)" }},
-    { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "target.combat" }},
+    -- Crackling Jade Lightning (on toggle)
+    {{
+      {"/stopcasting", { "target.range <= 5", "player.casting(Crackling Jade Lightning)" }},
+      { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "target.combat" }},
+    }, "toggle.cjl" },
 
   }, "@NOC.immuneEvents('target')" },
 }
