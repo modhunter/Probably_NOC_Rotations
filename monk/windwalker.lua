@@ -4,7 +4,7 @@
 local onLoad = function()
   ProbablyEngine.toggle.create('chistacker', 'Interface\\Icons\\ability_monk_expelharm', 'Stack Chi', 'Keep Chi at full even OoC...')
   ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
-  ProbablyEngine.toggle.create('fof', 'Interface\\Icons\\monk_ability_fistoffury', 'Fists of Fury', 'Enable use of Fists of Fury')
+  ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
   ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
   ProbablyEngine.toggle.create('autosef2', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF 2', 'Automatically cast SEF on valid targets')
@@ -38,8 +38,8 @@ local ooc = {
 local aoe = {
   { "Chi Explosion", "player.chi >= 4" },
 
-  -- Only use this is we have the RJW talent and there are more than 6 enemies
-  { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 6" }},
+  -- Only use this is we have the RJW talent and there are more than 5 enemies
+  { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 5", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
   { "Rushing Jade Wind", { "!talent(6,1)", "!talent(7,2)" }},
 
@@ -80,8 +80,8 @@ local aoe = {
   -- Only do this if we have RJW talent and not chex talent
   { "Blackout Kick", { "talent(6,1)", "!talent(7,2)", "player.chidiff < 2" }},
 
-  -- Only do this if we do not have RJW talent and there are more than 6 enemies
-  { "Spinning Crane Kick", { "!talent(6,1)", "modifier.enemies > 6" }},
+  -- Only do this if we do not have RJW talent and there are more than 5 enemies
+  { "Spinning Crane Kick", { "!talent(6,1)", "modifier.enemies > 5", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
   { "Spinning Crane Kick", { "!talent(6,1)", "!talent(7,2)" }},
 
