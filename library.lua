@@ -244,7 +244,6 @@ ProbablyEngine.command.register('mBM', function(msg, box)
     NOC.queueSpell = 101643 -- Transcendence
     mww.message("Transcendencet queued")
   else
-  else
     NOC.queueSpell = nil
   end
   if NOC.queueSpell ~= nil then NOC.queueTime = GetTime() end
