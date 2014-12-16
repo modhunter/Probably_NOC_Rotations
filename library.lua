@@ -424,10 +424,6 @@ function NOC.pause()
 	end
 end
 
-function NOC.isInCombat(Unit)
-  if UnitAffectingCombat(Unit) then return true; else return false; end
-end
-
 -- thanks to CML for this routine
 function NOC.isException(Unit)
 	if Unit == nil then Unit = "target"; else Unit = tostring(Unit) end
@@ -489,30 +485,69 @@ function tablelength(T)
   return count
 end
 
-function NOC.autoSEF()
-  if currtar == nil then
-    currtar = UnitGUID("player")
-  elseif UnitExists("target") then
-    currtar = UnitGUID("target")
+function NOC.guidtoUnit(guid)
+  local inGroup = GetNumGroupMembers()
+  if inGroup then
+    if IsInRaid("player") then
+      for i=1,inGroup do
+        if guid == UnitGUID("RAID".. i .. "TARGET") then
+          return "RAID".. i .. "TARGET"
+        end
+      end
+    else
+      for i=1,inGroup do
+        if guid == UnitGUID("PARTY".. i .. "TARGET") then
+          return "PARTY".. i .. "TARGET"
+        end
+      end
+      if guid == UnitGUID("PLAYERTARGET") then
+        return "PLAYERTARGET"
+      end
+    end
+  else
+    if guid == UnitGUID("PLAYERTARGET") then
+      return "PLAYERTARGET"
+    end
+    if guid == UnitGUID("MOUSEOVER") then
+      return "MOUSEOVER"
+    end
   end
+  return false
+end
+
+function NOC.autoSEF()
+--  if currtar == nil then
+--    currtar = UnitGUID("player")
+--  elseif UnitExists("target") then
+--    currtar = UnitGUID("target")
+--  end
 
   targets = {}
   -- loop through all of the combatTracker enemies and insert only those that are qualified targets
   --for i=1,#enemies do
   for i,_ in pairs(ProbablyEngine.module.combatTracker.enemy) do
-    local guid = ProbablyEngine.module.combatTracker.enemy[i]['guid']
 
-    if UnitGUID(guid)~=currtar
-      --and UnitExists(guid)
-      --and NOC.immuneEvents(guid)
-      --and getCreatureType(guid)
-      --and UnitCanAttack("player",guid)
-      --and not UnitIsDeadOrGhost(guid)
-      --and (isInCombat(guid) or isDummy(guid))
-      --and ProbablyEngine.parser.can_cast(137639, guid, false)
+    -- because we can't do most of the required operations on the GUID, we
+    -- need to translate the GUID to a UnitID. However a UnitID will only
+    -- be valid for those units that are essentially currently targetted by the
+    -- player or a player's group-mate, or mouseover, which will result in some
+    -- situations where there are enemy actors in combat with the player but
+    -- not able to be identified. This is a limitation of not using an
+    -- ObjectManager based solution
+    local unit = NOC.guidtoUnit(ProbablyEngine.module.combatTracker.enemy[i]['guid'])
+
+    if unit
+      and unit ~= "target"
+      --and UnitExists(unit)
+      --and NOC.immuneEvents(unit)
+      --and getCreatureType(unit)
+      --and UnitCanAttack("player",unit)
+      --and not UnitIsDeadOrGhost(unit)
+      --and (UnitAffectingCombat((unit) or isDummy(unit))
+      --and ProbablyEngine.parser.can_cast(137639, unit, false)
       --and UnitGUID(guid)~=currtar
     then
-      table.insert(targets, { Name = UnitName(guid), Unit = guid, HP = UnitHealth(guid) } )
+      table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit) } )
       --table.insert( targets,{ Name = UnitName(enemies[i]), Unit = enemies[i], HP = UnitHealth(enemies[i]), Range = getDistance("player",enemies[i]) })
     end
   end
@@ -522,18 +557,19 @@ function NOC.autoSEF()
 
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
   if #targets > 0 then
-    --ProbablyEngine.dsl.parsedTarget = targets[1]
-    Cast(137639,targets[1].Unit)
-    print('returning 1:'..targets[1])
+    ProbablyEngine.dsl.parsedTarget = targets[1].Unit
+    --Cast(137639,targets[1].Unit)
+    print('returning 1:'..targets[1]..' ('..targets[1].Unit..')')
     return true
   end
   if #targets > 1 then
-    --ProbablyEngine.dsl.parsedTarget = targets[2]
-    Cast(137639,targets[2].Unit)
-    print('returning 2:'..targets[2])
+    ProbablyEngine.dsl.parsedTarget = targets[2].Unit
+    --Cast(137639,targets[2].Unit)
+    print('returning 2:'..targets[2]..' ('..targets[2].Unit..')')
     return true
   end
   return false
 end
+
 
 ProbablyEngine.library.register("NOC", NOC)
