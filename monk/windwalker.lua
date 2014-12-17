@@ -52,8 +52,7 @@ local aoe = {
     "player.spell(Rushing Jade Wind).exists",
     "player.timetomax > 4",
     "player.buff(Tiger Power).duration > 4",
-    "target.debuff(Rising Sun Kick).duration > 4",
-    "toggle.fof" }},
+    "target.debuff(Rising Sun Kick).duration > 4", }},
 
   { "Hurricane Strike", {
     "player.spell(Rushing Jade Wind).exists",
@@ -175,8 +174,8 @@ local combat = {
 
   -- wrapper for "@NOC.immuneEvents" which prevents the following from occuring when the target is CCed or otherwise not allowed to be attacked
   {{
-    -- TODO: remove chi wave cast when < % health and simply use the one in the rotation below?
-    --{ "Chi Wave", {"player.health <= 75", "!player.buff(Serenity)" }}, -- 40 yard range 0 energy, 0 chi
+    -- Chi wave during the first few seconds of combat (even at range) and when not under Serenity
+    { "Chi Wave", { "player.time < 10", "!player.buff(Serenity)" }}, -- 40 yard range 0 energy, 0 chi
 
     {{
        -- Cooldowns/Racials
@@ -191,6 +190,19 @@ local combat = {
 
     -- Melee range only
     {{
+      -- Opener priority during the first 10 seconds
+      {{
+        -- Chi Brew?
+        -- TP?
+        -- RSK?
+        {{
+          { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(159490)" }},
+          { "Fists of Fury", "player.glyph(159490)" },
+        }, { "player.buff(Tiger Power)", "target.debuff(Rising Sun Kick)" }},
+        -- Jab?
+        -- Serenity?
+        }, { "player.time < 10", "!player.buff(Serenity)" }},
+
       { "Touch of Death", "player.buff(Death Note)" },
 
       {{
@@ -231,7 +243,7 @@ local combat = {
       {{
         { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(159490)" }},
         { "Fists of Fury", "player.glyph(159490)" },
-      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 4", "toggle.fof" }},
+      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 4" }},
 
 
       { "Hurricane Strike", {
