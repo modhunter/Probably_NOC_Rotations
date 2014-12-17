@@ -516,15 +516,9 @@ function NOC.guidtoUnit(guid)
 end
 
 function NOC.autoSEF()
---  if currtar == nil then
---    currtar = UnitGUID("player")
---  elseif UnitExists("target") then
---    currtar = UnitGUID("target")
---  end
-
   targets = {}
-  -- loop through all of the combatTracker enemies and insert only those that are qualified targets
-  --for i=1,#enemies do
+  -- loop through all of the combatTracker enemies and insert only those
+  -- that are 'qualified' targets
   for i,_ in pairs(ProbablyEngine.module.combatTracker.enemy) do
 
     -- because we can't do most of the required operations on the GUID, we
@@ -538,34 +532,34 @@ function NOC.autoSEF()
 
     if unit
       and unit ~= "target"
-      --and UnitExists(unit)
-      --and NOC.immuneEvents(unit)
-      --and getCreatureType(unit)
-      --and UnitCanAttack("player",unit)
-      --and not UnitIsDeadOrGhost(unit)
+      and unit ~= "PLAYERTARGET"
+      and UnitExists(unit)
+      and NOC.immuneEvents(unit)
+      and getCreatureType(unit)
+      and UnitCanAttack("player",unit)
+      and not UnitIsDeadOrGhost(unit)
       --and (UnitAffectingCombat((unit) or isDummy(unit))
-      --and ProbablyEngine.parser.can_cast(137639, unit, false)
-      --and UnitGUID(guid)~=currtar
+      and ProbablyEngine.parser.can_cast(137639, unit, false)
+      and IsSpellInRange(137639, unit)
     then
       table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit) } )
-      --table.insert( targets,{ Name = UnitName(enemies[i]), Unit = enemies[i], HP = UnitHealth(enemies[i]), Range = getDistance("player",enemies[i]) })
     end
   end
 
   -- sort the qualified targets by health
-  --table.sort(targets, function(x,y) return x.HP > y.HP end)
+  table.sort(targets, function(x,y) return x.HP > y.HP end)
 
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
   if #targets > 0 then
     ProbablyEngine.dsl.parsedTarget = targets[1].Unit
     --Cast(137639,targets[1].Unit)
-    print('returning 1:'..targets[1]..' ('..targets[1].Unit..')')
+    --print('returning 1:'..targets[1]..' ('..targets[1].Unit..')')
     return true
   end
   if #targets > 1 then
     ProbablyEngine.dsl.parsedTarget = targets[2].Unit
     --Cast(137639,targets[2].Unit)
-    print('returning 2:'..targets[2]..' ('..targets[2].Unit..')')
+    print('returning 2')
     return true
   end
   return false
