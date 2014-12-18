@@ -111,14 +111,9 @@ local combat = {
   -- SEF on mouseover when enabled
   {{
     { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },
+    { "Storm, Earth, and Fire", { "!player.buff(137639).count = 2", "@NOC.autoSEF()", "toggle.autosef2" }},
     { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }}
   }, "toggle.autosef" },
-
-  -- Auto SEF
-  {{
-    { "Storm, Earth, and Fire", { "!player.buff(137639).count = 2", "@NOC.autoSEF()" }},
-    { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }}
-    }, "toggle.autosef2" },
 
   -- Interrupts
   {{
@@ -199,15 +194,12 @@ local combat = {
     {{
       -- Opener priority during the first 10 seconds
       {{
-        -- Chi Brew?
-        -- TP?
-        -- RSK?
+        { "Jab", "player.chi < 3" },
         {{
           { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(159490)" }},
           { "Fists of Fury", "player.glyph(159490)" },
         }, { "player.buff(Tiger Power)", "target.debuff(Rising Sun Kick)" }},
-        -- Jab?
-        -- Serenity?
+
         }, { "player.time < 10", "!player.buff(Serenity)" }},
 
       { "Touch of Death", "player.buff(Death Note)" },
@@ -241,7 +233,7 @@ local combat = {
 
       { "Tiger Palm", { "!player.buff(Tiger Power)", "target.debuff(Rising Sun Kick).duration > 1", "player.timetomax > 1" }},
 
-      { "Serenity", { "talent(7,3)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
+      { "Serenity", { "talent(7,3)", "player.time > 5", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
       -- AoE
       { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},

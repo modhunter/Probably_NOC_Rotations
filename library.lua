@@ -508,14 +508,20 @@ function NOC.guidtoUnit(guid)
     if guid == UnitGUID("PLAYERTARGET") then
       return "PLAYERTARGET"
     end
-    if guid == UnitGUID("MOUSEOVER") then
-      return "MOUSEOVER"
+    if guid == UnitGUID("mouseover") then
+      return "mouseover"
     end
   end
   return false
 end
 
 function NOC.autoSEF()
+  if currtar == nil then
+    currtar = UnitGUID("player")
+  elseif UnitExists("target") then
+    currtar = UnitGUID("target")
+  end
+
   targets = {}
   -- loop through all of the combatTracker enemies and insert only those
   -- that are 'qualified' targets
@@ -531,16 +537,16 @@ function NOC.autoSEF()
     local unit = NOC.guidtoUnit(ProbablyEngine.module.combatTracker.enemy[i]['guid'])
 
     if unit
-      and unit ~= "target"
-      and unit ~= "PLAYERTARGET"
+      and UnitGUID(unit)~=currtar
+      and not UnitDebuff(unit,137639)
       and UnitExists(unit)
-      and NOC.immuneEvents(unit)
-      and getCreatureType(unit)
       and UnitCanAttack("player",unit)
-      and not UnitIsDeadOrGhost(unit)
-      --and (UnitAffectingCombat((unit) or isDummy(unit))
+      --and NOC.immuneEvents(unit)
+      --and getCreatureType(unit)
+      --and not UnitIsDeadOrGhost(unit)
+      --and (UnitAffectingCombat(unit) or isDummy(unit))
       and ProbablyEngine.parser.can_cast(137639, unit, false)
-      and IsSpellInRange(137639, unit)
+      and IsSpellInRange("Storm, Earth, and Fire", unit)
     then
       table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit) } )
     end
@@ -552,13 +558,11 @@ function NOC.autoSEF()
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
   if #targets > 0 then
     ProbablyEngine.dsl.parsedTarget = targets[1].Unit
-    --Cast(137639,targets[1].Unit)
-    --print('returning 1:'..targets[1]..' ('..targets[1].Unit..')')
+
     return true
   end
   if #targets > 1 then
     ProbablyEngine.dsl.parsedTarget = targets[2].Unit
-    --Cast(137639,targets[2].Unit)
     print('returning 2')
     return true
   end
