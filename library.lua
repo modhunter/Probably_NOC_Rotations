@@ -516,13 +516,9 @@ function NOC.guidtoUnit(guid)
 end
 
 function NOC.autoSEF()
-  if currtar == nil then
-    currtar = UnitGUID("player")
-  elseif UnitExists("target") then
-    currtar = UnitGUID("target")
-  end
+  -- Initialize 'targets' every call of the function
+  local targets = {}
 
-  targets = {}
   -- loop through all of the combatTracker enemies and insert only those
   -- that are 'qualified' targets
   for i,_ in pairs(ProbablyEngine.module.combatTracker.enemy) do
@@ -537,18 +533,16 @@ function NOC.autoSEF()
     local unit = NOC.guidtoUnit(ProbablyEngine.module.combatTracker.enemy[i]['guid'])
 
     if unit
-      and UnitGUID(unit)~=currtar
-      and not UnitDebuff(unit,137639)
-      and UnitExists(unit)
-      and UnitCanAttack("player",unit)
-      --and NOC.immuneEvents(unit)
-      --and getCreatureType(unit)
-      --and not UnitIsDeadOrGhost(unit)
-      --and (UnitAffectingCombat(unit) or isDummy(unit))
-      and ProbablyEngine.parser.can_cast(137639, unit, false)
-      and IsSpellInRange("Storm, Earth, and Fire", unit)
+    and UnitGUID(unit) ~= UnitGUID("target")
+    --and not UnitIsUnit("target",unit)
+    and not ProbablyEngine.condition["debuff"](unit,138130)
+    and ProbablyEngine.condition["distance"](unit) < 40
+    and getCreatureType(unit)
+    and NOC.immuneEvents(unit)
+    and (UnitAffectingCombat(unit) or isDummy(unit))
+    and IsSpellInRange(GetSpellInfo(137639), unit)
     then
-      table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit) } )
+      table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
     end
   end
 
@@ -557,13 +551,8 @@ function NOC.autoSEF()
 
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
   if #targets > 0 then
+    --print(targets[1].Unit..","..targets[1].Name..","..#targets)
     ProbablyEngine.dsl.parsedTarget = targets[1].Unit
-
-    return true
-  end
-  if #targets > 1 then
-    ProbablyEngine.dsl.parsedTarget = targets[2].Unit
-    print('returning 2')
     return true
   end
   return false
