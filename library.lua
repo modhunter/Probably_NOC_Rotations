@@ -424,10 +424,6 @@ function NOC.pause()
 	end
 end
 
-function NOC.isInCombat(Unit)
-  if UnitAffectingCombat(Unit) then return true; else return false; end
-end
-
 -- thanks to CML for this routine
 function NOC.isException(Unit)
 	if Unit == nil then Unit = "target"; else Unit = tostring(Unit) end
@@ -481,6 +477,85 @@ function NOC.KSEnergy()
   local MyNRGregen = select(2, GetPowerRegen("player"))
   local NRGforKS = MyNRG + (MyNRGregen * GetSpellCD(121253))
   return NRGforKS
+end
+
+function tablelength(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
+end
+
+function NOC.guidtoUnit(guid)
+  local inGroup = GetNumGroupMembers()
+  if inGroup then
+    if IsInRaid("player") then
+      for i=1,inGroup do
+        if guid == UnitGUID("RAID".. i .. "TARGET") then
+          return "RAID".. i .. "TARGET"
+        end
+      end
+    else
+      for i=1,inGroup do
+        if guid == UnitGUID("PARTY".. i .. "TARGET") then
+          return "PARTY".. i .. "TARGET"
+        end
+      end
+      if guid == UnitGUID("PLAYERTARGET") then
+        return "PLAYERTARGET"
+      end
+    end
+  else
+    if guid == UnitGUID("PLAYERTARGET") then
+      return "PLAYERTARGET"
+    end
+    if guid == UnitGUID("mouseover") then
+      return "mouseover"
+    end
+  end
+  return false
+end
+
+function NOC.autoSEF()
+  -- Initialize 'targets' every call of the function
+  local targets = {}
+
+  -- loop through all of the combatTracker enemies and insert only those
+  -- that are 'qualified' targets
+  for i,_ in pairs(ProbablyEngine.module.combatTracker.enemy) do
+
+    -- because we can't do most of the required operations on the GUID, we
+    -- need to translate the GUID to a UnitID. However a UnitID will only
+    -- be valid for those units that are essentially currently targetted by the
+    -- player or a player's group-mate, or mouseover, which will result in some
+    -- situations where there are enemy actors in combat with the player but
+    -- not able to be identified. This is a limitation of not using an
+    -- ObjectManager based solution
+    local unit = NOC.guidtoUnit(ProbablyEngine.module.combatTracker.enemy[i]['guid'])
+
+    if unit
+    and UnitGUID(unit) ~= UnitGUID("target")
+    --and not UnitIsUnit("target",unit)
+    and not ProbablyEngine.condition["debuff"](unit,138130)
+    and ProbablyEngine.condition["distance"](unit) < 40
+    and getCreatureType(unit)
+    and NOC.immuneEvents(unit)
+    and (UnitAffectingCombat(unit) or isDummy(unit))
+    and IsSpellInRange(GetSpellInfo(137639), unit)
+    then
+      table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
+    end
+  end
+
+  -- sort the qualified targets by health
+  table.sort(targets, function(x,y) return x.HP > y.HP end)
+
+  -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
+  if #targets > 0 then
+    --print(targets[1].Unit..","..targets[1].Name..","..#targets)
+    ProbablyEngine.dsl.parsedTarget = targets[1].Unit
+    return true
+  end
+  return false
 end
 
 

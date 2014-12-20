@@ -57,6 +57,76 @@ ProbablyEngine.module.register("combatTracker", {
   units = { },
 })
 
+-- TODO: merge this with aquireRange so we accomplish both in the same function
+ProbablyEngine.module.combatTracker.aquireHealth = function(guid, maxHealth, name)
+  if maxHealth then health = UnitHealthMax else health = UnitHealth end
+  local inGroup = GetNumGroupMembers()
+  if inGroup then
+    if IsInRaid("player") then
+      for i=1,inGroup do
+        if guid == UnitGUID("RAID".. i .. "TARGET") then
+          return health("RAID".. i .. "TARGET")
+        end
+      end
+    else
+      for i=1,inGroup do
+        if guid == UnitGUID("PARTY".. i .. "TARGET") then
+          return health("PARTY".. i .. "TARGET")
+        end
+      end
+      if guid == UnitGUID("PLAYERTARGET") then
+        return health("PLAYERTARGET")
+      end
+    end
+  else
+    print(guid, UnitGUID("PLAYERTARGET"))
+    if guid == UnitGUID("PLAYERTARGET") then
+      return health("PLAYERTARGET")
+    end
+    if guid == UnitGUID("MOUSEOVER") then
+      return health("MOUSEOVER")
+    end
+  end
+  -- All health checks failed, do we have a cache of this units health ?
+  if maxHealth then
+    if ProbablyEngine.module.combatTracker.healthCache[name] ~= nil then
+      return ProbablyEngine.module.combatTracker.healthCache[name]
+    end
+  end
+  return false
+end
+
+ProbablyEngine.module.combatTracker.aquireRange = function(guid)
+  range = ProbablyEngine.condition["distance"]
+  local inGroup = GetNumGroupMembers()
+  if inGroup then
+    if IsInRaid("player") then
+      for i=1,inGroup do
+        if guid == UnitGUID("RAID".. i .. "TARGET") then
+          return range("RAID".. i .. "TARGET")
+        end
+      end
+    else
+      for i=1,inGroup do
+        if guid == UnitGUID("PARTY".. i .. "TARGET") then
+          return range("PARTY".. i .. "TARGET")
+        end
+      end
+      if guid == UnitGUID("PLAYERTARGET") then
+        return range("PLAYERTARGET")
+      end
+    end
+  else
+    print(guid, UnitGUID("PLAYERTARGET"))
+    if guid == UnitGUID("PLAYERTARGET") then
+      return range("PLAYERTARGET")
+    end
+    if guid == UnitGUID("MOUSEOVER") then
+      return range("MOUSEOVER")
+    end
+  end
+  return false
+end
 
 ProbablyEngine.module.combatTracker.combatCheck = function()
   local inGroup = GetNumGroupMembers()
@@ -78,8 +148,25 @@ ProbablyEngine.module.combatTracker.combatCheck = function()
   return false
 end
 
+-- TODO: rename this to just updateCT
 ProbablyEngine.timer.register("updateCTHealth", function()
-  if not ProbablyEngine.module.combatTracker.combatCheck() then
+  if ProbablyEngine.module.combatTracker.combatCheck() then
+    for guid,table in pairs(ProbablyEngine.module.combatTracker.enemy) do
+      local health = ProbablyEngine.module.combatTracker.aquireHealth(guid)
+      if health then
+        -- attempt to aquire max health again
+        if ProbablyEngine.module.combatTracker.enemy[guid]['maxHealth'] == false then
+          local name = ProbablyEngine.module.combatTracker.enemy[guid]['name']
+          ProbablyEngine.module.combatTracker.enemy[guid]['maxHealth'] = ProbablyEngine.module.combatTracker.           aquireHealth(guid, true, name)
+        end
+        ProbablyEngine.module.combatTracker.enemy[guid].health = health
+      end
+      local range = ProbablyEngine.module.combatTracker.aquireRange(guid)
+      if range then
+        ProbablyEngine.module.combatTracker.enemy[guid].range = range
+      end
+    end
+  else
     ProbablyEngine.module.combatTracker.cleanCT()
   end
 end, 100)
@@ -87,9 +174,34 @@ end, 100)
 
 ProbablyEngine.module.combatTracker.insert = function(guid, unitname, timestamp)
   if ProbablyEngine.module.combatTracker.enemy[guid] == nil then
+
+    local maxHealth = ProbablyEngine.module.combatTracker.aquireHealth(guid, true, unitname)
+    local health = ProbablyEngine.module.combatTracker.aquireHealth(guid)
+    local range = ProbablyEngine.module.combatTracker.aquireRange(guid)
+
     ProbablyEngine.module.combatTracker.enemy[guid] = { }
+    ProbablyEngine.module.combatTracker.enemy[guid]['maxHealth'] = maxHealth
+    ProbablyEngine.module.combatTracker.enemy[guid]['health'] = health
+    ProbablyEngine.module.combatTracker.enemy[guid]['range'] = range
     ProbablyEngine.module.combatTracker.enemy[guid]['name'] = unitname
     ProbablyEngine.module.combatTracker.enemy[guid]['time'] = false
+    ProbablyEngine.module.combatTracker.enemy[guid]['guid'] = guid
+
+    if maxHealth then
+      -- we got a health value from aquire, store it for later usage
+      if ProbablyEngine.module.combatTracker.healthCacheCount[unitname] then
+        -- we've alreadt seen this type, average it
+        local currentAverage = ProbablyEngine.module.combatTracker.healthCache[unitname]
+        local currentCount = ProbablyEngine.module.combatTracker.healthCacheCount[unitname]
+        local newAverage = (currentAverage + maxHealth) / 2
+        ProbablyEngine.module.combatTracker.healthCache[unitname] = newAverage
+        ProbablyEngine.module.combatTracker.healthCacheCount[unitname] = currentCount + 1
+      else
+        -- this is new to use, save it
+        ProbablyEngine.module.combatTracker.healthCache[unitname] = maxHealth
+        ProbablyEngine.module.combatTracker.healthCacheCount[unitname] = 1
+      end
+    end
   end
 end
 
