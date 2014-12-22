@@ -439,11 +439,14 @@ function NOC.isException(Unit)
         46647, --Training Dummy - Lvl 85
         60197, --Scarlet Monastery Dummy
         67127, --Training Dummy - Lvl 90
-        87761, --Dungeoneer's Training Dummy <Damage>
-        88314, --Dungeoneer's Training Dummy <Tanking>
+        87761, --Dungeoneer's Training Dummy <Damage> (Frostall)
+        87318, --Dungeoneer's Training Dummy <Damage> (Lunarfall)
+        88314, --Dungeoneer's Training Dummy <Tanking> (Lunarefall)
+        88288, --Dungeoneer's Training Dummy <Tanking> (Frostwall)
+        87322, --Dungeoneer's Training Dummy <Tanking> (Stormshield)
+        88836, --Dungeoneer's Training Dummy <Tanking> (Warspear)
         88316, --Training Dummy <Healing>
         89078, --Training Dummy (Garrison)
-        87318, --Dungeoneer's Training Dummy <Damage>
         76585, --Ragewing <Boss in UBRS>
         76267, --Solar Zealot <Skyreach Final Boss Mob>
         76598, --Ritual of Bones?
@@ -539,7 +542,7 @@ function NOC.autoSEF()
     and ProbablyEngine.condition["distance"](unit) < 40
     and getCreatureType(unit)
     and NOC.immuneEvents(unit)
-    and (UnitAffectingCombat(unit) or isDummy(unit))
+    and (UnitAffectingCombat(unit) or isException(unit))
     and IsSpellInRange(GetSpellInfo(137639), unit)
     then
       table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )

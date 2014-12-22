@@ -111,7 +111,8 @@ local combat = {
   -- SEF on mouseover when enabled
   {{
     { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },
-    { "Storm, Earth, and Fire", { "toggle.autosef2", "!player.buff(137639).count = 2", "timeout(sefTimer, 1)", "@NOC.autoSEF()", },},
+    --{ "Storm, Earth, and Fire", { "toggle.autosef2", "!player.buff(137639).count = 2", "timeout(sefTimer, 1)", "@NOC.autoSEF()", },},
+    { "Storm, Earth, and Fire", { "toggle.autosef2", "!player.buff(137639).count = 2", "@NOC.autoSEF()", },},
     { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }}
   }, "toggle.autosef" },
 
