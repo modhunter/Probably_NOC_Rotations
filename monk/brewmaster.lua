@@ -90,27 +90,27 @@ local combat = {
 			"!target.debuff(Spear Hand Strike)",
 			"player.spell(116705).cooldown > 0",
 			"player.spell(107079).cooldown > 0",
-			"!modifier.last(116705)"
+			"!modifier.lastcast(116705)"
 		}},
 		{ "116844", { -- Ring of Peace when SHS is on CD
 			"!target.debuff(Spear Hand Strike)",
 			"player.spell(116705).cooldown > 0",
-			"!modifier.last(116705)"
+			"!modifier.lastcast(116705)"
 		}},
 		{ "Leg Sweep", { -- Leg Sweep when SHS is on CD
 			"player.spell(116705).cooldown > 0",
 			"target.range <= 5",
-			"!modifier.last(116705)"
+			"!modifier.lastcast(116705)"
 		}},
 		{ "Charging Ox Wave", { -- Charging Ox Wave when SHS is on CD
 			"player.spell(116705).cooldown > 0",
 			"target.range <= 30",
-			"!modifier.last(116705)"
+			"!modifier.lastcast(116705)"
 		}},
 		{ "107079", { -- Quaking Palm when SHS on CD
 			"!target.debuff(Spear Hand Strike)",
 			"player.spell(116705).cooldown > 0",
-			"!modifier.last(116705)"
+			"!modifier.lastcast(116705)"
 		}},
 		{ "116705" }, -- Spear Hand Strike
 	}, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
@@ -146,7 +146,7 @@ local combat = {
 	{ "Expel Harm", "player.health < 35" },
 
 	{ "Detox", { "player.dispellable(115450)" }, "player" }, -- Self Dispell (Detox)
-	{ "Detox", { "!modifier.last(4987)", "mouseover.exists", "mouseover.alive", "mouseover.friend", "mouseover.range <= 40", "mouseover.dispellable(115450)" }, "mouseover" }, -- Detox on mouseover if needed
+	{ "Detox", { "!modifier.lastcast(4987)", "mouseover.exists", "mouseover.alive", "mouseover.friend", "mouseover.range <= 40", "mouseover.dispellable(115450)" }, "mouseover" }, -- Detox on mouseover if needed
 
 	{ "Nimble Brew", "@NOC.noControl()" },
 	{ "Tiger's Lust", "@NOC.noControl()" },

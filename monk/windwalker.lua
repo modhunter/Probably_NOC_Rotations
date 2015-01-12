@@ -122,27 +122,27 @@ local combat = {
        "!target.debuff(Spear Hand Strike)",
        "player.spell(Spear Hand Strike).cooldown > 0",
        "player.spell(Quaking Palm).cooldown > 0",
-       "!modifier.last(Spear Hand Strike)"
+       "!modifier.lastcast(Spear Hand Strike)"
     }},
     { "Ring of Peace", { -- Ring of Peace when SHS is on CD
        "!target.debuff(Spear Hand Strike)",
        "player.spell(Spear Hand Strike).cooldown > 0",
-       "!modifier.last(Spear Hand Strike)"
+       "!modifier.lastcast(Spear Hand Strike)"
     }},
     { "Leg Sweep", { -- Leg Sweep when SHS is on CD
        "player.spell(116705).cooldown > 0",
        "target.range <= 5",
-       "!modifier.last(116705)"
+       "!modifier.lastcast(116705)"
     }},
     { "Charging Ox Wave", { -- Charging Ox Wave when SHS is on CD
        "player.spell(116705).cooldown > 0",
        "target.range <= 30",
-       "!modifier.last(116705)"
+       "!modifier.lastcast(116705)"
     }},
     { "Quaking Palm", { -- Quaking Palm when SHS is on CD
        "!target.debuff(Spear Hand Strike)",
        "player.spell(Spear Hand Strike).cooldown > 0",
-       "!modifier.last(Spear Hand Strike)"
+       "!modifier.lastcast(Spear Hand Strike)"
     }},
     { "Spear Hand Strike" }, -- Spear Hand Strike
   }, "target.interruptsAt(40)" }, -- Interrupt when 40% into the cast time
@@ -205,9 +205,9 @@ local combat = {
       { "Touch of Death", "player.buff(Death Note)" },
 
       {{
-        { "Chi Brew", { "!modifier.last(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
+        { "Chi Brew", { "!modifier.lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
         --{ "Chi Brew", "target.ttd < 10" },
-        { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.last(Chi Brew)" }},
+        { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.lastcast(Chi Brew)" }},
       }, {"player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16" }},
 
       { "Tiger Palm", "player.buff(Tiger Power).duration <= 3" },
@@ -226,7 +226,7 @@ local combat = {
             --{ "116740", { "target.ttd < 40" }},
           },{ "player.chi >= 2" }},
         },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
-      },{ "!player.buff(116740)", "!modifier.last(116740)" }},
+      },{ "!player.buff(116740)", "!modifier.lastcast(116740)" }},
 
       { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
       { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
