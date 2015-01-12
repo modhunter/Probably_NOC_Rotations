@@ -26,8 +26,8 @@ local buffs = {
 }
 
 local ooc = {
-	{ "115180", "modifier.lcontrol", "mouseover.ground" }, -- Dizzying Haze
-	{ "115315", "modifier.lalt", "mouseover.ground" }, -- Black Ox Statue
+	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
+	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
 	{ "Expel Harm", "player.health < 100" }, -- Expel Harm when not at full health
 	{ buffs, },
 }
@@ -118,6 +118,7 @@ local combat = {
 	-- Self Heal
 	{ "Zen Sphere", { "player.buff(124081)", "!focus.buff(124081)",  }, "focus" }, -- Zen Sphere on focus if buff is already on player
 	{ "Zen Sphere", { "!player.buff(124081)" }, "player" }, -- Zen Sphere on player
+   { "#109223", "player.health < 40" }, -- Healing Tonic
 	{ "#5512", "player.health < 40"}, --Healthstone when less than 40% health
 	--TODO: Add support for healing potions
 
@@ -173,7 +174,7 @@ local combat = {
 		"mouseover.spell(115546).range",
 		"mouseover.threat < 100",
 		"mouseover.range > 10"
-	}, "mouseover.ground" },
+	}, "ground" },
 
 	-- Main Rotation (melee)
 	{{

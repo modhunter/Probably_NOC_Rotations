@@ -168,8 +168,8 @@ local combat = {
     "!player.buff(Dampen Harm)"
   }},
 
+  { "#109223", "player.health < 40" }, -- Healing Tonic
   { "#5512", "player.health < 40" }, -- Healthstone
-  --TODO: Add support for healing potions
 
   { "Detox", "player.dispellable(Detox)", "player" },
   { "Nimble Brew", "@NOC.noControl()" },

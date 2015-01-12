@@ -75,6 +75,7 @@ local combat = {
   -- Survival
   { "109304", "player.health < 50" }, -- Exhiliration
   { "Deterrence", "player.health < 10" }, -- Deterrence as a last resort
+  { "#109223", "player.health < 40" }, -- Healing Tonic
   { "#5512", "player.health < 40" }, -- Healthstone
 
   -- This is still broken if the potion is on cooldown
