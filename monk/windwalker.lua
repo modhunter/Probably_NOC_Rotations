@@ -108,6 +108,11 @@ local combat = {
   ---------------------------------------------------------------------------------------------------
   { "!101643", "@NOC.checkQueue(101643)" }, -- Transcendence
 
+  -- Auto Touch of Death
+  { "Touch of Death", "@NOC.autoTOD()" },
+  -- Touch of Death on mouseover
+  { "Touch of Death", "mouseover.health < 10", "mouseover" },
+
   -- SEF on mouseover when enabled
   {{
     { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },

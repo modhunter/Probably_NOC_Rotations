@@ -561,5 +561,46 @@ function NOC.autoSEF()
   return false
 end
 
+function NOC.autoTOD()
+  -- Initialize 'targets' every call of the function
+  local targets = {}
+
+  -- loop through all of the combatTracker enemies and insert only those
+  -- that are 'qualified' targets
+  for i,_ in pairs(ProbablyEngine.module.combatTracker.enemy) do
+
+    -- because we can't do most of the required operations on the GUID, we
+    -- need to translate the GUID to a UnitID. However a UnitID will only
+    -- be valid for those units that are essentially currently targetted by the
+    -- player or a player's group-mate, or mouseover, which will result in some
+    -- situations where there are enemy actors in combat with the player but
+    -- not able to be identified. This is a limitation of not using an
+    -- ObjectManager based solution
+    local unit = NOC.guidtoUnit(ProbablyEngine.module.combatTracker.enemy[i]['guid'])
+
+    if unit
+    and UnitGUID(unit) ~= UnitGUID("target")
+    --and not ProbablyEngine.condition["buff"]("player",121125)
+    and math.floor((UnitHealth(unit)/UnitHealthMax(unit))*100) < 10 then
+    and ProbablyEngine.condition["distance"](unit) <= 8
+    and getCreatureType(unit)
+    and NOC.immuneEvents(unit)
+    and (UnitAffectingCombat(unit) or isException(unit))
+    and IsSpellInRange(GetSpellInfo(121125), unit)
+    then
+      table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
+    end
+  end
+
+  -- sort the qualified targets by health
+  table.sort(targets, function(x,y) return x.HP > y.HP end)
+
+  if #targets > 0 then
+    --print(targets[1].Unit..","..targets[1].Name..","..#targets)
+    ProbablyEngine.dsl.parsedTarget = targets[1].Unit
+    return true
+  end
+  return false
+end
 
 ProbablyEngine.library.register("NOC", NOC)
