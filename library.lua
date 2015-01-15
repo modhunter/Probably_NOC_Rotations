@@ -581,7 +581,7 @@ function NOC.autoTOD()
     if unit
     and UnitGUID(unit) ~= UnitGUID("target")
     --and not ProbablyEngine.condition["buff"]("player",121125)
-    and math.floor((UnitHealth(unit)/UnitHealthMax(unit))*100) < 10 then
+    and math.floor((UnitHealth(unit)/UnitHealthMax(unit))*100) < 10
     and ProbablyEngine.condition["distance"](unit) <= 8
     and getCreatureType(unit)
     and NOC.immuneEvents(unit)
