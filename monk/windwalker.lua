@@ -36,13 +36,20 @@ local ooc = {
 }
 
 local aoe = {
-  { "Chi Explosion", "player.chi >= 4" },
+  {{
+    { "Chi Explosion", "player.spell(Fists of Fury).cooldown > 3" },
+    { "Chi Explosion", "!talent(6,1)" },
+  }, "player.chi >= 4" },
+
+  {{
+    { "Energizing Brew", "!talent(7,3)" },
+    { "Energizing Brew", { "!player.buff(Serenity)", "player.spell(Serenity).cooldown > 4" }},
+  },{ "player.spell(Fists of Fury).cooldown > 6", "player.timetomax > 5" }},
 
   -- Only use this is we have the RJW talent and there are more than 5 enemies
   { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 5", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
   { "Rushing Jade Wind", { "!talent(6,1)", "!talent(7,2)" }},
-
 
   { "Rising Sun Kick", "player.chidiff = 0" },
 
@@ -77,14 +84,15 @@ local aoe = {
   { "Tiger Palm", { "player.spell(Rushing Jade Wind).exists", "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
 
   -- Only do this if we have RJW talent and not chex talent
-  { "Blackout Kick", { "talent(6,1)", "!talent(7,2)", "player.chidiff < 2" }},
+  { "Blackout Kick", { "talent(6,1)", "!talent(7,2)", "player.chidiff < 2", "player.spell(Fists of Fury).cooldown > 3"  }},
 
   -- Only do this if we do not have RJW talent and there are more than 5 enemies
   { "Spinning Crane Kick", { "!talent(6,1)", "modifier.enemies > 5", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
   { "Spinning Crane Kick", { "!talent(6,1)", "!talent(7,2)" }},
 
-  { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 2" }},
+  { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 2" }},  
+  { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3" }},
 }
 
 local combat = {
@@ -206,6 +214,9 @@ local combat = {
         }, { "player.buff(Tiger Power)", "target.debuff(Rising Sun Kick)" }},
       }, { "player.time < 10", "!player.buff(Serenity)" }},
 
+      -- Use Fortifying Brew offensivley to get bigger ToD damage
+      -- TODO: Need to test this to make sure it is working
+      { "Fortifying Brew", { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown = 0", "player.chi >= 3" }},
       { "Touch of Death", "player.buff(Death Note)" },
 
       {{
@@ -214,7 +225,7 @@ local combat = {
         { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.lastcast(Chi Brew)" }},
       }, {"player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16" }},
 
-      { "Tiger Palm", "player.buff(Tiger Power).duration <= 3" },
+      { "Tiger Palm", "player.buff(Tiger Power).duration < 6" },
 
       -- Tigereye Brew
       {{
@@ -235,7 +246,7 @@ local combat = {
       { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
       { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
 
-      { "Tiger Palm", { "!player.buff(Tiger Power)", "target.debuff(Rising Sun Kick).duration > 1", "player.timetomax > 1" }},
+      --{ "Tiger Palm", { "!player.buff(Tiger Power)", "target.debuff(Rising Sun Kick).duration > 1", "player.timetomax > 1" }},
 
       { "Serenity", { "talent(7,3)", "player.time > 5", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
@@ -247,7 +258,6 @@ local combat = {
         { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(159490)" }},
         { "Fists of Fury", "player.glyph(159490)" },
       }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 4" }},
-
 
       { "Hurricane Strike", {
         "talent(7,3)",
@@ -273,15 +283,16 @@ local combat = {
         { "Blackout Kick", "player.buff(Serenity)" },
       }, "!talent(7,2)" },
 
-      { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.buff(Combo Breaker: Chi Explosion)" }},
+      { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.buff(Combo Breaker: Chi Explosion)", "player.spell(Fists of Fury).cooldown > 3" }},
 
-      { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
+      { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration < 6" }},
 
       { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2" }},
 
-      { "Chi Explosion", { "talent(7,2)", "player.chi >= 3" }},
+      { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.spell(Fists of Fury).cooldown > 3" }},
 
       { "Jab", { "player.chidiff >= 2", "player.energy >= 45" }},
+      { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3" }},
 
     }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
