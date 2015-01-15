@@ -56,7 +56,7 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-
+- Add logic to allow casting movment-restricted spells while under aspect of the fox
 
 ## Windwalker Monk (6.x)
 ====================

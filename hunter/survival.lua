@@ -39,7 +39,7 @@ local aoe = {
   { "Powershot" },
   { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
   { "2643", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
-  { "Focusing Shot" },
+  { "Focusing Shot", { "player.focus < 45", "!player.moving", "player.lastmoved > 1" }},
   { "Cobra Shot" },
 }
 
@@ -128,7 +128,7 @@ local combat = {
     { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
     { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
     { "Arcane Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }},
-    { "Focusing Shot" },
+    { "Focusing Shot", { "player.focus < 45", "!player.moving", "player.lastmoved > 1" }},
     { "Cobra Shot" },
   }, "@NOC.immuneEvents('target')" },
 }

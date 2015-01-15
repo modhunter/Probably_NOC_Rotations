@@ -96,7 +96,7 @@ local combat = {
     { "A Murder of Crows" },
     { "Kill Shot" },
     { "Kill Command" },
-    { "Focusing Shot", "player.focus < 50" },
+    { "Focusing Shot", { "player.focus < 50", "!player.moving", "player.lastmoved > 1" }},
     { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 50" }},
     { "Glaive Toss" },
     { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
