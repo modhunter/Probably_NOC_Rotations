@@ -7,7 +7,7 @@ local onLoad = function()
   ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
   ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
-  ProbablyEngine.toggle.create('autotod', 'Interface\\Icons\\spell_sandstorm', 'Auto TOD', 'Automatically cast TOD on valid targets')
+  ProbablyEngine.toggle.create('autotod', 'Interface\\Icons\\ability_monk_touchofdeath', 'Auto TOD', 'Automatically cast TOD on valid targets')
 end
 
 local buffs = {
@@ -91,7 +91,7 @@ local aoe = {
   -- Otherwise, use it 'normally' if we aren't using chi explosion
   { "Spinning Crane Kick", { "!talent(6,1)", "!talent(7,2)" }},
 
-  { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 2" }},  
+  { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 2" }},
   { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3" }},
 }
 
@@ -121,12 +121,12 @@ local combat = {
     { "Touch of Death", "@NOC.autoTOD()" },
     -- Touch of Death on mouseover
     { "Touch of Death", "mouseover.health < 10", "mouseover" },
-  }, "toggle.autoted" },
+  }, "toggle.autotod" },
 
   { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },
   -- Auto SEF when enabled
   { "Storm, Earth, and Fire", { "toggle.autosef", "!player.buff(137639).count = 2", "@NOC.autoSEF()", },},
-  { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }}
+  { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }},
 
   -- Interrupts
   {{
