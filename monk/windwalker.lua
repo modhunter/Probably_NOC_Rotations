@@ -46,8 +46,8 @@ local aoe = {
     { "Energizing Brew", { "!player.buff(Serenity)", "player.spell(Serenity).cooldown > 4" }},
   },{ "player.spell(Fists of Fury).cooldown > 6", "player.timetomax > 5" }},
 
-  -- Only use this is we have the RJW talent and there are more than 5 enemies
-  { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 5", "toggle.rjw" }},
+  -- Only use this is we have the RJW talent and there are more than 3 enemies and toggle enabled
+  { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 3", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
   { "Rushing Jade Wind", { "!talent(6,1)", "!talent(7,2)" }},
 
@@ -86,8 +86,8 @@ local aoe = {
   -- Only do this if we have RJW talent and not chex talent
   { "Blackout Kick", { "talent(6,1)", "!talent(7,2)", "player.chidiff < 2", "player.spell(Fists of Fury).cooldown > 3"  }},
 
-  -- Only do this if we do not have RJW talent and there are more than 5 enemies
-  { "Spinning Crane Kick", { "!talent(6,1)", "modifier.enemies > 5", "toggle.rjw" }},
+  -- Only do this if we do not have RJW talent and there are more than 3 enemies and toggle enabled
+  { "Spinning Crane Kick", { "!talent(6,1)", "modifier.enemies > 3", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
   { "Spinning Crane Kick", { "!talent(6,1)", "!talent(7,2)" }},
 
@@ -118,6 +118,7 @@ local combat = {
 
   -- Auto Touch of Death
   {{
+    -- Fully automatic Touch of Death (similar to SE&F)
     { "Touch of Death", "@NOC.autoTOD()" },
     -- Touch of Death on mouseover
     { "Touch of Death", "mouseover.health < 10", "mouseover" },
@@ -165,8 +166,6 @@ local combat = {
   { "!119392", "@NOC.checkQueue(119392)" }, -- Charging Ox Wave
   { "!119381", "@NOC.checkQueue(119381)" }, -- Leg Sweep
   { "!Tiger's Lust", "@NOC.checkQueue(Tiger's Lust)" }, -- Tiger's Lust
-  { "!Dampen Harm", "@NOC.checkQueue(Dampen Harm)" }, -- Dampen Harm
-  { "!Diffuse Magic", "@NOC.checkQueue(Diffuse Magic)" }, -- Diffuse Magic
 
   -- Self-Healing & Defensives
   { "Expel Harm", { "player.health <= 70", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
@@ -215,12 +214,12 @@ local combat = {
       }, { "player.time < 10", "!player.buff(Serenity)" }},
 
       -- Use Fortifying Brew offensivley to get bigger ToD damage
-      -- TODO: Need to test this to make sure it is working
       { "Fortifying Brew", { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown = 0", "player.chi >= 3" }},
       { "Touch of Death", "player.buff(Death Note)" },
 
       {{
         { "Chi Brew", { "!modifier.lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
+        -- target.ttd is unreliable
         --{ "Chi Brew", "target.ttd < 10" },
         { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.lastcast(Chi Brew)" }},
       }, {"player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16" }},
@@ -238,6 +237,7 @@ local combat = {
           },{ "player.chi >= 3", "player.buff(125195).count >= 10" }},
           {{
             { "116740", { "player.buff(125195).count >= 16" }},
+            -- target.ttd is unreliable
             --{ "116740", { "target.ttd < 40" }},
           },{ "player.chi >= 2" }},
         },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
