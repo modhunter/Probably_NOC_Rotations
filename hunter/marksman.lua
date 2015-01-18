@@ -31,7 +31,7 @@ local careful_aim = {
   { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
   -- ST
   { "Aimed Shot" },
-  { "Focusing Shot", { "player.timetomax > 4", "!player.moving", "player.lastmoved > 1" }},
+  { "Focusing Shot", { "player.timetomax > 4", "!player.moving" }},
   { "Steady Shot" },
 }
 
@@ -121,12 +121,12 @@ local combat = {
       --actions+=/steady_shot,if=focus.deficit*cast_time%(14+cast_regen)>cooldown.rapid_fire.remains
       --actions+=/focusing_shot,if=focus.deficit*cast_time%(50+cast_regen)>cooldown.rapid_fire.remains&focus<100
       { "Steady Shot", "player.timetomax > player.spell(Rapid Fire).cooldown" },
-      { "Focusing Shot", { "player.focus < 50", "!player.moving", "player.lastmoved > 1" }},
+      { "Focusing Shot", { "player.focus < 50", "!player.moving" }},
       { "Steady Shot", { "player.buff(Steady Focus)", "player.timetomax > 5" }},
       { "Aimed Shot", "player.spell(Focusing Shot).exists" },
       { "Aimed Shot", "player.focus > 80" },
       { "Aimed Shot", { "player.buff(34720)", "player.focus > 60" }},
-      { "Focusing Shot", { "player.focus < 50", "!player.moving", "player.lastmoved > 1" }},
+      { "Focusing Shot", { "player.focus < 50", "!player.moving" }},
       { "Steady Shot" },
     }, { "target.health < 80", "!player.buff(Rapid Fire)" }},
 
