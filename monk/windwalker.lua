@@ -54,8 +54,8 @@ local aoe = {
   { "Rising Sun Kick", "player.chidiff = 0" },
 
   {{
-    { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(159490)" }},
-    { "Fists of Fury", "player.glyph(159490)" },
+    { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
+    { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
   }, {
     "player.spell(Rushing Jade Wind).exists",
     "player.timetomax > 4",
@@ -122,6 +122,7 @@ local combat = {
     { "Touch of Death", "@NOC.autoTOD()" },
     -- Touch of Death on mouseover
     { "Touch of Death", "mouseover.health < 10", "mouseover" },
+    { "Touch of Death", "mouseover.health.actual < player.health.actual", "mouseover" },
   }, "toggle.autotod" },
 
   { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },
@@ -204,25 +205,47 @@ local combat = {
 
     -- Melee range only
     {{
-      -- Opener priority during the first 10 seconds
+      -- Opener priority during the first 10 seconds when serenity talent is selected and hasn't been cast yet
+      -- 'ideal' opener (with 5 chi) is:    RSK -> TP -> CB -> CB -> BoK -> TeB -> FoF -> Jab -> Serenity
+      -- 'unideal' opener (with 2 chi) is:  RSK -> Jab -> TP -> CB -> CB -> BoK -> TeB -> FoF -> Jab -> Serenity
       {{
-        { "Jab", "player.chi < 3" },
         {{
-          { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(159490)" }},
-          { "Fists of Fury", "player.glyph(159490)" },
+          -- This should 'constrain' BoK to be only casted once
+          { "Blackout Kick", { "!talent(7,2)", "player.spell(Blackout Kick).casted < 1" }},
+
+          { "Chi Brew", { "player.chidiff >= 2" }},
+
+          -- TeB when we have at least 5 stacks and we have casted BoK at least once
+          { "116740", { "player.buff(125195).count >= 5", "!player.buff(116740)", "!modifier.lastcast(116740)", "player.spell(Blackout Kick).casted >= 1" }},
+
+          { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
+          { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
         }, { "player.buff(Tiger Power)", "target.debuff(Rising Sun Kick)" }},
-      }, { "player.time < 10", "!player.buff(Serenity)" }},
+        { "Jab", "player.chi <= 1" },
+      }, { "player.time < 10", "talent(7,3)", "!player.buff(Serenity)" }},
 
       -- Use Fortifying Brew offensivley to get bigger ToD damage
       { "Fortifying Brew", { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown = 0", "player.chi >= 3" }},
       { "Touch of Death", "player.buff(Death Note)" },
 
+      -- If serenity, honor opener
       {{
         { "Chi Brew", { "!modifier.lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
         -- target.ttd is unreliable
         --{ "Chi Brew", "target.ttd < 10" },
         { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.lastcast(Chi Brew)" }},
-      }, {"player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16" }},
+      }, { "player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16", "player.time >= 6", "talent(7,3)" }},
+
+      -- If not serenity, disregard opener
+      {{
+        { "Chi Brew", { "!modifier.lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
+        -- target.ttd is unreliable
+        --{ "Chi Brew", "target.ttd < 10" },
+        { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.lastcast(Chi Brew)" }},
+        }, { "player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16", "!talent(7,3)" }},
+
+      { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
+      { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
 
       { "Tiger Palm", "player.buff(Tiger Power).duration < 6" },
 
@@ -243,20 +266,17 @@ local combat = {
         },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
       },{ "!player.buff(116740)", "!modifier.lastcast(116740)" }},
 
-      { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
-      { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
-
       --{ "Tiger Palm", { "!player.buff(Tiger Power)", "target.debuff(Rising Sun Kick).duration > 1", "player.timetomax > 1" }},
 
-      { "Serenity", { "talent(7,3)", "player.time > 5", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
+      { "Serenity", { "talent(7,3)", "player.time >= 6", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
       -- AoE
       { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
       -- Single
       {{
-        { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(159490)" }},
-        { "Fists of Fury", "player.glyph(159490)" },
+        { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
+        { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
       }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 4" }},
 
       { "Hurricane Strike", {
@@ -291,8 +311,12 @@ local combat = {
 
       { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.spell(Fists of Fury).cooldown > 3" }},
 
-      { "Jab", { "player.chidiff >= 2", "player.energy >= 45" }},
-      { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3" }},
+      -- If Serenity, honor opener
+      { "Jab", { "player.chidiff >= 2", "player.energy >= 45", "player.time >= 6", "talent(7,3)" }},
+      { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3", "player.time >= 6", "talent(7,3)" }},
+      -- If not serenity, disregard opener
+      { "Jab", { "player.chidiff >= 2", "player.energy >= 45", "!talent(7,3)" }},
+      { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3", "!talent(7,3)" }},
 
     }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
