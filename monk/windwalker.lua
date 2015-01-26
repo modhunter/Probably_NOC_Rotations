@@ -7,7 +7,7 @@ local onLoad = function()
   ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
   ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
-  ProbablyEngine.toggle.create('autotod', 'Interface\\Icons\\ability_monk_touchofdeath', 'Auto TOD', 'Automatically cast TOD on valid targets')
+  --ProbablyEngine.toggle.create('tod', 'Interface\\Icons\\ability_monk_touchofdeath', 'Auto TOD', 'Automatically cast TOD on valid targets')
 end
 
 local buffs = {
@@ -116,14 +116,11 @@ local combat = {
   ---------------------------------------------------------------------------------------------------
   { "!101643", "@NOC.checkQueue(101643)" }, -- Transcendence
 
-  -- Auto Touch of Death
-  {{
     -- Fully automatic Touch of Death (similar to SE&F)
-    { "Touch of Death", "@NOC.autoTOD()" },
+  --{ "Touch of Death", {  "toggle.tod", "@NOC.autoTOD()", },},
     -- Touch of Death on mouseover
-    { "Touch of Death", "mouseover.health < 10", "mouseover" },
-    { "Touch of Death", "mouseover.health.actual < player.health.actual", "mouseover" },
-  }, "toggle.autotod" },
+  { "Touch of Death", "mouseover.health < 10", "mouseover" },
+  { "Touch of Death", "mouseover.health.actual < player.health.max", "mouseover" },
 
   { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },
   -- Auto SEF when enabled
@@ -220,6 +217,7 @@ local combat = {
 
           { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
           { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
+
         }, { "player.buff(Tiger Power)", "target.debuff(Rising Sun Kick)" }},
         { "Jab", "player.chi <= 1" },
       }, { "player.time < 10", "talent(7,3)", "!player.buff(Serenity)" }},
@@ -320,8 +318,8 @@ local combat = {
 
     }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
-    -- Tiger's Lust if the target is at least 15 yards away and we are moving for at least 1 second
-    { "Tiger's Lust", { "target.range >= 15", "player.movingfor > 1", "target.alive" }},
+    -- Tiger's Lust if the target is at least 10 yards away and we are moving for at least 0.5 second
+    { "Tiger's Lust", { "target.range >= 10", "player.movingfor > 0.5", "target.alive" }},
 
     -- Crackling Jade Lightning (on toggle)
     {{

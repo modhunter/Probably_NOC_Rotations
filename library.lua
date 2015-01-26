@@ -581,12 +581,12 @@ function NOC.autoTOD()
     if unit
     and UnitGUID(unit) ~= UnitGUID("target")
     --and not ProbablyEngine.condition["buff"]("player",121125)
-    and math.floor((UnitHealth(unit)/UnitHealthMax(unit))*100) < 10
-    and ProbablyEngine.condition["distance"](unit) <= 8
+    and ((math.floor((UnitHealth(unit)/UnitHealthMax(unit))*100) < 10) or (UnitHealth(unit) < UnitHealthMax("player")))
+    and ProbablyEngine.condition["distance"](unit) <= 5
     and getCreatureType(unit)
     and NOC.immuneEvents(unit)
     and (UnitAffectingCombat(unit) or isException(unit))
-    and IsSpellInRange(GetSpellInfo(121125), unit)
+    and IsSpellInRange(GetSpellInfo(115080), unit)
     then
       table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
     end
@@ -596,7 +596,7 @@ function NOC.autoTOD()
   table.sort(targets, function(x,y) return x.HP > y.HP end)
 
   if #targets > 0 then
-    --print(targets[1].Unit..","..targets[1].Name..","..#targets)
+    print("Auto ToD candidate: "..targets[1].Unit..","..targets[1].Name..","..#targets)
     ProbablyEngine.dsl.parsedTarget = targets[1].Unit
     return true
   end
