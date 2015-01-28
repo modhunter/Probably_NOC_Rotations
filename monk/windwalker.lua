@@ -213,7 +213,7 @@ local combat = {
           { "Chi Brew", { "player.chidiff >= 2" }},
 
           -- TeB when we have at least 5 stacks and we have casted BoK at least once
-          { "116740", { "player.buff(125195).count >= 5", "!player.buff(116740)", "!modifier.lastcast(116740)", "player.spell(Blackout Kick).casted >= 1" }},
+          { "116740", { "player.buff(125195).count >= 9", "!player.buff(116740)", "!modifier.lastcast(116740)", "player.spell(Blackout Kick).casted >= 1" }},
 
           { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
           { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
@@ -319,7 +319,7 @@ local combat = {
     }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
 
     -- Tiger's Lust if the target is at least 10 yards away and we are moving for at least 0.5 second
-    { "Tiger's Lust", { "target.range >= 10", "player.movingfor > 0.5", "target.alive" }},
+    { "Tiger's Lust", { "target.range >= 5", "player.movingfor > 0.5", "target.alive" }},
 
     -- Crackling Jade Lightning (on toggle)
     {{
