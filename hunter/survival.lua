@@ -24,7 +24,7 @@ local ooc = {
 
 local aoe = {
   -- Explosive shot if LnL is up and Barrage is not ready
-  { "Explosive Shot", { "player.buff(56453)", "player.spell(Barrage).cooldown > 0" }},
+  { "Explosive Shot", { "player.buff(Lock and Load)", "player.spell(Barrage).cooldown > 0" }},
   { "Barrage" },
   { "Explosive Shot" },
   { "Black Arrow", "!target.debuff(3674)" },
