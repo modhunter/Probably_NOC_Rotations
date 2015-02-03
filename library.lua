@@ -450,7 +450,8 @@ function NOC.isException(Unit)
         76585, --Ragewing <Boss in UBRS>
         76267, --Solar Zealot <Skyreach Final Boss Mob>
         76598, --Ritual of Bones?
-        76518 --Ritual of Bones?
+        76518, --Ritual of Bones?
+        77252  --Boxes on oregorger
     }
     for i=1, #dummies do
         if UnitExists(Unit) and UnitGUID(Unit) then
