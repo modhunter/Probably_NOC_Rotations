@@ -98,10 +98,7 @@ ProbablyEngine.command.register('mWW', function(msg, box)
     end
   end
 
-  if command == "qKarma" or command == 122470 then
-    NOC.queueSpell = 122470 -- Touch of Karma
-    mww.message("Touch of Karma queued")
-  elseif command == "qLust" or command == 116841 then
+  if command == "qLust" or command == 116841 then
     NOC.queueSpell = 116841 -- Tiger's Lust
     mww.message("Tger's Lust queued")
   elseif command == "qTfour" then
@@ -115,17 +112,6 @@ ProbablyEngine.command.register('mWW', function(msg, box)
         NOC.queueSpell = 119381 -- Leg Sweep
         mww.message("Leg Sweep queued")
     end
-  elseif command == "qTfive" then
-    if select(2,GetTalentRowSelectionInfo(5)) == 14 then
-        NOC.queueSpell = 122278 -- Dampen Harm
-        mww.message("Dampen Harm queued")
-    elseif select(2,GetTalentRowSelectionInfo(5)) == 15 then
-        NOC.queueSpell = 122783 -- Diffuse Magic
-        mww.message("Diffuse Magic queued")
-    end
-  elseif command == "qtr" or command == 101643 then
-      NOC.queueSpell = 101643 -- Transcendence
-      mww.message("Transcendencet queued")
   else
     NOC.queueSpell = nil
   end
@@ -206,16 +192,7 @@ ProbablyEngine.command.register('mBM', function(msg, box)
   end
 
 -- Spell Queue -- thank you merq for basic code --------------------------------------------------------------------
-  if command == "qGuard" or command == 123402 then
-    NOC.queueSpell = 123402
-    mww:message("Guard queued")
-  elseif command == "qBrew" or command == 115203 then
-    NOC.queueSpell = 115203
-    mww:message("Fortifying Brew queued")
-  elseif command == "qZen" or command == 115176 then
-    NOC.queueSpell = 115176
-    mww:message("Zen Meditation queued")
-  elseif command == "qPara" or command == 115078 then
+  if command == "qPara" or command == 115078 then
     NOC.queueSpell = 115078
     mww:message("Paralysis (mouseover) queued")
   elseif command == "qOx" or command == 115315 then
@@ -232,17 +209,6 @@ ProbablyEngine.command.register('mBM', function(msg, box)
         NOC.queueSpell = 119381
         mww:message("Leg Sweep queued")
     end
-  elseif command == "qTfive" then
-    if select(2,GetTalentRowSelectionInfo(5)) == 14 then
-        NOC.queueSpell = 122278
-        mww:message("Dampen Harm queued")
-    elseif select(2,GetTalentRowSelectionInfo(5)) == 15 then
-        NOC.queueSpell = 122783
-        mww:message("Diffuse Magic queued")
-    end
-  elseif command == "qtr" or command == 101643 then
-    NOC.queueSpell = 101643 -- Transcendence
-    mww.message("Transcendencet queued")
   else
     NOC.queueSpell = nil
   end

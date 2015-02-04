@@ -2,9 +2,10 @@
 -- NO CARRIER's Brewmaster Monk Rotation
 
 local onLoad = function()
-	ProbablyEngine.toggle.create('def', 'Interface\\Icons\\INV_SummerFest_Symbol_Medium.png‎', 'Defensive CDs Toggle', 'Enable or Disable usage of Guard / Fortifying Brew')
-	ProbablyEngine.toggle.create('autotaunt', 'Interface\\Icons\\Spell_Magic_PolymorphRabbit.png‎',	'SoO Auto autotaunt Toggle', 'Enable or Disable Auto autotaunt in SoO\nImmerseus 1 Stack\nNorushen 4 Stacks\nSha of Pride 1 Stack\nIron Juggernaut 3 Stacks\nDark Shamans 5 Stacks\nGeneral Nazgrim 3 Stacks\nMalkorok 13 Stacks\nBlackfuse 3 Stacks\nThok 3 Stacks\nGarrosh 3 Stacks\nSET 2ND TANK TO FOCUS')
-	ProbablyEngine.toggle.create('kegsmash', 'Interface\\Icons\\achievement_brewery_2.png‎',	'Keg Smash Toggle',	'Enable or Disable Keg Smash to avoid cleave')
+	ProbablyEngine.toggle.create('def', 'Interface\\Icons\\INV_SummerFest_Symbol_Medium.png', 'Defensive CDs Toggle', 'Enable or Disable usage of Guard / Fortifying Brew')
+--	ProbablyEngine.toggle.create('autotaunt', 'Interface\\Icons\\Spell_Magic_PolymorphRabbit.png',	'SoO Auto autotaunt Toggle', 'Enable or Disable Auto autotaunt in SoO\nImmerseus 1 Stack\nNorushen 4 Stacks\nSha of Pride 1 Stack\nIron Juggernaut 3 Stacks\nDark Shamans 5 Stacks\nGeneral Nazgrim 3 Stacks\nMalkorok 13 Stacks\nBlackfuse 3 Stacks\nThok 3 Stacks\nGarrosh 3 Stacks\nSET 2ND TANK TO FOCUS')
+	ProbablyEngine.toggle.create('kegsmash', 'Interface\\Icons\\achievement_brewery_2.png',	'Keg Smash Toggle',	'Enable or Disable Keg Smash to avoid cleave')
+	ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
 	ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
 end
 
@@ -53,6 +54,30 @@ local aoe = {
 	}},
 }
 
+--[[
+an big issue with the Brewmaster Rotation is the fact that it wastes alot of Chi with purifying brew, if you have the chi explosion talent.
+
+what it does now:
+http://i.imgur.com/aSypbWf.png
+
+e.g. how it should be:
+https://www.warcraftlogs.com/reports...asts&source=31
+https://www.warcraftlogs.com/reports...casts&source=8
+
+it should not use purifying brew with chi explo Talent, and just use chi explo at 3 chi to purify the damage(if neccesary) (also Chi Explo will do more Damage with 3 Chi).
+~30 Chi and much Damage wasted in a fight, as of now.
+
+Also chi explo isn effectivly useable in cleave fights with 2 Targets (Twins, Tectus, Brackenspore), since it uses the 4 Chi , Chi Explo only with Multitarget Enabled, But with Multitarget enabled it also uses Rushing Jade Wind, which you dont want to use at 2 Targets.
+
+it would be solved if we had a Button to disable RJW/SCK in Multitarget Mode.
+
+ACTIONS:
+-when specced to chi explosion, do not use purify - ever?
+-instead, pool chi to 3 and use chex to purify
+
+-implement similar RJW/SCK check/toggle & multitarget conditions like we do with windwalker
+]]
+
 local combat = {
 	-- Hotkeys
 	{ "pause", "modifier.lshift" },
@@ -71,16 +96,10 @@ local combat = {
 	-- Queued Spells
 	-- TODO: Remediate this
 	 ---------------------------------------------------------------------------------------------------
-	{ "!123402", "@NOC.checkQueue(123402)" }, -- Guard
-	{ "!115203", "@NOC.checkQueue(115203)" }, -- Fortifying Brew
-	{ "!115176", "@NOC.checkQueue(115176)" }, -- Zen Meditation
 	{ "!116844", "@NOC.checkQueue(116844)" }, -- Ring of Peace
 	{ "!119392", "@NOC.checkQueue(119392)" }, -- Charging Ox Wave
 	{ "!119381", "@NOC.checkQueue(119381)" }, -- Leg Sweep
-	{ "!122280", "@NOC.checkQueue(122280)" }, -- Healing Elixers
-	{ "!122278", "@NOC.checkQueue(122278)" }, -- Dampen Harm
-	{ "!122783", "@NOC.checkQueue(122783)" }, -- Diffuse Magic
-	{ "!101643", "@NOC.checkQueue(101643)" }, -- Transcendence
+	{ "!116841", "@NOC.checkQueue(116841)" }, -- Tiger's Lust
 	{ "!115078", "@NOC.checkQueue(115078)", "mouseover" }, -- Paralysis
 	{ "!115315", "@NOC.checkQueue(115315)", "ground" }, -- Summon Black Ox Statue
 
@@ -122,8 +141,12 @@ local combat = {
 	{ "#5512", "player.health < 40"}, --Healthstone when less than 40% health
 	--TODO: Add support for healing potions
 
-	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
-	{ "Purifying Brew", "@NOC.DrinkStagger" },
+	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger when not using Chi Explosion
+	{ "Purifying Brew", { "@NOC.DrinkStagger", "!talent(7,2)" }},
+
+	-- Purify only at heavy stagger when using Chi Explosion
+	{ "Purifying Brew", { "player.debuff(124273)", "talent(7,2)" }},
+
 	-- Purify if Serenity is about to fall-off
 	{ "Purifying Brew", {"player.buff(157558)", "player.buff(157558).duration <= 2" }},
 
