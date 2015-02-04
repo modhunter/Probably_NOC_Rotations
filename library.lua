@@ -428,30 +428,41 @@ end
 function NOC.isException(Unit)
 	if Unit == nil then Unit = "target"; else Unit = tostring(Unit) end
     dummies = {
-        31144, --Training Dummy - Lvl 80
-        31146, --Raider's Training Dummy - Lvl ??
-        32541, --Initiate's Training Dummy - Lvl 55 (Scarlet Enclave)
-        32542, --Disciple's Training Dummy - Lvl 65
-        32545, --Initiate's Training Dummy - Lvl 55
-        32546, --Ebon Knight's Training Dummy - Lvl 80
-        32666, --Training Dummy - Lvl 60
-        32667, --Training Dummy - Lvl 70
-        46647, --Training Dummy - Lvl 85
-        60197, --Scarlet Monastery Dummy
-        67127, --Training Dummy - Lvl 90
-        87761, --Dungeoneer's Training Dummy <Damage> (Frostall)
-        87318, --Dungeoneer's Training Dummy <Damage> (Lunarfall)
-        88314, --Dungeoneer's Training Dummy <Tanking> (Lunarefall)
-        88288, --Dungeoneer's Training Dummy <Tanking> (Frostwall)
-        87322, --Dungeoneer's Training Dummy <Tanking> (Stormshield)
-        88836, --Dungeoneer's Training Dummy <Tanking> (Warspear)
-        88316, --Training Dummy <Healing>
-        89078, --Training Dummy (Garrison)
-        76585, --Ragewing <Boss in UBRS>
-        76267, --Solar Zealot <Skyreach Final Boss Mob>
-        76598, --Ritual of Bones?
-        76518, --Ritual of Bones?
-        77252  --Boxes on oregorger
+       -- TRAINING DUMMIES
+       31144,      -- Training Dummy - Lvl 80
+       31146,      -- Raider's Training Dummy - Lvl ??
+       32541,      -- Initiate's Training Dummy - Lvl 55 (Scarlet Enclave)
+       32542,      -- Disciple's Training Dummy - Lvl 65
+       32545,      -- Initiate's Training Dummy - Lvl 55
+       32546,      -- Ebon Knight's Training Dummy - Lvl 80
+       32666,      -- Training Dummy - Lvl 60
+       32667,      -- Training Dummy - Lvl 70
+       46647,      -- Training Dummy - Lvl 85
+       60197,      -- Scarlet Monastery Dummy
+       67127,      -- Training Dummy - Lvl 90
+       87761,      -- Dungeoneer's Training Dummy <Damage> HORDE GARRISON
+       88288,      -- Dunteoneer's Training Dummy <Tanking> HORDE GARRISON
+       88289,      -- Training Dummy <Healing> HORDE GARRISON
+       88314,      -- Dungeoneer's Training Dummy <Tanking> ALLIANCE GARRISON
+       87322,      --Dungeoneer's Training Dummy <Tanking> (Stormshield)
+       88836,      --Dungeoneer's Training Dummy <Tanking> (Warspear)
+       88316,      -- Training Dummy <Healing> ALLIANCE GARRISON
+       89078,      -- Training Dummy (Garrison)
+       87318,      -- Dungeoneer's Training Dummy <Damage>
+       -- WOD DUNGEONS/RAIDS
+       71075,      -- Small Illusionary Banshee (Proving Grounds)
+       75966,      -- Defiled Spirit (Shadowmoon Burial Grounds)
+       76220,      -- Blazing Trickster (Auchindoun Normal)
+       76267,      -- Solar Zealot (Skyreach)
+       76518,      -- Ritual of Bones (Shadowmoon Burial Grounds)
+       76598,      --Ritual of Bones?
+       79511,      -- Blazing Trickster (Auchindoun Heroic)
+       81638,      -- Aqueous Globule (The Everbloom)
+       153792,     -- Rallying Banner (UBRS Black Iron Grunt)
+       76585,      --Ragewing <Boss in UBRS>
+       77252,      -- Ore Crate (BRF Oregorger)
+       79504,      -- Ore Crate (BRF Oregorger)
+       86644,      -- Ore Crate (BRF Oregorger)
     }
     for i=1, #dummies do
         if UnitExists(Unit) and UnitGUID(Unit) then
@@ -463,6 +474,7 @@ function NOC.isException(Unit)
             return true
         end
     end
+    return false
 end
 
 function GetSpellCD(MySpell)
