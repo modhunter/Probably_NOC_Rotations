@@ -43,40 +43,20 @@ local aoe = {
 			"!talent(7,2)",
 	}},
 
-	{ "Rushing Jade Wind", {
-		"player.chidiff >= 1",
-		"talent(6,1)",
-	}},
+	{{
+		-- Only use this is we have the RJW talent and there are more than 3 enemies and toggle enabled
+		{ "Rushing Jade Wind", { "modifier.enemies > 3", "toggle.rjw" }},
+		-- Otherwise, use it 'normally' if we aren't using chi explosion
+		{ "Rushing Jade Wind", "!talent(7,2)" },
+	}, { "talent(6,1)", "player.chidiff >= 1" }},
 
-	{ "Spinning Crane Kick", {
-		"player.chidiff >= 1",
-		"!talent(6,1)",
-	}},
+	{{
+		-- Only do this if we do not have RJW talent and there are more than 3 enemies and toggle enabled
+		{ "Spinning Crane Kick", { "modifier.enemies > 3", "toggle.rjw" }},
+		-- Otherwise, use it 'normally' if we aren't using chi explosion
+		{ "Spinning Crane Kick", "!talent(7,2)" },
+	}, { "!talent(6,1)", "player.chidiff >= 1" }},
 }
-
---[[
-an big issue with the Brewmaster Rotation is the fact that it wastes alot of Chi with purifying brew, if you have the chi explosion talent.
-
-what it does now:
-http://i.imgur.com/aSypbWf.png
-
-e.g. how it should be:
-https://www.warcraftlogs.com/reports...asts&source=31
-https://www.warcraftlogs.com/reports...casts&source=8
-
-it should not use purifying brew with chi explo Talent, and just use chi explo at 3 chi to purify the damage(if neccesary) (also Chi Explo will do more Damage with 3 Chi).
-~30 Chi and much Damage wasted in a fight, as of now.
-
-Also chi explo isn effectivly useable in cleave fights with 2 Targets (Twins, Tectus, Brackenspore), since it uses the 4 Chi , Chi Explo only with Multitarget Enabled, But with Multitarget enabled it also uses Rushing Jade Wind, which you dont want to use at 2 Targets.
-
-it would be solved if we had a Button to disable RJW/SCK in Multitarget Mode.
-
-ACTIONS:
--when specced to chi explosion, do not use purify - ever?
--instead, pool chi to 3 and use chex to purify
-
--implement similar RJW/SCK check/toggle & multitarget conditions like we do with windwalker
-]]
 
 local combat = {
 	-- Hotkeys
@@ -137,18 +117,17 @@ local combat = {
 	-- Self Heal
 	{ "Zen Sphere", { "player.buff(124081)", "!focus.buff(124081)",  }, "focus" }, -- Zen Sphere on focus if buff is already on player
 	{ "Zen Sphere", { "!player.buff(124081)" }, "player" }, -- Zen Sphere on player
-   { "#109223", "player.health < 40" }, -- Healing Tonic
+  { "#109223", "player.health < 40" }, -- Healing Tonic
 	{ "#5512", "player.health < 40"}, --Healthstone when less than 40% health
-	--TODO: Add support for healing potions
 
 	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger when not using Chi Explosion
 	{ "Purifying Brew", { "@NOC.DrinkStagger", "!talent(7,2)" }},
 
 	-- Purify only at heavy stagger when using Chi Explosion
-	{ "Purifying Brew", { "player.debuff(124273)", "talent(7,2)" }},
+	--{ "Purifying Brew", { "player.debuff(124273)", "talent(7,2)" }},
 
 	-- Purify if Serenity is about to fall-off
-	{ "Purifying Brew", {"player.buff(157558)", "player.buff(157558).duration <= 2" }},
+	{ "Purifying Brew", { "player.buff(157558)", "player.buff(157558).duration <= 2" }},
 
 	-- Defensives
 	-- Fortifying Brew when < 25% health and DM/DH are not being used
@@ -208,7 +187,7 @@ local combat = {
 			{ "Blackout Kick", "!player.buff(115307)" },
 			{ "Blackout Kick", "player.buff(115307).duration < 3" },
 			--{ "Blackout Kick",  "player.chi >= 4" },
-		}, "player.time < 10"},
+		}, "player.time < 10" },
 
 		{ "Serenity", { "player.chidiff >= 1", "player.buff(Tiger Power).duration >= 10", "modifier.cooldowns" }},
 
