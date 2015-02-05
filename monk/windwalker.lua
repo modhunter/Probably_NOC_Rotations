@@ -49,7 +49,7 @@ local aoe = {
   -- Only use this is we have the RJW talent and there are more than 3 enemies and toggle enabled
   { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 3", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
-  { "Rushing Jade Wind", { "!talent(6,1)", "!talent(7,2)" }},
+  { "Rushing Jade Wind", { "talent(6,1)", "!talent(7,2)" }},
 
   { "Rising Sun Kick", "player.chidiff = 0" },
 
@@ -110,11 +110,6 @@ local combat = {
 
   -- Buffs
   { buffs, },
-
-  -- Queued Spells
-  -- TODO: Remediate this
-  ---------------------------------------------------------------------------------------------------
-  { "!101643", "@NOC.checkQueue(101643)" }, -- Transcendence
 
     -- Fully automatic Touch of Death (similar to SE&F)
   --{ "Touch of Death", {  "toggle.tod", "@NOC.autoTOD()", },},
