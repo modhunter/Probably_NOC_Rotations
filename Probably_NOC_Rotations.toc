@@ -4,6 +4,7 @@
 ## Dependencies: Probably
 
 library.lua
+pe.lua
 hunter\beastmastery.lua
 hunter\survival.lua
 hunter\marksman.lua

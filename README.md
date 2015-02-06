@@ -4,21 +4,14 @@ NOC Rotations
 
 ##Status
 - Monk Windwalker
- - Updated for 6.x
- - **Level 90: raid ready**
- - Level 100: under development
+ - **Level 90 & 100: raid ready**
 - Monk Brewmaster
- - Updated for 6.x
- - **Level 90: raid ready**
- - Level 100: under development
+ - **Level 90 & 100: raid ready**
 - Hunter Survival
- - Updated for 6.x
  - **Level 90 & 100: raid ready**
 - Hunter Beastmaster
- - Updated for 6.x
  - **Level 90 & 100: raid ready**
 - Hunter Marksman
- - Updated for 6.x
  - **Level 90 & 100: raid ready**
 
 
@@ -63,8 +56,7 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-- Smart check for multi-target AOE missing
-
+- Add logic to allow casting movment-restricted spells while under aspect of the fox
 
 ## Windwalker Monk (6.x)
 ====================
@@ -118,7 +110,7 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-- Smart check for multi-target AOE missing
+- Cancel CJL when target <= 5 yards (not working?)
 
 
 ## Brewmaster Monk (6.x)
@@ -177,4 +169,3 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-- Smart check for multi-target AOE missing
