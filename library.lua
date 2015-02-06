@@ -429,6 +429,7 @@ function NOC.isException(Unit)
        77252,      -- Ore Crate (BRF Oregorger)
        79504,      -- Ore Crate (BRF Oregorger)
        86644,      -- Ore Crate (BRF Oregorger)
+       77891,      -- Grasping Earth (BRF Kromog)
        77893,      -- Grasping Earth (BRF Kromog)
     }
     for i=1, #dummies do
@@ -522,7 +523,7 @@ function NOC.autoSEF()
     and ProbablyEngine.condition["distance"](unit) < 40
     and getCreatureType(unit)
     and NOC.immuneEvents(unit)
-    and (UnitAffectingCombat(unit) or isException(unit))
+    and (UnitAffectingCombat(unit) or NOC.isException(unit))
     and IsSpellInRange(GetSpellInfo(137639), unit)
     then
       table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
@@ -565,7 +566,7 @@ function NOC.autoTOD()
     and ProbablyEngine.condition["distance"](unit) <= 5
     and getCreatureType(unit)
     and NOC.immuneEvents(unit)
-    and (UnitAffectingCombat(unit) or isException(unit))
+    and (UnitAffectingCombat(unit) or NOC.isException(unit))
     and IsSpellInRange(GetSpellInfo(115080), unit)
     then
       table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
