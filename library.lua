@@ -432,6 +432,7 @@ function NOC.isException(Unit)
        77891,      -- Grasping Earth (BRF Kromog)
        77893,      -- Grasping Earth (BRF Kromog)
        78583,      -- Turrets (BRF Iron Maidens)
+       78584,      -- Turrets (BRF Iron Maidens)
     }
     for i=1, #dummies do
         if UnitExists(Unit) and UnitGUID(Unit) then
