@@ -433,10 +433,12 @@ function NOC.isException(unit)
     }
 
     -- Fetch mob ID
-    local _,_,_,_,_,mobID = strsplit("-", UnitGUID(unit))
 
-    -- Compare
-    if not not UnitExists(unit) and units[mobID] ~= nil then return true end
+    if UnitGUID(unit) then
+      local _,_,_,_,_,mobID = strsplit("-", UnitGUID(unit))
+      -- Compare
+      if not not UnitExists(unit) and units[mobID] ~= nil then return true end
+    end
     return false
 end
 
