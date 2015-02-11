@@ -185,6 +185,8 @@ local combat = {
     -- Chi wave during the first few seconds of combat (even at range) and when not under Serenity
     { "Chi Wave", { "player.time < 10", "!player.buff(Serenity)" }}, -- 40 yard range 0 energy, 0 chi
 
+    -- TODO: add logic to line-up things with on-use trinkets as well as proc buffs
+
     {{
        -- Cooldowns/Racials
        { "Lifeblood" },
@@ -243,6 +245,7 @@ local combat = {
 
       { "Tiger Palm", "player.buff(Tiger Power).duration < 6" },
 
+      -- TODO: Pop TeB early when any sort of weapon/trinket/etc proc goes
       -- Tigereye Brew
       {{
         { "116740", "player.buff(125195).count = 20" },
