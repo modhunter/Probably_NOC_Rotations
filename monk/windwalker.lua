@@ -99,6 +99,7 @@ local combat = {
   -- Pause
   { "pause", "modifier.lshift" },
   { "pause", "@NOC.pause()"},
+  { "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
 
    -- AutoTarget
   { "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" } },
