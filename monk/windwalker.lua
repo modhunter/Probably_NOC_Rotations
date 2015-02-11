@@ -98,7 +98,7 @@ local aoe = {
 local combat = {
   -- Pause
   { "pause", "modifier.lshift" },
-  { "pause", "@NOC.pause()"},
+  --{ "pause", "@NOC.pause()"},
   { "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
 
    -- AutoTarget

@@ -236,8 +236,6 @@ end
 ------------------------------------
 
 
-
--- TODO: clean-up this function and update for WoD wher enecessary
 function NOC.immuneEvents(unit)
   if NOC.isException(unit) then return true end
   if not UnitAffectingCombat(unit) then return false end
@@ -369,13 +367,9 @@ end
 
 -- return true when the rotation should be paused
 function NOC.pause()
-	--if (IsMounted() and not UnitBuffID("player",164222) and not UnitBuffID("player",165803))
-  --if (IsMounted() and getUnitID("target") ~= 56877 and not UnitBuffID("player",164222) and not UnitBuffID("player",165803))
   if SpellIsTargeting()
     or (not UnitCanAttack("player", "target") and not UnitIsPlayer("target") and UnitExists("target"))
-    --or UnitCastingInfo("player")
-    --or UnitChannelInfo("player")
-    or UnitIsDeadOrGhost("player")
+    --or UnitIsDeadOrGhost("player")
     or (UnitIsDeadOrGhost("target") and not UnitIsPlayer("target"))
     or UnitBuff("player",80169) -- Eating
     or UnitBuff("player",87959) -- Drinking

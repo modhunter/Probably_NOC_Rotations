@@ -61,7 +61,7 @@ local aoe = {
 local combat = {
 	-- Hotkeys
 	{ "pause", "modifier.lshift" },
-	{ "pause", "@NOC.pause()" },
+	--{ "pause", "@NOC.pause()" },
 	{ "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
 	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
 	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue

@@ -28,7 +28,7 @@ local aoe = {
 
 local combat = {
   { "pause", "modifier.lshift" },
-  { "pause", "@NOC.pause()"},
+  --{ "pause", "@NOC.pause()"},
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
 
   -- AutoTarget
