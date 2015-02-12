@@ -154,13 +154,6 @@ local combat = {
     { "Spear Hand Strike" }, -- Spear Hand Strike
   }, "target.interruptsAt(40)" }, -- Interrupt when 40% into the cast time
 
-  -- Queued Spells
-  { "!122470", "@NOC.checkQueue(122470)" }, -- Touch of Karma
-  { "!116845", "@NOC.checkQueue(Ring of Peace)" }, -- Ring of Peace
-  { "!119392", "@NOC.checkQueue(119392)" }, -- Charging Ox Wave
-  { "!119381", "@NOC.checkQueue(119381)" }, -- Leg Sweep
-  { "!Tiger's Lust", "@NOC.checkQueue(Tiger's Lust)" }, -- Tiger's Lust
-
   -- Self-Healing & Defensives
   { "Expel Harm", { "player.health <= 70", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
   -- TODO: This locks up the rotation, need to investigate
@@ -194,8 +187,11 @@ local combat = {
        { "Blood Fury" },
        { "Bear Hug" },
        { "Invoke Xuen, the White Tiger" },
-       { "#trinket1" },
-       { "#trinket2" },
+       --{ "#trinket1", "player.hashero" },
+       --{ "#trinket2", "player.hashero" },
+       -- Use trinkets when we are using TeB
+       { "#trinket1", "player.buff(116740)" },
+       { "#trinket2", "player.buff(116740)" },
     }, "modifier.cooldowns" },
 
     -- Melee range only
@@ -254,6 +250,9 @@ local combat = {
           {{
             { "116740", "player.spell(Fists of Fury).cooldown = 0" },
             { "116740", { "player.spell(Hurricane Strike).cooldown > 0", "talent(7,1)" }},
+            { "116740", "player.buff(177161)" }, -- ArchmagesIncandescence
+            { "116740", "player.buff(177172)" }, -- ArchmagesGreaterIncandescence
+            { "116740", "player.hashero" },
           },{ "player.chi >= 3", "player.buff(125195).count >= 10" }},
           {{
             { "116740", { "player.buff(125195).count >= 16" }},
