@@ -7,6 +7,41 @@ NOC.unflagged = GetTime()
 NOC.queueSpell = nil
 NOC.queueTime = 0
 
+SpecialTargets = {
+    -- TRAINING DUMMIES
+    31144,      -- Training Dummy - Lvl 80
+    31146,      -- Raider's Training Dummy - Lvl ??
+    32541,      -- Initiate's Training Dummy - Lvl 55 (Scarlet Enclave)
+    32542,      -- Disciple's Training Dummy - Lvl 65
+    32545,      -- Initiate's Training Dummy - Lvl 55
+    32546,      -- Ebon Knight's Training Dummy - Lvl 80
+    32666,      -- Training Dummy - Lvl 60
+    32667,      -- Training Dummy - Lvl 70
+    46647,      -- Training Dummy - Lvl 85
+    60197,      -- Scarlet Monastery Dummy
+    67127,      -- Training Dummy - Lvl 90
+    87761,      -- Dungeoneer's Training Dummy <Damage> HORDE GARRISON
+    88288,      -- Dunteoneer's Training Dummy <Tanking> HORDE GARRISON
+    88289,      -- Training Dummy <Healing> HORDE GARRISON
+    88314,      -- Dungeoneer's Training Dummy <Tanking> ALLIANCE GARRISON
+    88316,      -- Training Dummy <Healing> ALLIANCE GARRISON
+    89078,      -- Training Dummy (Garrison)
+    87318,      -- Dungeoneer's Training Dummy <Damage>
+    -- WOD DUNGEONS/RAIDS
+    71075,      -- Small Illusionary Banshee (Proving Grounds)
+    75966,      -- Defiled Spirit (Shadowmoon Burial Grounds)
+    76220,      -- Blazing Trickster (Auchindoun Normal)
+    76267,      -- Solar Zealot (Skyreach)
+    76518,      -- Ritual of Bones (Shadowmoon Burial Grounds)
+    79511,      -- Blazing Trickster (Auchindoun Heroic)
+    81638,      -- Aqueous Globule (The Everbloom)
+    153792,     -- Rallying Banner (UBRS Black Iron Grunt)
+    77252,      -- Ore Crate (BRF Oregorger)
+    79504,      -- Ore Crate (BRF Oregorger)
+    86644,      -- Ore Crate (BRF Oregorger)
+    77665,      -- Iron Bomber (BRF Blackhand)
+}
+
 ------------------------------------
 --TODO: replace all of following messaging and queuing logic below with the new 'UI' - look at MrTheSoulz for examples
 ------------------------------------
@@ -383,63 +418,28 @@ function NOC.pause()
 	end
 end
 
--- thanks to CML for this routine
+-- Thanks to StinkyTwitch for the routine
 function NOC.isException(unit)
-    if not unit then unit = "target" else unit = tostring(unit) end
+  local unit = unit
+  local count = table.getn(SpecialTargets)
 
-    -- units to exempt
-    local units = {
-      -- TRAINING DUMMIES
-      [31144] = true,		-- Training Dummy - Lvl 80
-      [31146] = true,		-- Raider's Training Dummy - Lvl ??
-      [32541] = true,		-- Initiate's Training Dummy - Lvl 55 (Scarlet Enclave)
-      [32542] = true,		-- Disciple's Training Dummy - Lvl 65
-      [32545] = true,		-- Initiate's Training Dummy - Lvl 55
-      [32546] = true,		-- Ebon Knight's Training Dummy - Lvl 80
-      [32666] = true,		-- Training Dummy - Lvl 60
-      [32667] = true,		-- Training Dummy - Lvl 70
-      [46647] = true,		-- Training Dummy - Lvl 85
-      [60197] = true,		-- Scarlet Monastery Dummy
-      [67127] = true,		-- Training Dummy - Lvl 90
-      [87761] = true,		-- Dungeoneer's Training Dummy <Damage> HORDE GARRISON
-      [88288] = true,		-- Dunteoneer's Training Dummy <Tanking> HORDE GARRISON
-      [88289] = true,		-- Training Dummy <Healing> HORDE GARRISON
-      [88314] = true,		-- Dungeoneer's Training Dummy <Tanking> ALLIANCE GARRISON
-      [87322] = true,		-- Dungeoneer's Training Dummy <Tanking> (Stormshield)
-      [88836] = true,		-- Dungeoneer's Training Dummy <Tanking> (Warspear)
-      [88316] = true,		-- Training Dummy <Healing> ALLIANCE GARRISON
-      [89078] = true,		-- Training Dummy (Garrison)
-      [87318] = true,		-- Dungeoneer's Training Dummy <Damage>
+  if not UnitExists(unit) then
+      return false
+  end
 
-      -- WOD DUNGEONS/RAIDS
-      [71075] = true,		-- Small Illusionary Banshee (Proving Grounds)
-      [75966] = true,		-- Defiled Spirit (Shadowmoon Burial Grounds)
-      [76220] = true,		-- Blazing Trickster (Auchindoun Normal)
-      [76267] = true,		-- Solar Zealot (Skyreach)
-      [76518] = true,		-- Ritual of Bones (Shadowmoon Burial Grounds)
-      [76598] = true,		-- Ritual of Bones?
-      [79511] = true,		-- Blazing Trickster (Auchindoun Heroic)
-      [81638] = true,		-- Aqueous Globule (The Everbloom)
-      [153792] = true,	-- Rallying Banner (UBRS Black Iron Grunt)
-      [76585] = true,		-- Ragewing <Boss in UBRS>
-      [77252] = true,		-- Ore Crate (BRF Oregorger)
-      [79504] = true,		-- Ore Crate (BRF Oregorger)
-      [86644] = true,		-- Ore Crate (BRF Oregorger)
-      [77891] = true,		-- Grasping Earth (BRF Kromog)
-      [77893] = true,		-- Grasping Earth (BRF Kromog)
-      [78583] = true,		-- Turrets (BRF Iron Maidens)
-      [78584] = true,		-- Turrets (BRF Iron Maidens)
-      [77665] = true,    -- Iron Bomber on blackhand
-    }
+  if UnitGUID(unit) then
+      targets_guid = tonumber(string.match(UnitGUID(unit), "-(%d+)-%x+$"))
+  else
+      targets_guid = 0
+  end
 
-    -- Fetch mob ID
+  for i=1, count do
+      if targets_guid == SpecialTargets[i] then
+          return true
+      end
+  end
 
-    if UnitGUID(unit) then
-      local _,_,_,_,_,mobID = strsplit("-", UnitGUID(unit))
-      -- Compare
-      if not not UnitExists(unit) and units[mobID] ~= nil then return true end
-    end
-    return false
+  return false
 end
 
 function GetSpellCD(MySpell)
