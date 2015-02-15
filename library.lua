@@ -1,11 +1,10 @@
 local NOC = { }
 local DSL = ProbablyEngine.dsl.get
 
-NOC.items = { }
-NOC.flagged = GetTime()
-NOC.unflagged = GetTime()
-NOC.queueSpell = nil
-NOC.queueTime = 0
+BASESTATSVALUE = {}
+BASEMULTISTRIKE = 0
+DEBUGLOGLEVEL = 5
+DEBUGTOGGLE = false
 
 SpecialTargets = {
     -- TRAINING DUMMIES
@@ -42,233 +41,114 @@ SpecialTargets = {
     77665,      -- Iron Bomber (BRF Blackhand)
 }
 
-------------------------------------
---TODO: replace all of following messaging and queuing logic below with the new 'UI' - look at MrTheSoulz for examples
-------------------------------------
--- Props for Chumii for all of the messaging and toggle code below
-local function onUpdate(self,elapsed)
-   if self.time < GetTime() - 2.5 then
-      if self:GetAlpha() == 0 then self:Hide() else self:SetAlpha(self:GetAlpha() - .05) end
-      end
-end
-mww = CreateFrame("Frame",nil,ChatFrame1)
-mww:SetSize(ChatFrame1:GetWidth(),30)
-mww:Hide()
-mww:SetScript("OnUpdate",onUpdate)
-mww:SetPoint("TOPLEFT",0,150)
-mww.text = mww:CreateFontString(nil,"OVERLAY","MovieSubtitleFont")
-mww.text:SetAllPoints()
-mww.texture = mww:CreateTexture()
-mww.texture:SetAllPoints()
-mww.texture:SetTexture(0,0,0,.50)
-mww.time = 0
-function mww:message(message)
-   self.text:SetText(message)
-   self:SetAlpha(1)
-   self.time = GetTime()
-   self:Show()
+
+-- Credit to StinkyTwitch for the routines to check primary stat buffs
+function BaseStatsInit()
+    for i=1, 5 do
+        BASESTATSVALUE[#BASESTATSVALUE+1] = UnitStat("player", i)
+        --local stat = UnitStat("player", i)
+        --DEBUG(5, "i: "..BASESTATSVALUE[#BASESTATSVALUE+1].." = " ..stat)
+    end
+    BASEMULTISTRIKE = GetMultistrike()
+    DEBUG(5, "GetMultistrike = "..BASEMULTISTRIKE)
 end
 
 
-------- "/mWW" handling ------
-ProbablyEngine.command.register('mWW', function(msg, box)
-  local command, text = msg:match("^(%S*)%s*(.-)$")
-
-  if command == 'toggle' then
-    if ProbablyEngine.config.read('button_states', 'MasterToggle', false) then
-        ProbablyEngine.buttons.toggle('MasterToggle')
-        mww:message("|cFFB30000NOC off")
-    else
-        ProbablyEngine.buttons.toggle('MasterToggle')
-        mww:message("|cFF00B34ANOC on")
-    end
-  end
-  if command == 'kick' then
-    if ProbablyEngine.config.read('button_states', 'interrupt', false) then
-      ProbablyEngine.buttons.toggle('interrupt')
-      mww:message("|cFFB30000Interrupts off")
-    else
-      ProbablyEngine.buttons.toggle('interrupt')
-      mww:message("|cFF00B34AInterrupts on")
-    end
-  end
-
-  if command == 'cds' then
-    if ProbablyEngine.config.read('button_states', 'cooldowns', false) then
-      ProbablyEngine.buttons.toggle('cooldowns')
-      mww:message("|cFFB30000Xuen off")
-    else
-      ProbablyEngine.buttons.toggle('cooldowns')
-      mww:message("|cFF00B34AXuen on")
-    end
-  end
-
-  if command == 'aoe' then
-    if ProbablyEngine.config.read('button_states', 'multitarget', false) then
-      ProbablyEngine.buttons.toggle('multitarget')
-      mww:message("|cFFB30000AoE off")
-    else
-      ProbablyEngine.buttons.toggle('multitarget')
-      mww:message("|cFF00B34AAoE on")
-    end
-  end
-
-  if command == 'chistacker' then
-    if ProbablyEngine.config.read('button_states', 'chistacker', false) then
-      ProbablyEngine.buttons.toggle('chistacker')
-      mww:message("|cFFB30000Auto Chi Stacking off")
-    else
-      ProbablyEngine.buttons.toggle('chistacker')
-      mww:message("|cFF00B34AAuto Chi Stacking on")
-    end
-  end
-
-  if command == 'autosef' then
-    if ProbablyEngine.config.read('button_states', 'autosef', false) then
-      ProbablyEngine.buttons.toggle('autosef')
-      mww:message("|cFFB30000Automatic SE&F Mouseover off")
-    else
-      ProbablyEngine.buttons.toggle('autosef')
-      mww:message("|cFF00B34AAutomatic SE&F Mouseover on")
-    end
-  end
-
-  if command == "qLust" or command == 116841 then
-    NOC.queueSpell = 116841 -- Tiger's Lust
-    mww.message("Tger's Lust queued")
-  elseif command == "qTfour" then
-    if select(2,GetTalentRowSelectionInfo(4)) == 10 then
-        NOC.queueSpell = 116844 -- Ring of Peace
-        mww.message("Ring of Peace queued")
-    elseif select(2,GetTalentRowSelectionInfo(4)) == 11 then
-        NOC.queueSpell = 119392 -- Charging Ox Wave
-        mww.message("Charging Ox Wave queued")
-    elseif select(2,GetTalentRowSelectionInfo(4)) == 12 then
-        NOC.queueSpell = 119381 -- Leg Sweep
-        mww.message("Leg Sweep queued")
-    end
-  else
-    NOC.queueSpell = nil
-  end
-  if NOC.queueSpell ~= nil then NOC.queueTime = GetTime() end
-end)
-
-
-------- "/mBM" handling ------
-ProbablyEngine.command.register('mBM', function(msg, box)
-  local command, text = msg:match("^(%S*)%s*(.-)$")
-  if command == 'toggle' then
-    if ProbablyEngine.config.read('button_states', 'MasterToggle', false) then
-        ProbablyEngine.buttons.toggle('MasterToggle')
-        mww:message("|cFFB30000Into the Brew off")
-    else
-        ProbablyEngine.buttons.toggle('MasterToggle')
-        mww:message("|cFF00B34AInto the Brew on")
-    end
-  end
-  if command == 'kick' then
-    if ProbablyEngine.config.read('button_states', 'interrupt', false) then
-      ProbablyEngine.buttons.toggle('interrupt')
-      mww:message("|cFFB30000Interrupts off")
-    else
-      ProbablyEngine.buttons.toggle('interrupt')
-      mww:message("|cFF00B34AInterrupts on")
-    end
-  end
-
-  if command == 'xuen' then
-    if ProbablyEngine.config.read('button_states', 'cooldowns', false) then
-      ProbablyEngine.buttons.toggle('cooldowns')
-      mww:message("|cFFB30000Xuen off")
-    else
-      ProbablyEngine.buttons.toggle('cooldowns')
-      mww:message("|cFF00B34AXuen on")
-    end
-  end
-
-  if command == 'aoe' then
-    if ProbablyEngine.config.read('button_states', 'multitarget', false) then
-      ProbablyEngine.buttons.toggle('multitarget')
-      mww:message("|cFFB30000AoE off")
-    else
-      ProbablyEngine.buttons.toggle('multitarget')
-      mww:message("|cFF00B34AAoE on")
-    end
-  end
-
-  if command == 'taunt' then
-    if ProbablyEngine.config.read('button_states', 'taunt', false) then
-      ProbablyEngine.buttons.toggle('taunt')
-      mww:message("|cFFB30000SoO Auto Taunt off")
-    else
-      ProbablyEngine.buttons.toggle('taunt')
-      mww:message("|cFF00B34ASoO Auto Taunt on")
-    end
-  end
-
-  if command == 'def' then
-    if ProbablyEngine.config.read('button_states', 'def', false) then
-      ProbablyEngine.buttons.toggle('def')
-      mww:message("|cFFB30000Defensive Cooldowns off")
-    else
-      ProbablyEngine.buttons.toggle('def')
-      mww:message("|cFF00B34ADefensive Cooldowns on")
-    end
-  end
-
-  if command == 'ksmash' then
-    if ProbablyEngine.config.read('button_states', 'kegsmash', false) then
-      ProbablyEngine.buttons.toggle('kegsmash')
-      mww:message("|cFFB30000Keg Smash off")
-    else
-      ProbablyEngine.buttons.toggle('kegsmash')
-      mww:message("|cFF00B34AKeg Smash on")
-    end
-  end
-
--- Spell Queue -- thank you merq for basic code --------------------------------------------------------------------
-  if command == "qPara" or command == 115078 then
-    NOC.queueSpell = 115078
-    mww:message("Paralysis (mouseover) queued")
-  elseif command == "qOx" or command == 115315 then
-    NOC.queueSpell = 115315
-    mww:message("Statue of the Ox queued")
-  elseif command == "qTfour" then
-    if select(2,GetTalentRowSelectionInfo(4)) == 10 then
-        NOC.queueSpell = 116844
-        mww:message("Ring of Peace queued")
-    elseif select(2,GetTalentRowSelectionInfo(4)) == 11 then
-        NOC.queueSpell = 119392
-        mww:message("Charging Ox Wave queued")
-    elseif select(2,GetTalentRowSelectionInfo(4)) == 12 then
-        NOC.queueSpell = 119381
-        mww:message("Leg Sweep queued")
-    end
-  else
-    NOC.queueSpell = nil
-  end
-  if NOC.queueSpell ~= nil then NOC.queueTime = GetTime() end
-end)
-
-NOC.checkQueue = function (spellId)
-    if (GetTime() - NOC.queueTime) > 10 then
-        NOC.queueTime = 0
-        NOC.queueSpell = nil
-    return false
-    else
-    if NOC.queueSpell then
-        if NOC.queueSpell == spellId then
-            if ProbablyEngine.parser.lastCast == GetSpellName(spellId) then
-                NOC.queueSpell = nil
-                NOC.queueTime = 0
+function BaseStatsUpdate()
+    if not UnitAffectingCombat("player") then
+        for i=1, 5 do
+            local stat = UnitStat("player", i)
+            if BASESTATSVALUE[i] ~= stat then
+                DEBUG(5, "Updating BASESTATSVALUE[i] ("..BASESTATSVALUE[i]..") = " ..stat)
+                BASESTATSVALUE[i] = stat
             end
-        return true
+        end
+        local multistrike = GetMultistrike()
+        if BASEMULTISTRIKE ~= multistrike then
+            DEBUG(5, "Updating BASEMULTISTRIKE ("..BASEMULTISTRIKE..") = " ..multistrike)
+            BASEMULTISTRIKE = multistrike
         end
     end
+end
+
+
+function NOC.StatProcs(index)
+  local index = string.lower(index)
+
+  if index == "strength" then
+      index = 1
+  elseif index == "agility" then
+      index = 2
+  elseif index == "stamina" then
+      index = 3
+  elseif index == "intellect" then
+      index = 4
+  elseif index == "spirit" then
+      index = 5
+  elseif index == "multistrike" then
+    local multistrike = GetMultistrike()
+    if multistrike > BASEMULTISTRIKE then
+        DEBUG(5, "StatProcs(multistrike): TRUE ("..multistrike.." > "..BASEMULTISTRIKE..")")
+        return true
+    else
+        DEBUG(5, "StatProcs(multistrike): FALSE ("..multistrike.." <= "..BASEMULTISTRIKE..")")
+        return false
     end
+  else
+      return false
+  end
+
+  local current_stat = UnitStat("player", index)
+
+  if current_stat > BASESTATSVALUE[index] then
+      DEBUG(5, "StatProcs(): TRUE ("..current_stat.." > "..BASESTATSVALUE[index]..")")
+      return true
+  else
+      DEBUG(5, "StatProcs(): FALSE ("..current_stat.." <= "..BASESTATSVALUE[index]..")")
+      return false
+  end
+end
+
+function DEBUG(level, debug_string)
+    if DEBUGTOGGLE then
+        if level == 5 and DEBUGLOGLEVEL >= 5 then
+            print(debug_string)
+        elseif level == 4 and DEBUGLOGLEVEL >= 4 then
+            print(debug_string)
+        elseif level == 3 and DEBUGLOGLEVEL >= 3 then
+            print(debug_string)
+        elseif level == 2 and DEBUGLOGLEVEL >= 2 then
+            print(debug_string)
+        elseif level == 1 and DEBUGLOGLEVEL >= 1 then
+            print(debug_string)
+        else
+            return
+        end
+    end
+end
+
+function NOC.SpecialTargetCheck(unit)
+    local unit = unit
+    local count = table.getn(SpecialTargets)
+
+    if not UnitExists(unit) then
+        return false
+    end
+
+    if UnitGUID(unit) then
+        targets_guid = tonumber(string.match(UnitGUID(unit), "-(%d+)-%x+$"))
+    else
+        targets_guid = 0
+    end
+
+    for i=1, count do
+        if targets_guid == SpecialTargets[i] then
+            return true
+        end
+    end
+
     return false
 end
-------------------------------------
 
 
 function NOC.immuneEvents(unit)
@@ -539,46 +419,5 @@ function NOC.autoSEF()
   return false
 end
 
-function NOC.autoTOD()
-  -- Initialize 'targets' every call of the function
-  local targets = {}
-
-  -- loop through all of the combatTracker enemies and insert only those
-  -- that are 'qualified' targets
-  for i,_ in pairs(ProbablyEngine.module.combatTracker.enemy) do
-
-    -- because we can't do most of the required operations on the GUID, we
-    -- need to translate the GUID to a UnitID. However a UnitID will only
-    -- be valid for those units that are essentially currently targetted by the
-    -- player or a player's group-mate, or mouseover, which will result in some
-    -- situations where there are enemy actors in combat with the player but
-    -- not able to be identified. This is a limitation of not using an
-    -- ObjectManager based solution
-    local unit = NOC.guidtoUnit(ProbablyEngine.module.combatTracker.enemy[i]['guid'])
-
-    if unit
-    and UnitGUID(unit) ~= UnitGUID("target")
-    --and not ProbablyEngine.condition["buff"]("player",121125)
-    and ((math.floor((UnitHealth(unit)/UnitHealthMax(unit))*100) < 10) or (UnitHealth(unit) < UnitHealthMax("player")))
-    and ProbablyEngine.condition["distance"](unit) <= 5
-    and getCreatureType(unit)
-    and NOC.immuneEvents(unit)
-    and (UnitAffectingCombat(unit) or NOC.isException(unit))
-    and IsSpellInRange(GetSpellInfo(115080), unit)
-    then
-      table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
-    end
-  end
-
-  -- sort the qualified targets by health
-  table.sort(targets, function(x,y) return x.HP > y.HP end)
-
-  if #targets > 0 then
-    print("Auto ToD candidate: "..targets[1].Unit..","..targets[1].Name..","..#targets)
-    ProbablyEngine.dsl.parsedTarget = targets[1].Unit
-    return true
-  end
-  return false
-end
 
 ProbablyEngine.library.register("NOC", NOC)

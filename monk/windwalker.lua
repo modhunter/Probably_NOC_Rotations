@@ -7,7 +7,15 @@ local onLoad = function()
   ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
   ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
-  --ProbablyEngine.toggle.create('tod', 'Interface\\Icons\\ability_monk_touchofdeath', 'Auto TOD', 'Automatically cast TOD on valid targets')
+
+  BaseStatsInit()
+
+  C_Timer.NewTicker(0.25, (
+      function()
+          BaseStatsUpdate()
+      end),
+  nil)
+
 end
 
 local buffs = {
@@ -98,7 +106,6 @@ local aoe = {
 local combat = {
   -- Pause
   { "pause", "modifier.lshift" },
-  --{ "pause", "@NOC.pause()"},
   { "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
 
    -- AutoTarget
@@ -111,12 +118,6 @@ local combat = {
 
   -- Buffs
   { buffs, },
-
-    -- Fully automatic Touch of Death (similar to SE&F)
-  --{ "Touch of Death", {  "toggle.tod", "@NOC.autoTOD()", },},
-    -- Touch of Death on mouseover
-  { "Touch of Death", "mouseover.health < 10", "mouseover" },
-  { "Touch of Death", "mouseover.health.actual < player.health.max", "mouseover" },
 
   { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },
   -- Auto SEF when enabled
@@ -154,17 +155,8 @@ local combat = {
     { "Spear Hand Strike" }, -- Spear Hand Strike
   }, "target.interruptsAt(40)" }, -- Interrupt when 40% into the cast time
 
-  -- Queued Spells
-  { "!122470", "@NOC.checkQueue(122470)" }, -- Touch of Karma
-  { "!116845", "@NOC.checkQueue(Ring of Peace)" }, -- Ring of Peace
-  { "!119392", "@NOC.checkQueue(119392)" }, -- Charging Ox Wave
-  { "!119381", "@NOC.checkQueue(119381)" }, -- Leg Sweep
-  { "!Tiger's Lust", "@NOC.checkQueue(Tiger's Lust)" }, -- Tiger's Lust
-
   -- Self-Healing & Defensives
   { "Expel Harm", { "player.health <= 70", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
-  -- TODO: This locks up the rotation, need to investigate
-  --{ "Surging Mist", { "player.health <= 20", "!player.moving", "player.lastmoved > 1" }, "player" }, -- 30 energy, 0 chi
 
   -- Forifying Brew at < 30% health and when DM & DH buff is not up
   { "Fortifying Brew", {
@@ -185,8 +177,6 @@ local combat = {
     -- Chi wave during the first few seconds of combat (even at range) and when not under Serenity
     { "Chi Wave", { "player.time < 10", "!player.buff(Serenity)" }}, -- 40 yard range 0 energy, 0 chi
 
-    -- TODO: add logic to line-up things with on-use trinkets as well as proc buffs
-
     {{
        -- Cooldowns/Racials
        { "Lifeblood" },
@@ -194,8 +184,11 @@ local combat = {
        { "Blood Fury" },
        { "Bear Hug" },
        { "Invoke Xuen, the White Tiger" },
-       { "#trinket1" },
-       { "#trinket2" },
+       --{ "#trinket1", "player.hashero" },
+       --{ "#trinket2", "player.hashero" },
+       -- Use trinkets when we are using TeB
+       { "#trinket1", "player.buff(116740)" },
+       { "#trinket2", "player.buff(116740)" },
     }, "modifier.cooldowns" },
 
     -- Melee range only
@@ -221,22 +214,20 @@ local combat = {
       }, { "player.time < 10", "talent(7,3)", "!player.buff(Serenity)" }},
 
       -- Use Fortifying Brew offensivley to get bigger ToD damage
-      { "Fortifying Brew", { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown = 0", "player.chi >= 3" }},
-      { "Touch of Death", "player.buff(Death Note)" },
+      {{
+         { "!Fortifying Brew", { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown = 0", "player.chi >= 3" }},
+         { "!Touch of Death", "player.buff(Death Note)" },
+   }, { "!target.id(78463)", "!target.id(76829)" }}, -- Don't use ToD if we are targetting the Slag Elemental
 
       -- If serenity, honor opener
       {{
         { "Chi Brew", { "!modifier.lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
-        -- target.ttd is unreliable
-        --{ "Chi Brew", "target.ttd < 10" },
         { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.lastcast(Chi Brew)" }},
       }, { "player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16", "player.time >= 6", "talent(7,3)" }},
 
       -- If not serenity, disregard opener
       {{
         { "Chi Brew", { "!modifier.lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
-        -- target.ttd is unreliable
-        --{ "Chi Brew", "target.ttd < 10" },
         { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.lastcast(Chi Brew)" }},
         }, { "player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16", "!talent(7,3)" }},
 
@@ -254,16 +245,20 @@ local combat = {
           {{
             { "116740", "player.spell(Fists of Fury).cooldown = 0" },
             { "116740", { "player.spell(Hurricane Strike).cooldown > 0", "talent(7,1)" }},
+            { "116740", "@NOC.StatProcs('agility')" }, -- Any agility buff
+            { "116740", "@NOC.StatProcs('multistrike')" }, -- Any multistrike buff
+            --{ "116740", "player.buff(177161)" }, -- ArchmagesIncandescence (+10% Agility)
+            --{ "116740", "player.buff(177172)" }, -- ArchmagesGreaterIncandescence (+?% Agility)
+            --{ "116740", "player.buff(176878)" }, -- Lub-Dub (Beatring Heart of the Mountain Proc) (+Multistrike)
+            --{ "116740", "player.buff(159676)" }, -- Mark of the Frostwolf (+Multistrike)
+            { "116740", "player.hashero" },
           },{ "player.chi >= 3", "player.buff(125195).count >= 10" }},
           {{
             { "116740", { "player.buff(125195).count >= 16" }},
-            -- target.ttd is unreliable
-            --{ "116740", { "target.ttd < 40" }},
           },{ "player.chi >= 2" }},
         },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
       },{ "!player.buff(116740)", "!modifier.lastcast(116740)" }},
 
-      --{ "Tiger Palm", { "!player.buff(Tiger Power)", "target.debuff(Rising Sun Kick).duration > 1", "player.timetomax > 1" }},
 
       { "Serenity", { "talent(7,3)", "player.time >= 6", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
@@ -325,8 +320,7 @@ local combat = {
       {"/stopcasting", { "target.range <= 5", "player.casting(Crackling Jade Lightning)" }},
       { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "target.combat" }},
     }, "toggle.cjl" },
-
   }, "@NOC.immuneEvents('target')" },
 }
 
-ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk 6.0|r", combat, ooc, onLoad)
+ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk|r", combat, ooc, onLoad)

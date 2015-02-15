@@ -73,16 +73,6 @@ local combat = {
 	-- Buffs
 	{ buffs, },
 
-	-- Queued Spells
-	-- TODO: Remediate this
-	 ---------------------------------------------------------------------------------------------------
-	{ "!116844", "@NOC.checkQueue(116844)" }, -- Ring of Peace
-	{ "!119392", "@NOC.checkQueue(119392)" }, -- Charging Ox Wave
-	{ "!119381", "@NOC.checkQueue(119381)" }, -- Leg Sweep
-	{ "!116841", "@NOC.checkQueue(116841)" }, -- Tiger's Lust
-	{ "!115078", "@NOC.checkQueue(115078)", "mouseover" }, -- Paralysis
-	{ "!115315", "@NOC.checkQueue(115315)", "ground" }, -- Summon Black Ox Statue
-
 	-- Interrupts
 	{{
 		{ "115078", { -- Paralysis when SHS and Quaking Palm are all on CD
