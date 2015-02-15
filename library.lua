@@ -1,5 +1,9 @@
 local NOC = { }
 local DSL = ProbablyEngine.dsl.get
+BASESTATSVALUE = {}
+BASEMULTISTRIKE = 0
+DEBUGLOGLEVEL = 5
+DEBUGTOGGLE = true
 
 SpecialTargets = {
     -- TRAINING DUMMIES
@@ -35,6 +39,92 @@ SpecialTargets = {
     86644,      -- Ore Crate (BRF Oregorger)
     77665,      -- Iron Bomber (BRF Blackhand)
 }
+
+
+-- Credit to StinkyTwitch for the routines to check primary stat buffs
+function BaseStatsInit()
+    for i=1, 5 do
+        BASESTATSVALUE[#BASESTATSVALUE+1] = UnitStat("player", i)
+        --local stat = UnitStat("player", i)
+        --DEBUG(5, "i: "..BASESTATSVALUE[#BASESTATSVALUE+1].." = " ..stat)
+    end
+    BASEMULTISTRIKE = GetMultistrike()
+    DEBUG(5, "GetMultistrike = "..BASEMULTISTRIKE)
+end
+
+
+function BaseStatsUpdate()
+    if not UnitAffectingCombat("player") then
+        for i=1, 5 do
+            local stat = UnitStat("player", i)
+            if BASESTATSVALUE[i] ~= stat then
+                DEBUG(5, "Updating BASESTATSVALUE[i] ("..BASESTATSVALUE[i]..") = " ..stat)
+                BASESTATSVALUE[i] = stat
+            end
+        end
+        local multistrike = GetMultistrike()
+        if BASEMULTISTRIKE ~= multistrike then
+            DEBUG(5, "Updating BASEMULTISTRIKE ("..BASEMULTISTRIKE..") = " ..multistrike)
+            BASEMULTISTRIKE = multistrike
+        end
+    end
+end
+
+
+function NOC.StatProcs(index)
+  local index = string.lower(index)
+
+  if index == "strength" then
+      index = 1
+  elseif index == "agility" then
+      index = 2
+  elseif index == "stamina" then
+      index = 3
+  elseif index == "intellect" then
+      index = 4
+  elseif index == "spirit" then
+      index = 5
+  elseif index == "multistrike" then
+    local multistrike = GetMultistrike()
+    if multistrike > BASEMULTISTRIKE then
+        DEBUG(5, "StatProcs(multistrike): TRUE ("..multistrike.." > "..BASEMULTISTRIKE..")")
+        return true
+    else
+        DEBUG(5, "StatProcs(multistrike): FALSE ("..multistrike.." <= "..BASEMULTISTRIKE..")")
+        return false
+    end
+  else
+      return false
+  end
+
+  local current_stat = UnitStat("player", index)
+
+  if current_stat > BASESTATSVALUE[index] then
+      DEBUG(5, "StatProcs(): TRUE ("..current_stat.." > "..BASESTATSVALUE[index]..")")
+      return true
+  else
+      DEBUG(5, "StatProcs(): FALSE ("..current_stat.." <= "..BASESTATSVALUE[index]..")")
+      return false
+  end
+end
+
+function DEBUG(level, debug_string)
+    if DEBUGTOGGLE then
+        if level == 5 and DEBUGLOGLEVEL >= 5 then
+            print(debug_string)
+        elseif level == 4 and DEBUGLOGLEVEL >= 4 then
+            print(debug_string)
+        elseif level == 3 and DEBUGLOGLEVEL >= 3 then
+            print(debug_string)
+        elseif level == 2 and DEBUGLOGLEVEL >= 2 then
+            print(debug_string)
+        elseif level == 1 and DEBUGLOGLEVEL >= 1 then
+            print(debug_string)
+        else
+            return
+        end
+    end
+end
 
 function NOC.SpecialTargetCheck(unit)
     local unit = unit
@@ -328,46 +418,5 @@ function NOC.autoSEF()
   return false
 end
 
-function NOC.autoTOD()
-  -- Initialize 'targets' every call of the function
-  local targets = {}
-
-  -- loop through all of the combatTracker enemies and insert only those
-  -- that are 'qualified' targets
-  for i,_ in pairs(ProbablyEngine.module.combatTracker.enemy) do
-
-    -- because we can't do most of the required operations on the GUID, we
-    -- need to translate the GUID to a UnitID. However a UnitID will only
-    -- be valid for those units that are essentially currently targetted by the
-    -- player or a player's group-mate, or mouseover, which will result in some
-    -- situations where there are enemy actors in combat with the player but
-    -- not able to be identified. This is a limitation of not using an
-    -- ObjectManager based solution
-    local unit = NOC.guidtoUnit(ProbablyEngine.module.combatTracker.enemy[i]['guid'])
-
-    if unit
-    and UnitGUID(unit) ~= UnitGUID("target")
-    --and not ProbablyEngine.condition["buff"]("player",121125)
-    and ((math.floor((UnitHealth(unit)/UnitHealthMax(unit))*100) < 10) or (UnitHealth(unit) < UnitHealthMax("player")))
-    and ProbablyEngine.condition["distance"](unit) <= 5
-    and getCreatureType(unit)
-    and NOC.immuneEvents(unit)
-    and (UnitAffectingCombat(unit) or NOC.isException(unit))
-    and IsSpellInRange(GetSpellInfo(115080), unit)
-    then
-      table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
-    end
-  end
-
-  -- sort the qualified targets by health
-  table.sort(targets, function(x,y) return x.HP > y.HP end)
-
-  if #targets > 0 then
-    print("Auto ToD candidate: "..targets[1].Unit..","..targets[1].Name..","..#targets)
-    ProbablyEngine.dsl.parsedTarget = targets[1].Unit
-    return true
-  end
-  return false
-end
 
 ProbablyEngine.library.register("NOC", NOC)
