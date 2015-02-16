@@ -103,6 +103,40 @@ local aoe = {
   { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3" }},
 }
 
+local st = {
+  { "Rising Sun Kick", "!talent(7,2)" },
+
+  {{
+    { "Chi Wave" },
+    { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
+    { "Chi Burst", { "!player.moving", "talent(2,3)" }},
+  }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
+
+  {{
+    { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
+    { "Blackout Kick", "player.buff(Serenity)" },
+  }, "!talent(7,2)" },
+
+  { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.buff(Combo Breaker: Chi Explosion)", "player.spell(Fists of Fury).cooldown > 3" }},
+
+  { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration < 6" }},
+
+  { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2" }},
+
+  { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.spell(Fists of Fury).cooldown > 3" }},
+
+  -- If Serenity, honor opener
+  { "Jab", { "player.chidiff >= 2", "player.energy >= 45", "player.time >= 6", "talent(7,3)" }},
+  { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3", "player.time >= 6", "talent(7,3)" }},
+  -- If not serenity, disregard opener
+  { "Jab", { "player.chidiff >= 2", "player.energy >= 45", "!talent(7,3)" }},
+  { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3", "!talent(7,3)" }},
+}
+
+local st_chex = {
+
+}
+
 local combat = {
   -- Pause
   { "pause", "modifier.lshift" },
@@ -213,11 +247,14 @@ local combat = {
         { "Jab", "player.chi <= 1" },
       }, { "player.time < 10", "talent(7,3)", "!player.buff(Serenity)" }},
 
+      -- fortifying_brew, if=target.health.percent<10 & cooldown.touch_of_death.remains=0 & (glyph.touch_of_death.enabled | chi>=3)
+      -- touch_of_death, if=target.health.percent<10 & (glyph.touch_of_death.enabled | chi>=3)
       -- Use Fortifying Brew offensivley to get bigger ToD damage
+      -- TODO: Add code to handle glyph
       {{
-         { "!Fortifying Brew", { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown = 0", "player.chi >= 3" }},
-         { "!Touch of Death", "player.buff(Death Note)" },
-   }, { "!target.id(78463)", "!target.id(76829)" }}, -- Don't use ToD if we are targetting the Slag Elemental
+         { "!Fortifying Brew", "player.spell(Touch of Death).cooldown < 1" },
+         { "!Touch of Death" },
+      }, { "player.buff(Death Note)", "player.chi >= 3", "!target.id(78463)", "!target.id(76829)" }}, -- Don't use ToD if we are targetting the Slag Elemental
 
       -- If serenity, honor opener
       {{
@@ -237,7 +274,7 @@ local combat = {
       -- Tigereye Brew
       {{
         { "116740", "player.buff(125195).count = 20" },
-        { "116740", { "player.buff(125195).count >= 9", "player.buff(Serenity)" }},
+        { "116740", { "player.buff(125195).count >= 9", "player.buff(Serenity).duration > 1" }},
         {{
           {{
             { "116740", "player.spell(Fists of Fury).cooldown < 1" },
@@ -261,55 +298,33 @@ local combat = {
 
       { "Serenity", { "talent(7,3)", "player.time >= 6", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
-      -- AoE
-      { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
-
-      -- Single
       {{
         { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
         { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
-      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 4" }},
+      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 3.6", "player.timetomax > 3.6", "player.buff(Tiger Power).duration > 3.6" }},
 
       { "Hurricane Strike", {
         "talent(7,3)",
         "player.timetomax > 2",
         "target.debuff(Rising Sun Kick).duration > 2",
+        "player.buff(Tiger Power).duration > 2",
         "!player.buff(Energizing Brew)" }},
 
       {{
         { "Energizing Brew", "!talent(7,3)" },
         { "Energizing Brew", { "!player.buff(Serenity)", "player.spell(Serenity).cooldown > 4" }},
-      },{ "player.spell(Fists of Fury).cooldown > 6", "player.timetomax > 5" }},
+      },{ "player.spell(Fists of Fury).cooldown > 6", "@NOC.energyTime < 50" }},
 
-      { "Rising Sun Kick", "!talent(7,2)" },
+      -- AoE
+      { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
-      {{
-        { "Chi Wave" },
-        { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
-        { "Chi Burst", { "!player.moving", "talent(2,3)" }},
-      }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
+      -- Not specced into Chi Explosion
+      { st, { "!talent(7,2)", "modifier.enemies < 3" }},
 
-      {{
-        { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
-        { "Blackout Kick", "player.buff(Serenity)" },
-      }, "!talent(7,2)" },
+      -- Specced into Chi Explosion
+      { st_chex, { "talent(7,2)", "modifier.enemies < 3" }},
 
-      { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.buff(Combo Breaker: Chi Explosion)", "player.spell(Fists of Fury).cooldown > 3" }},
-
-      { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration < 6" }},
-
-      { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2" }},
-
-      { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.spell(Fists of Fury).cooldown > 3" }},
-
-      -- If Serenity, honor opener
-      { "Jab", { "player.chidiff >= 2", "player.energy >= 45", "player.time >= 6", "talent(7,3)" }},
-      { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3", "player.time >= 6", "talent(7,3)" }},
-      -- If not serenity, disregard opener
-      { "Jab", { "player.chidiff >= 2", "player.energy >= 45", "!talent(7,3)" }},
-      { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3", "!talent(7,3)" }},
-
-    }, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
+    }, { "target.range <= 5" }},
 
     -- Tiger's Lust if the target is at least 10 yards away and we are moving for at least 0.5 second
     { "Tiger's Lust", { "target.range >= 5", "player.movingfor > 0.5", "target.alive" }},
