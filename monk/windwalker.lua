@@ -130,27 +130,27 @@ local combat = {
        "!target.debuff(Spear Hand Strike)",
        "player.spell(Spear Hand Strike).cooldown > 0",
        "player.spell(Quaking Palm).cooldown > 0",
-       "!modifier.lastcast(Spear Hand Strike)"
+       "!lastcast(Spear Hand Strike)"
     }},
     { "Ring of Peace", { -- Ring of Peace when SHS is on CD
        "!target.debuff(Spear Hand Strike)",
        "player.spell(Spear Hand Strike).cooldown > 0",
-       "!modifier.lastcast(Spear Hand Strike)"
+       "!lastcast(Spear Hand Strike)"
     }},
     { "Leg Sweep", { -- Leg Sweep when SHS is on CD
        "player.spell(116705).cooldown > 0",
        "target.range <= 5",
-       "!modifier.lastcast(116705)"
+       "!lastcast(116705)"
     }},
     { "Charging Ox Wave", { -- Charging Ox Wave when SHS is on CD
        "player.spell(116705).cooldown > 0",
        "target.range <= 30",
-       "!modifier.lastcast(116705)"
+       "!lastcast(116705)"
     }},
     { "Quaking Palm", { -- Quaking Palm when SHS is on CD
        "!target.debuff(Spear Hand Strike)",
        "player.spell(Spear Hand Strike).cooldown > 0",
-       "!modifier.lastcast(Spear Hand Strike)"
+       "!lastcast(Spear Hand Strike)"
     }},
     { "Spear Hand Strike" }, -- Spear Hand Strike
   }, "target.interruptsAt(40)" }, -- Interrupt when 40% into the cast time
@@ -204,7 +204,7 @@ local combat = {
           { "Chi Brew", { "player.chidiff >= 2" }},
 
           -- TeB when we have at least 5 stacks and we have casted BoK at least once
-          { "116740", { "player.buff(125195).count >= 9", "!player.buff(116740)", "!modifier.lastcast(116740)", "player.spell(Blackout Kick).casted >= 1" }},
+          { "116740", { "player.buff(125195).count >= 9", "!player.buff(116740)", "!lastcast(116740)", "player.spell(Blackout Kick).casted >= 1" }},
 
           { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
           { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
@@ -221,30 +221,27 @@ local combat = {
 
       -- If serenity, honor opener
       {{
-        { "Chi Brew", { "!modifier.lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
-        { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.lastcast(Chi Brew)" }},
+        { "Chi Brew", { "!lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
+        { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!lastcast(Chi Brew)" }},
       }, { "player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16", "player.time >= 6", "talent(7,3)" }},
 
       -- If not serenity, disregard opener
       {{
-        { "Chi Brew", { "!modifier.lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
-        { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!modifier.lastcast(Chi Brew)" }},
+        { "Chi Brew", { "!lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
+        { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!lastcast(Chi Brew)" }},
         }, { "player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16", "!talent(7,3)" }},
 
-      { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
-      { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
-
-      { "Tiger Palm", "player.buff(Tiger Power).duration < 6" },
+      { "Tiger Palm", "player.buff(Tiger Power).duration < 6.6" },
 
       -- TODO: Pop TeB early when any sort of weapon/trinket/etc proc goes
       -- Tigereye Brew
       {{
         { "116740", "player.buff(125195).count = 20" },
-        { "116740", { "player.buff(125195).count >= 10", "player.buff(Serenity).duration > 0" }},
+        { "116740", { "player.buff(125195).count >= 9", "player.buff(Serenity)" }},
         {{
           {{
-            { "116740", "player.spell(Fists of Fury).cooldown = 0" },
-            { "116740", { "player.spell(Hurricane Strike).cooldown > 0", "talent(7,1)" }},
+            { "116740", "player.spell(Fists of Fury).cooldown < 1" },
+            { "116740", { "player.spell(Hurricane Strike).cooldown < 1", "talent(7,1)" }},
             { "116740", "@NOC.StatProcs('agility')" }, -- Any agility buff
             { "116740", "@NOC.StatProcs('multistrike')" }, -- Any multistrike buff
             --{ "116740", "player.buff(177161)" }, -- ArchmagesIncandescence (+10% Agility)
@@ -257,8 +254,10 @@ local combat = {
             { "116740", { "player.buff(125195).count >= 16" }},
           },{ "player.chi >= 2" }},
         },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
-      },{ "!player.buff(116740)", "!modifier.lastcast(116740)" }},
+      },{ "!player.buff(116740)", "!lastcast(116740)" }},
 
+      { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
+      { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
 
       { "Serenity", { "talent(7,3)", "player.time >= 6", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
