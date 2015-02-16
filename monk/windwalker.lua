@@ -252,7 +252,7 @@ local combat = {
             --{ "116740", "player.buff(176878)" }, -- Lub-Dub (Beatring Heart of the Mountain Proc) (+Multistrike)
             --{ "116740", "player.buff(159676)" }, -- Mark of the Frostwolf (+Multistrike)
             { "116740", "player.hashero" },
-          },{ "player.chi >= 3", "player.buff(125195).count >= 10" }},
+          },{ "player.chi >= 3", "player.buff(125195).count >= 9" }},
           {{
             { "116740", { "player.buff(125195).count >= 16" }},
           },{ "player.chi >= 2" }},
