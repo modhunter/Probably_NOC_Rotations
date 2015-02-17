@@ -44,97 +44,100 @@ local ooc = {
 }
 
 local aoe = {
-  {{
-    { "Chi Explosion", "player.spell(Fists of Fury).cooldown > 3" },
-    { "Chi Explosion", "!talent(6,1)" },
-  }, "player.chi >= 4" },
+  { "Chi Explosion", { "player.chi >= 4", "player.spell(Fists of Fury).cooldown > 4" }},
 
-  {{
-    { "Energizing Brew", "!talent(7,3)" },
-    { "Energizing Brew", { "!player.buff(Serenity)", "player.spell(Serenity).cooldown > 4" }},
-  },{ "player.spell(Fists of Fury).cooldown > 6", "player.timetomax > 5" }},
+  { "Rising Sun Kick", { "player.chidiff = 0" }},
 
   -- Only use this is we have the RJW talent and there are more than 3 enemies and toggle enabled
   { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 3", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
   { "Rushing Jade Wind", { "talent(6,1)", "!talent(7,2)" }},
 
-  { "Rising Sun Kick", "player.chidiff = 0" },
-
-  {{
-    { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
-    { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
-  }, {
-    "player.spell(Rushing Jade Wind).exists",
-    "player.timetomax > 4",
-    "player.buff(Tiger Power).duration > 4",
-    "target.debuff(Rising Sun Kick).duration > 4", }},
-
-  { "Hurricane Strike", {
-    "player.spell(Rushing Jade Wind).exists",
-    "talent(7,3)",
-    "player.timetomax > 2",
-    "target.debuff(Rising Sun Kick).duration > 2",
-    "!player.buff(Energizing Brew)" }},
-
   {{
     { "Chi Wave" },
     { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
   }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
-  -- Only do this if we have RJW talent and not chex talent
+  { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
+
+  -- If we have RJW:
   {{
-    { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
-    { "Blackout Kick", "player.buff(Serenity).duration > 0" },
-  },{ "talent(6,1)", "!talent(7,2)" }},
+    {{
+      { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
+      { "Blackout Kick", "player.buff(Serenity).duration > 0" },
+    },{ "!talent(7,2)" }},
+    { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2", "player.spell(Fists of Fury).cooldown > 3"  }},
+    { "Chi Torpoedo", "player.timetomax > 2" },
+  }, { "talent(6,1)" }},
 
-  { "Tiger Palm", { "player.spell(Rushing Jade Wind).exists", "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
+  -- If we do NOT have RJW
+  {{
+    { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2" }},
+    { "Chi Torpoedo", "player.timetomax > 2" },
 
-  -- Only do this if we have RJW talent and not chex talent
-  { "Blackout Kick", { "talent(6,1)", "!talent(7,2)", "player.chidiff < 2", "player.spell(Fists of Fury).cooldown > 3"  }},
+    -- Only do this if we do not have RJW talent and there are more than 3 enemies and toggle enabled
+    { "Spinning Crane Kick", { "modifier.enemies > 3", "toggle.rjw" }},
+    -- Otherwise, use it 'normally' if we aren't using chi explosion
+    { "Spinning Crane Kick", { "!talent(7,2)" }},
 
-  -- Only do this if we do not have RJW talent and there are more than 3 enemies and toggle enabled
-  { "Spinning Crane Kick", { "!talent(6,1)", "modifier.enemies > 3", "toggle.rjw" }},
-  -- Otherwise, use it 'normally' if we aren't using chi explosion
-  { "Spinning Crane Kick", { "!talent(6,1)", "!talent(7,2)" }},
+  }, { "!talent(6,1)" }},
 
-  { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 2" }},
-  { "Jab", { "player.spell(Rushing Jade Wind).exists", "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3" }},
+  { "Expel Harm", { "player.health <= 95", "player.chidiff >= 2" }},
+  { "Jab", "player.chidiff >= 2" },
 }
 
 local st = {
+  { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
+  { "Blackout Kick", "player.buff(Serenity)" },
+
+  { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
+
   { "Rising Sun Kick", "!talent(7,2)" },
 
   {{
     { "Chi Wave" },
     { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
+    { "Chi Torpoedo" },
   }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
-  {{
-    { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
-    { "Blackout Kick", "player.buff(Serenity)" },
-  }, "!talent(7,2)" },
-
-  { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.buff(Combo Breaker: Chi Explosion)", "player.spell(Fists of Fury).cooldown > 3" }},
-
-  { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration < 6" }},
-
-  { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2" }},
-
-  { "Chi Explosion", { "talent(7,2)", "player.chi >= 3", "player.spell(Fists of Fury).cooldown > 3" }},
-
-  -- If Serenity, honor opener
-  { "Jab", { "player.chidiff >= 2", "player.energy >= 45", "player.time >= 6", "talent(7,3)" }},
-  { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3", "player.time >= 6", "talent(7,3)" }},
-  -- If not serenity, disregard opener
-  { "Jab", { "player.chidiff >= 2", "player.energy >= 45", "!talent(7,3)" }},
-  { "Jab", { "player.chidiff >= 1", "talent(7,2)", "player.spell(Fists of Fury).cooldown > 3", "!talent(7,3)" }},
+  { "Blackout Kick", "player.chidiff < 2" },
 }
 
 local st_chex = {
+  { "Chi Explosion", { "player.chi >= 2", "player.buff(Combo Breaker: Chi Explosion)", "player.spell(Fists of Fury).cooldown > 2" }},
 
+  { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
+
+  {{
+    { "Chi Wave" },
+    { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
+    { "Chi Burst", { "!player.moving", "talent(2,3)" }},
+  }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
+
+  { "Rising Sun Kick" },
+
+  { "Tiger Palm", { "player.chi >= 4", "!player.buff(Combo Breaker: Chi Explosion)" }},
+
+  { "Chi Explosion", { "player.chi >= 3", "player.spell(Fists of Fury).cooldown > 4" }},
+
+  { "Chi Torpoedo", "player.timetomax > 2" },
+}
+
+local opener = {
+  {{
+    -- This should 'constrain' BoK to be only casted once during the opener
+    { "Blackout Kick", { "player.chidiff <= 1", "player.spell(Blackout Kick).casted = 0" }},
+
+    -- TeB when we have used both Chi Brews and have casted BoK at least once
+    { "116740", { "!player.buff(116740)", "player.spell(Chi Brew).charges = 0", "player.spell(Blackout Kick).casted != 0" }},
+
+  }, { "player.buff(Tiger Power)", "target.debuff(Rising Sun Kick)" }},
+
+  { "Chi Brew", { "!lastcast(Chi Brew)", "player.chidiff >= 2" }}, -- 0-3 chi
+
+  { "Jab", "player.chidiff >= 2" }, -- 0-3 chi
 }
 
 local combat = {
@@ -187,7 +190,7 @@ local combat = {
        "!lastcast(Spear Hand Strike)"
     }},
     { "Spear Hand Strike" }, -- Spear Hand Strike
-  }, "target.interruptsAt(40)" }, -- Interrupt when 40% into the cast time
+  }, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
 
   -- Self-Healing & Defensives
   { "Expel Harm", { "player.health <= 70", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
@@ -227,25 +230,10 @@ local combat = {
 
     -- Melee range only
     {{
-      -- Opener priority during the first 10 seconds when serenity talent is selected and hasn't been cast yet
-      -- 'ideal' opener (with 5 chi) is:    RSK -> TP -> CB -> CB -> BoK -> TeB -> FoF -> Jab -> Serenity
-      -- 'unideal' opener (with 2 chi) is:  RSK -> Jab -> TP -> CB -> CB -> BoK -> TeB -> FoF -> Jab -> Serenity
-      {{
-        {{
-          -- This should 'constrain' BoK to be only casted once
-          { "Blackout Kick", { "!talent(7,2)", "player.spell(Blackout Kick).casted < 1" }},
-
-          { "Chi Brew", { "player.chidiff >= 2" }},
-
-          -- TeB when we have at least 5 stacks and we have casted BoK at least once
-          { "116740", { "player.buff(125195).count >= 9", "!player.buff(116740)", "!lastcast(116740)", "player.spell(Blackout Kick).casted >= 1" }},
-
-          { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
-          { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
-
-        }, { "player.buff(Tiger Power)", "target.debuff(Rising Sun Kick)" }},
-        { "Jab", "player.chi <= 1" },
-      }, { "player.time < 10", "talent(7,3)", "!player.buff(Serenity)" }},
+      -- Opener priority during the first 10 seconds when serenity talent is selected and we haven't popped TeB yet
+      -- 'ideal' opener (starting with 5 chi) is:    RSK -> TP -> CB -> CB -> BoK -> TeB -> Serenity
+      -- 'unideal' opener (starting with 0 chi) is:  CB -> CB -> RSK -> TP -> Jab -> Jab -> BoK -> TeB -> Serenity
+      { opener, { "player.time < 10", "talent(3,3)", "talent(7,3)", "!player.buff(116740)" }},
 
       -- fortifying_brew, if=target.health.percent<10 & cooldown.touch_of_death.remains=0 & (glyph.touch_of_death.enabled | chi>=3)
       -- touch_of_death, if=target.health.percent<10 & (glyph.touch_of_death.enabled | chi>=3)
@@ -260,7 +248,7 @@ local combat = {
       {{
         { "Chi Brew", { "!lastcast(Chi Brew)", "player.spell(Chi Brew).charges = 2" }},
         { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!lastcast(Chi Brew)" }},
-      }, { "player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16", "player.time >= 6", "talent(7,3)" }},
+      }, { "player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16", "player.time >= 10", "talent(7,3)" }},
 
       -- If not serenity, disregard opener
       {{
@@ -270,23 +258,20 @@ local combat = {
 
       { "Tiger Palm", "player.buff(Tiger Power).duration < 6.6" },
 
-      -- TODO: Pop TeB early when any sort of weapon/trinket/etc proc goes
       -- Tigereye Brew
       {{
         { "116740", "player.buff(125195).count = 20" },
         { "116740", { "player.buff(125195).count >= 9", "player.buff(Serenity).duration > 1" }},
         {{
+          -- Pop TeB anytime we have any sort of proc or big buff
           {{
             { "116740", "player.spell(Fists of Fury).cooldown < 1" },
             { "116740", { "player.spell(Hurricane Strike).cooldown < 1", "talent(7,1)" }},
             { "116740", "@NOC.StatProcs('agility')" }, -- Any agility buff
             { "116740", "@NOC.StatProcs('multistrike')" }, -- Any multistrike buff
-            --{ "116740", "player.buff(177161)" }, -- ArchmagesIncandescence (+10% Agility)
-            --{ "116740", "player.buff(177172)" }, -- ArchmagesGreaterIncandescence (+?% Agility)
-            --{ "116740", "player.buff(176878)" }, -- Lub-Dub (Beatring Heart of the Mountain Proc) (+Multistrike)
-            --{ "116740", "player.buff(159676)" }, -- Mark of the Frostwolf (+Multistrike)
             { "116740", "player.hashero" },
-          },{ "player.chi >= 3", "player.buff(125195).count >= 9" }},
+          },{ "player.chi >= 2", "player.time >= 10" }},
+          --"player.chi >= 3", "player.buff(125195).count >= 9"
           {{
             { "116740", { "player.buff(125195).count >= 16" }},
           },{ "player.chi >= 2" }},
@@ -296,7 +281,8 @@ local combat = {
       { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
       { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
 
-      { "Serenity", { "talent(7,3)", "player.time >= 6", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
+      -- Serenity whenever TeB buff is up
+      { "Serenity", { "talent(7,3)", "player.buff(116740)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
       {{
         { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
@@ -319,15 +305,17 @@ local combat = {
       { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
       -- Not specced into Chi Explosion
-      { st, { "!talent(7,2)", "modifier.enemies < 3" }},
-
+      { st, "!talent(7,2)" },
       -- Specced into Chi Explosion
-      { st_chex, { "talent(7,2)", "modifier.enemies < 3" }},
+      { st_chex, "talent(7,2)" },
+
+      { "Expel Harm", { "player.health <= 95", "player.chidiff >= 2" }},
+      { "Jab", "player.chidiff >= 2" },
 
     }, { "target.range <= 5" }},
 
-    -- Tiger's Lust if the target is at least 10 yards away and we are moving for at least 0.5 second
-    { "Tiger's Lust", { "target.range >= 5", "player.movingfor > 0.5", "target.alive" }},
+    -- Tiger's Lust if the target is out of melee range and we are moving for at least 0.5 second
+    { "Tiger's Lust", { "target.range > 5", "player.movingfor > 0.5", "target.alive" }},
 
     -- Crackling Jade Lightning (on toggle)
     {{
