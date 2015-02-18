@@ -39,6 +39,8 @@ SpecialTargets = {
     79504,      -- Ore Crate (BRF Oregorger)
     86644,      -- Ore Crate (BRF Oregorger)
     77665,      -- Iron Bomber (BRF Blackhand)
+    77891,      -- Grasping Earth (BRF Kromog)
+    77893,      -- Grasping Earth (BRF Kromog)
 }
 
 
@@ -278,24 +280,6 @@ function NOC.noControl()
 	eventIndex = eventIndex - 1
 	end
 	return false
-end
-
--- return true when the rotation should be paused
-function NOC.pause()
-  if SpellIsTargeting()
-    or (not UnitCanAttack("player", "target") and not UnitIsPlayer("target") and UnitExists("target"))
-    --or UnitIsDeadOrGhost("player")
-    or (UnitIsDeadOrGhost("target") and not UnitIsPlayer("target"))
-    or UnitBuff("player",80169) -- Eating
-    or UnitBuff("player",87959) -- Drinking
-    or UnitBuff("target",104934) -- Eating
-    or UnitBuff("player",11392) -- Invisibility
-    or UnitBuff("player",9265) -- Deep Sleep(SM)
-	then
-		return true;
-	else
-		return false;
-	end
 end
 
 -- Thanks to StinkyTwitch for the routine
