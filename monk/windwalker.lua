@@ -325,4 +325,4 @@ local combat = {
   }, "@NOC.immuneEvents('target')" },
 }
 
-ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk (Beta)|r", combat, ooc, onLoad)
+ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk|r", combat, ooc, onLoad)
