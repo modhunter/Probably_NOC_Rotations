@@ -419,5 +419,41 @@ function NOC.autoSEF()
   return false
 end
 
+function NOC.energyTime()
+  --energy+energy.regen*gcd<50 = powtime < 50
+  --local powtime = (getPower("player")+getRegen("player"))*((1.5/GetHaste("player"))+1)
+  local energy = UnitPower("player", SPELL_POWER_ENERGY)
+  local energy_regen = 1.0 / select(2,GetPowerRegen("player"))
+
+  -- should this be 1.0 instead of 1.5?
+  local gcd = (1.5/GetHaste("player"))+1
+  DEBUG(5, "NOC.energyTime returning: "..energy.." + "..energy_regen.." * "..gcd.."")
+  return (energy + energy_regen) * gcd
+end
+
+--[[
+-- if getRegen("player") > 15 then
+function getRegen(Unit)
+   local regen = select(2,GetPowerRegen(Unit))
+   return 1.0 / regen
+end
+
+-- if getPower("target") <= 15 then
+function getPower(Unit)
+   local value = value
+   if select(3,UnitClass("player")) == 11 or select(3,UnitClass("player")) == 4 then
+      if UnitBuffID("player",135700) then
+         value = 999
+      elseif UnitBuffID("player",106951) then
+         value = UnitPower(Unit)*2
+      else
+         value = UnitPower(Unit)
+      end
+   else
+      value = 100 * UnitPower(Unit) / UnitPowerMax(Unit)
+   end
+   return value
+end
+]]
 
 ProbablyEngine.library.register("NOC", NOC)
