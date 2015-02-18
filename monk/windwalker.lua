@@ -296,10 +296,11 @@ local combat = {
         "player.buff(Tiger Power).duration > 2",
         "!player.buff(Energizing Brew)" }},
 
+      -- TODO: test and re-add "@NOC.energyTime() < 50" to main conditional
       {{
         { "Energizing Brew", "!talent(7,3)" },
         { "Energizing Brew", { "!player.buff(Serenity)", "player.spell(Serenity).cooldown > 4" }},
-      },{ "player.spell(Fists of Fury).cooldown > 6", "@NOC.energyTime < 50" }},
+      },{ "player.spell(Fists of Fury).cooldown > 6", "player.timetomax > 5" }},
 
       -- AoE
       { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
