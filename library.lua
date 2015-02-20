@@ -93,7 +93,7 @@ function NOC.StatProcs(index)
         DEBUG(5, "StatProcs(multistrike): TRUE ("..multistrike.." > "..BASEMULTISTRIKE..")")
         return true
     else
-        DEBUG(5, "StatProcs(multistrike): FALSE ("..multistrike.." <= "..BASEMULTISTRIKE..")")
+        --DEBUG(5, "StatProcs(multistrike): FALSE ("..multistrike.." <= "..BASEMULTISTRIKE..")")
         return false
     end
   else
@@ -106,7 +106,7 @@ function NOC.StatProcs(index)
       DEBUG(5, "StatProcs(): TRUE ("..current_stat.." > "..BASESTATSVALUE[index]..")")
       return true
   else
-      DEBUG(5, "StatProcs(): FALSE ("..current_stat.." <= "..BASESTATSVALUE[index]..")")
+      --DEBUG(5, "StatProcs(): FALSE ("..current_stat.." <= "..BASESTATSVALUE[index]..")")
       return false
   end
 end
@@ -403,41 +403,22 @@ function NOC.autoSEF()
   return false
 end
 
-function NOC.energyTime()
-  --energy+energy.regen*gcd<50 = powtime < 50
-  --local powtime = (getPower("player")+getRegen("player"))*((1.5/GetHaste("player"))+1)
-  local energy = UnitPower("player", SPELL_POWER_ENERGY)
-  local energy_regen = 1.0 / select(2,GetPowerRegen("player"))
 
-  -- should this be 1.0 instead of 1.5?
-  local gcd = (1.5/GetHaste("player"))+1
-  DEBUG(5, "NOC.energyTime returning: "..energy.." + "..energy_regen.." * "..gcd.."")
-  return (energy + energy_regen) * gcd
+--energy+energy.regen*gcd<50 = powtime < 50
+function NOC.energyTime(energycheck)
+  if energycheck then
+    --local energy = getPower("player")
+    local energy = UnitPower("player", SPELL_POWER_ENERGY)
+    local energy_regen = 1.0 / select(2,GetPowerRegen("player"))
+    local gcd = (1.5/GetHaste("player"))+1
+    local energytime = (energy + energy_regen)*gcd
+    if energytime < energycheck then
+      DEBUG(5, "NOC.energyTime2 returning: "..energytime.." ("..energy.."+"..energy_regen..")*"..gcd.."")
+    end
+    return energytime < energycheck
+  end
+  return false
 end
 
---[[
--- if getRegen("player") > 15 then
-function getRegen(Unit)
-   local regen = select(2,GetPowerRegen(Unit))
-   return 1.0 / regen
-end
-
--- if getPower("target") <= 15 then
-function getPower(Unit)
-   local value = value
-   if select(3,UnitClass("player")) == 11 or select(3,UnitClass("player")) == 4 then
-      if UnitBuffID("player",135700) then
-         value = 999
-      elseif UnitBuffID("player",106951) then
-         value = UnitPower(Unit)*2
-      else
-         value = UnitPower(Unit)
-      end
-   else
-      value = 100 * UnitPower(Unit) / UnitPowerMax(Unit)
-   end
-   return value
-end
-]]
 
 ProbablyEngine.library.register("NOC", NOC)
