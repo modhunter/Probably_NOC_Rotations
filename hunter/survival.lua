@@ -133,4 +133,4 @@ local combat = {
   }, "@NOC.immuneEvents('target')" },
 }
 
-ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter 6.0", combat, ooc, onLoad)
+ProbablyEngine.rotation.register_custom(255, "NOC Survival Hunter", combat, ooc, onLoad)

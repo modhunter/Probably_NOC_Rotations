@@ -15,6 +15,181 @@ ProbablyEngine.condition.register("chidiff", function(target, spell)
     return (max - curr)
 end)
 
+ProbablyEngine.condition.register("cc", function(target)
+  if not UnitExists(target) then
+    return false
+  else
+    if SpecialAurasCheck(target) then
+      return true
+    else
+      return false
+    end
+  end
+end)
+
+ProbablyEngine.condition.register("focus.deficit", function(target)
+  local max_power = UnitPowerMax(target)
+  local cur_power = UnitPower(target)
+  return max_power - cur_power
+end)
+
+ProbablyEngine.condition.register("anystats.proc", function(target, spell)
+  -- Check Primary Stats
+  for i=1, 5 do
+    local stat = UnitStat("player", i)
+    if stat > PRIMARYBASESTATS[i] then
+      return true
+    end
+  end
+  -- Check Secondary Stats
+  local crit = GetCritChance()
+  local haste = GetHaste()
+  local mastery = GetMastery()
+  local multistrike = GetMultistrike()
+  local versatility = GetCombatRating(29)
+
+  if crit > SECONDARYSTATSTABLE[1] then
+    return true
+  end
+  if haste > SECONDARYSTATSTABLE[2] then
+    return true
+  end
+  if mastery > SECONDARYSTATSTABLE[3] then
+    return true
+  end
+  if multistrike > SECONDARYSTATSTABLE[4] then
+    return true
+  end
+  if versatility > SECONDARYSTATSTABLE[5] then
+    return true
+  end
+
+  return false
+end)
+
+ProbablyEngine.condition.register("strength.proc", function(target, spell)
+  local stat = UnitStat("player", 1)
+
+  if stat > PRIMARYBASESTATS[1] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("agility.proc", function(target, spell)
+  local stat = UnitStat("player", 2)
+
+  if stat > PRIMARYBASESTATS[2] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("stamina.proc", function(target, spell)
+  local stat = UnitStat("player", 3)
+
+  if stat > PRIMARYBASESTATS[3] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("intellect.proc", function(target, spell)
+  local stat = UnitStat("player", 4)
+
+  if stat > PRIMARYBASESTATS[4] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("spirit.proc", function(target, spell)
+  local stat = UnitStat("player", 5)
+
+  if stat > PRIMARYBASESTATS[5] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("crit.proc", function(target, spell)
+  local crit = GetCritChance()
+
+  if crit > SECONDARYBASESTATS[1] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("haste.proc", function(target, spell)
+  local haste = GetHaste()
+
+  if haste > SECONDARYBASESTATS[2] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("mastery.proc", function(target, spell)
+  local mastery = GetMastery()
+
+  if mastery > SECONDARYBASESTATS[3] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("multistrike.proc", function(target, spell)
+  local multistrike = GetMultistrike()
+
+  if multistrike > SECONDARYBASESTATS[4] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("versatility.proc", function(target, spell)
+  local versatility = GetCombatRating(29)
+
+  if versatility > SECONDARYBASESTATS[5] then
+    return true
+  else
+    return false
+  end
+end)
+
+ProbablyEngine.condition.register("power.regen", function(target)
+  return select(2, GetPowerRegen(target))
+end)
+
+ProbablyEngine.condition.register("spell.regen", function(target, spell)
+  local name, rank, icon, cast_time, min_range, max_range = GetSpellInfo(spell)
+  if cast_time == 0 then
+    cast_time = 1
+  end
+  local cur_regen = select(2, GetPowerRegen(target))
+  local cast_time_in_seconds = cast_time / 1000.0
+
+  return cast_time_in_seconds * cur_regen
+end)
+
+ProbablyEngine.condition.register("gcd", function(target)
+  local gcd = (1.5/GetHaste(target))
+  if gcd < 1 then
+    return 1
+  else
+    return gcd
+  end
+end)
 
 -- Implementing native API combat tracker for # of enemies
 local band = bit.band

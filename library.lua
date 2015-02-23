@@ -5,6 +5,8 @@ BASESTATSVALUE = {}
 BASEMULTISTRIKE = 0
 DEBUGLOGLEVEL = 5
 DEBUGTOGGLE = false
+PRIMARYBASESTATS = {}
+SECONDARYBASESTATS = {}
 
 SpecialTargets = {
     -- TRAINING DUMMIES
@@ -43,6 +45,40 @@ SpecialTargets = {
     77893,      -- Grasping Earth (BRF Kromog)
 }
 
+SpecialAuras = {
+  -- CROWD CONTROL
+  [118]       = "118",        -- Polymorph
+  [1513]      = "1513",       -- Scare Beast
+  [1776]      = "1776",       -- Gouge
+  [2637]      = "2637",       -- Hibernate
+  [3355]      = "3355",       -- Freezing Trap
+  [6770]      = "6770",       -- Sap
+  [9484]      = "9484",       -- Shackle Undead
+  [19386]     = "19386",      -- Wyvern Sting
+  [20066]     = "20066",      -- Repentance
+  [28271]     = "28271",      -- Polymorph (turtle)
+  [28272]     = "28272",      -- Polymorph (pig)
+  [49203]     = "49203",      -- Hungering Cold
+  [51514]     = "51514",      -- Hex
+  [61025]     = "61025",      -- Polymorph (serpent) -- FIXME: gone ?
+  [61305]     = "61305",      -- Polymorph (black cat)
+  [61721]     = "61721",      -- Polymorph (rabbit)
+  [61780]     = "61780",      -- Polymorph (turkey)
+  [76780]     = "76780",      -- Bind Elemental
+  [82676]     = "82676",      -- Ring of Frost
+  [90337]     = "90337",      -- Bad Manner (Monkey) -- FIXME: to check
+  [115078]    = "115078",     -- Paralysis
+  [115268]    = "115268",     -- Mesmerize
+  -- MOP DUNGEONS/RAIDS/ELITES
+  [106062]    = "106062",     -- Water Bubble (Wise Mari)
+  [110945]    = "110945",     -- Charging Soul (Gu Cloudstrike)
+  [116994]    = "116994",     -- Unstable Energy (Elegon)
+  [122540]    = "122540",     -- Amber Carapace (Amber Monstrosity - Heat of Fear)
+  [123250]    = "123250",     -- Protect (Lei Shi)
+  [143574]    = "143574",     -- Swelling Corruption (Immerseus)
+  [143593]    = "143593",     -- Defensive Stance (General Nazgrim)
+  -- WOD DUNGEONS/RAIDS/ELITES
+}
 
 -- Credit to StinkyTwitch for the routines to check primary stat buffs
 function BaseStatsInit()
@@ -420,5 +456,73 @@ function NOC.energyTime(energycheck)
   return false
 end
 
+function SpecialAurasCheck(unit)
+  local unit = unit
+  if not UnitExists(unit) then
+    return false
+  end
+
+  for i = 1, 40 do
+    local debuff = select(11, UnitDebuff(unit, i))
+    if debuff == nil then
+      break
+    end
+    if SpecialAuras[tonumber(debuff)] ~= nil then
+      return true
+    end
+  end
+  return false
+end
+
+function PrimaryStatsTableInit()
+  for i=1, 5 do
+    PRIMARYBASESTATS[#PRIMARYBASESTATS+1] = UnitStat("player", i)
+  end
+end
+
+function PrimaryStatsTableUpdate()
+  if not UnitAffectingCombat("player") then
+    for i=1, 5 do
+      local stat = UnitStat("player", i)
+      if PRIMARYBASESTATS[i] ~= stat then
+        PRIMARYBASESTATS[i] = stat
+      end
+    end
+  end
+end
+
+function SecondaryStatsTableInit()
+  SECONDARYBASESTATS[1] = GetCritChance()
+  SECONDARYBASESTATS[2] = GetHaste()
+  SECONDARYBASESTATS[3] = GetMastery()
+  SECONDARYBASESTATS[4] = GetMultistrike()
+  SECONDARYBASESTATS[5] = GetCombatRating(29)
+end
+
+function SecondaryStatsTableUpdate()
+  if not UnitAffectingCombat("player") then
+    local crit = GetCritChance()
+    local haste = GetHaste()
+    local mastery = GetMastery()
+    local multistrike = GetMultistrike()
+    local versatility = GetCombatRating(29)
+
+    if SECONDARYBASESTATS[1] ~= crit then
+      SECONDARYBASESTATS[1] = crit
+    end
+    if SECONDARYBASESTATS[2] ~= haste then
+      SECONDARYBASESTATS[2] = haste
+    end
+    if SECONDARYBASESTATS[3] ~= mastery then
+      SECONDARYBASESTATS[3] = mastery
+    end
+    if SECONDARYBASESTATS[4] ~= multistrike then
+      SECONDARYBASESTATS[4] = multistrike
+    end
+    if SECONDARYBASESTATS[5] ~= versatility then
+      SECONDARYBASESTATS[5] = versatility
+    end
+  end
+end
 
 ProbablyEngine.library.register("NOC", NOC)
