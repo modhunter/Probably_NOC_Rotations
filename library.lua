@@ -409,9 +409,11 @@ function NOC.energyTime(energycheck)
   if energycheck then
     --local energy = getPower("player")
     local energy = UnitPower("player", SPELL_POWER_ENERGY)
-    local energy_regen = 1.0 / select(2,GetPowerRegen("player"))
+    --local energy_regen = 1.0 / select(2,GetPowerRegen("player"))
+    local energy_regen = select(2,GetPowerRegen("player"))
     local gcd = (1.5/GetHaste("player"))+1
-    local energytime = (energy + energy_regen)*gcd
+    --local energytime = (energy + energy_regen)*gcd
+    local energytime = (energy + energy_regen)
     if energytime < energycheck then
       DEBUG(5, "NOC.energyTime2 returning: "..energytime.." ("..energy.."+"..energy_regen..")*"..gcd.."")
     end

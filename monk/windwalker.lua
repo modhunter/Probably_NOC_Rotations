@@ -55,7 +55,7 @@ local aoe = {
 
   {{
     { "Chi Wave" },
-    { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
+    --{ "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
   }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
@@ -97,7 +97,7 @@ local st = {
 
   {{
     { "Chi Wave" },
-    { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
+    --{ "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
     { "Chi Torpoedo" },
   }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
@@ -112,7 +112,7 @@ local st_chex = {
 
   {{
     { "Chi Wave" },
-    { "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
+    --{ "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
   }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
@@ -224,9 +224,19 @@ local combat = {
        --{ "#trinket1", "player.hashero" },
        --{ "#trinket2", "player.hashero" },
        -- Use trinkets when we are using TeB
-       { "#trinket1", "player.buff(116740)" },
-       { "#trinket2", "player.buff(116740)" },
+      -- Use with TeB when not specced into Serenity
+       { "#trinket1", { "!talent(7,3)", "player.buff(116740)" }},
+       { "#trinket2", { "!talent(7,3)", "player.buff(116740)" }},
+       -- Use with Serenity buff when secced into Serenity
+       { "#trinket1", { "talent(7,3)", "player.buff(Serenity)" }},
+       { "#trinket2", { "talent(7,3)", "player.buff(Serenity)" }},
     }, "modifier.cooldowns" },
+
+    -- Should this be moved after the melee-range check? Worried that it may be prioritized too much
+    {{
+      { "Zen Sphere", "!player.buff(Zen Sphere)" },
+      { "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
+    }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
     -- Melee range only
     {{
@@ -256,7 +266,8 @@ local combat = {
         { "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge <= 10", "!lastcast(Chi Brew)" }},
         }, { "player.chidiff >= 2", "player.buff(Tigereye Brew).count <= 16", "!talent(7,3)" }},
 
-      { "Tiger Palm", "player.buff(Tiger Power).duration < 6.6" },
+      { "Tiger Palm", { "!talent(7,2)", "player.buff(Tiger Power).duration < 6.6" }},
+      { "Tiger Palm", { "talent(7,2)", "player.buff(Tiger Power).duration < 5", "player.spell(Fists of Fury).cooldown < 5" }},
 
       -- Tigereye Brew
       {{
