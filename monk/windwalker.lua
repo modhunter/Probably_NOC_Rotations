@@ -298,7 +298,7 @@ local combat = {
       {{
         { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
         { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
-      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 3.6", "player.timetomax > 3.6", "player.buff(Tiger Power).duration > 3.6" }},
+      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 3.6", "player.chi > 3", "player.buff(Tiger Power).duration > 3.6" }},
 
       { "Hurricane Strike", {
         "talent(7,1)",
