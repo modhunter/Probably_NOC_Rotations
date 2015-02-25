@@ -105,10 +105,10 @@ local combat = {
 	}, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
 
 	-- Self Heal
-	{ "Zen Sphere", { "player.buff(124081)", "!focus.buff(124081)",  }, "focus" }, -- Zen Sphere on focus if buff is already on player
-	{ "Zen Sphere", { "!player.buff(124081)" }, "player" }, -- Zen Sphere on player
+	{ "Zen Sphere", "!player.buff(Zen Sphere)" },
+	{ "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
   { "#109223", "player.health < 40" }, -- Healing Tonic
-	{ "#5512", "player.health < 40"}, --Healthstone when less than 40% health
+	{ "#5512", "player.health < 40" }, --Healthstone when less than 40% health
 
 	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger when not using Chi Explosion
 	{ "Purifying Brew", { "@NOC.DrinkStagger", "!talent(7,2)" }},
@@ -184,10 +184,6 @@ local combat = {
 		{ "Keg Smash", { "player.chidiff >= 2", "toggle.kegsmash" }},
 
 		{ "Blackout Kick", "player.buff(157558)" },
-
-		{ "Hurricane Strike", {
-			"talent(7,3)",
-			"!player.buff(Energizing Brew)" }},
 
 		{ "Chi Brew", {
 			"player.chidiff >= 2",

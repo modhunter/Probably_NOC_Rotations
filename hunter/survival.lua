@@ -1,24 +1,42 @@
 -- ProbablyEngine Rotation Packager
 -- NO CARRIER's Survival Hunter Rotation
+local function dynamicEval(condition, spell)
+  if not condition then return false end
+  return ProbablyEngine.dsl.parse(condition, spell or '')
+end
 
 local onLoad = function()
-ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
-ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')
-ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
-ProbablyEngine.toggle.create('autoAS', 'Interface\\Icons\\ability_hunter_quickshot', 'Mouseover Arcane Shot', 'Automatically apply Arcane Shot to mouseover units while in combat')
+  ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
+  ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')
+  ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
+  ProbablyEngine.toggle.create('autoAS', 'Interface\\Icons\\ability_hunter_quickshot', 'Mouseover Arcane Shot', 'Automatically apply Arcane Shot to mouseover units while in combat')
+
+  BaseStatsInit()
+
+  C_Timer.NewTicker(0.25, (
+      function()
+          BaseStatsUpdate()
+      end),
+  nil)
 end
 
 local ooc = {
   -- Out of combat
-  { "pause", "modifier.lshift" },
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
+
+  { "2641", { "pet.exists", "talent(7,3)" }}, -- Dismiss Pet
+  { "982", { "pet.dead", "!talent(7,3)" }}, -- Revive Pet
   { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)", "!talent(7,3)" }}, -- Mend Pet
+
   {{
     { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
     { "/cancelaura Aspect of the Cheetah", "!player.moving" },
   }, "toggle.aspect" },
+
+  -- Keep trap launcher set
+  { "77769", "!player.buff("77769")" },
+
   { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
-  { "82948", "modifier.lalt", "ground" }, -- Snake Trap
   { "82941", "modifier.lalt", "ground" }, -- Ice Trap
 }
 
@@ -26,27 +44,27 @@ local aoe = {
   -- Explosive shot if LnL is up and Barrage is not ready
   { "Explosive Shot", { "player.buff(Lock and Load)", "player.spell(Barrage).cooldown > 0" }},
   { "Barrage" },
-  { "Explosive Shot" },
   { "Black Arrow", "!target.debuff(3674)" },
-  { "A Murder of Crows" },
+  { "Explosive Shot", "modifier.enemies <= 4" },
+  { "A Murder of Crows", "target.health.actual < 200000" },
   { "Dire Beast" },
 
---/multishot,if=buff.thrill_of_the_hunt.react&focus>50&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
-  { "Multi-Shot", { "player.buff(34720)", "player.focus > 50" }},
-  --{ "Multi-Shot", "target.ttd < 4.5" },
+  { "Multi-Shot", { "player.buff(34720)", "player.focus > 50",
+  function() return(dynamicEval("player.spell("..s.MultiShot..").regen")<=dynamicEval("player.focus.deficit")) end, }},
   { "Multi-Shot", "target.debuff(Serpent Sting).duration <= 5" },
+
   { "Glaive Toss" },
   { "Powershot" },
-  { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
-  { "2643", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
-  { "Focusing Shot", { "player.focus < 45", "!player.moving" }},
+  { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45",
+  function() return ((dynamicEval("player.focus") + 14 + dynamicEval("player.spell("..s.CobraShot..").regen")) < 80) end, }},
+  { "Multi-Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
+  { "Focusing Shot", "!player.moving" },
   { "Cobra Shot" },
 }
 
 local combat = {
   -- Combat
   { "pause", "modifier.lshift" },
-  --{ "pause", "@NOC.pause()"},
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
 
   -- AutoTarget
@@ -61,16 +79,23 @@ local combat = {
   }, "!talent(7,3)" },
 
   { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
-  { "82948", "modifier.lalt", "ground" }, -- Snake Trap
   { "82941", "modifier.lalt", "ground" }, -- Ice Trap
 
   { "109248" , "modifier.lcontrol", "ground" }, -- Binding Shot
 
   -- Arcane Shot on mouseover when they don't have the debuff already and the toggle is enabled
-  { "Arcane Shot", { "!mouseover.debuff(Serpent Sting)", "toggle.autoAS", "!mouseover.charmed", "!mouseover.state.charm", "!mouseover.debuff(Touch of Y'Shaarj)", "!mouseover.debuff(Empowered Touch of Y'Shaarj)", "!mouseover.buff(Touch of Y'Shaarj)", "!mouseover.buff(Empowered Touch of Y'Shaarj)" }, "mouseover" },
+  { "Arcane Shot", { "!mouseover.debuff(Serpent Sting)", "toggle.autoAS", "!mouseover.cc", "mouseover.alive", "mouseover.enemy" }, "mouseover" },
+
+  -- Stop flamethrower in Brackenspore
+  { "/click ExtraActionButton1", { "player.buff(163322)" }},
+  -- Feign Death for Infesting Spores when >= 6
+  { "5384", "player.debuff(163242).count >= 6" },
+  -- TODO: Add Feign for Iron Maiden's ability
 
   -- Interrupt(s)
-  { "147362", "target.interruptAt(30)" }, -- Counter Shot at 30% cast time left
+  { "147362", "target.interruptAt(50)" }, -- Counter Shot at 50% cast time left
+  { "19577", "target.interruptAt(30)" }, -- Intimidation at 30% cast time left
+  { "19386", "target.interruptAt(30)" }, -- Wyrven Sting at 30% cast time left
 
   -- Survival
   { "109304", "player.health < 50" }, -- Exhiliration
@@ -79,7 +104,7 @@ local combat = {
   { "#5512", "player.health < 40" }, -- Healthstone
 
   -- This is still broken if the potion is on cooldown
-  { "#76097", "player.health < 40" }, -- Master Healing Potion
+  { "#109223", "player.health < 40" }, -- Healing Tonic
   { "136", { "pet.health <= 75", "pet.exists", "!pet.dead", "!pet.buff(136)", "!talent(7,3)" }}, -- Mend Pet
 
   -- Misdirect to focus target or pet when threat is above a certain threshhold
@@ -92,14 +117,18 @@ local combat = {
   {{
     { "53271", "player.state.stun" },
     { "53271", "player.state.root" },
-    { "53271", "player.state.snare" },
-  }, "!talent(7,3)" },
+    { "53271", { "player.state.snare", "!player.debuff(Dazed)" }},
+    { "53271", "player.state.disorient" },
+  }, { "!talent(7,3)", "pet.exists" }},
 
   -- Wrap the entire block in an 'immuneEvents' check
   {{
     -- Cooldowns
     {{
-      { "Stampede" },
+      { "Stampede", "player.agility.proc" },
+      { "Stampede", "player.multistrike.proc" },
+      { "Stampede", "player.crit.proc" },
+      { "A Murder of Crows" },
       { "Lifeblood" },
       { "Berserking" },
       { "Blood Fury" },
@@ -109,26 +138,27 @@ local combat = {
       { "#trinket2" },
     }, "modifier.cooldowns" },
 
-    { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.charmed", "!target.state.charm", "!target.debuff(Touch of Y'Shaarj)", "!target.debuff(Empowered Touch of Y'Shaarj)", "!target.buff(Touch of Y'Shaarj)", "!target.buff(Empowered Touch of Y'Shaarj)" }, "target" },
+    { "Tranquilizing Shot", { "!target.cc" }, "target" },
 
     -- AoE
-    { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
+    { aoe, { "toggle.multitarget", "modifier.enemies >= 2" }},
 
-    { "Explosive Shot" },
     { "Black Arrow", "!target.debuff(3674)" },
-    { "A Murder of Crows" },
+    { "Explosive Shot" },
+
     { "Dire Beast" },
-    --actions+=/arcane_shot,if=buff.thrill_of_the_hunt.react&focus>35&cast_regen<=focus.deficit|dot.serpent_sting.remains<=5|target.time_to_die<4.5
-    -- Arcane Shot if ToTH buff is up and focus > 35 and ("cast_regen<=focus.deficit"??? or serpent sting dot will be up <= 5s or ttd < 4.5s)
-    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35" }},
-    --{ "Arcane Shot", "target.ttd < 4.5" },
-    { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 5" },
-    { "Glaive Toss" },
-    { "Powershot" },
-    { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
-    { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
-    { "Arcane Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }},
-    { "Focusing Shot", { "player.focus < 45", "!player.moving" }},
+
+    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35", function() return (dynamicEval("player.spell(Arcane Shot).regen")<=dynamicEval("player.focus.deficit")) end, }},
+    { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 3" },
+
+    --{ "Glaive Toss" },
+    --{ "Powershot" },
+    --{ "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
+
+    { "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(Cobra Shot).regen")) <= dynamicEval("player.focus.deficit")) end, }},
+
+    { "Arcane Shot", { "player.focus >= 80", "player.spell(Focusing Shot).exists" }},
+    { "Focusing Shot", "!player.moving" },
     { "Cobra Shot" },
   }, "@NOC.immuneEvents('target')" },
 }
