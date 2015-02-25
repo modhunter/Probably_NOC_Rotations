@@ -3,9 +3,10 @@
 
 local onLoad = function()
   ProbablyEngine.toggle.create('chistacker', 'Interface\\Icons\\ability_monk_expelharm', 'Stack Chi', 'Keep Chi at full even OoC...')
-  ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
+  --ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
   ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
   ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
+  ProbablyEngine.toggle.create('dpstest', 'Interface\\Icons\\inv_misc_pocketwatch_01', 'DPS Test', 'Stop combat after 5 minutes in order to do a controlled DPS test')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
 
   BaseStatsInit()
@@ -44,6 +45,7 @@ local ooc = {
     { "Expel Harm" },
     { "Zen Sphere", "!player.buff(Zen Sphere)" },
     { "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
+    { "Zen Sphere", { "!focus.exists", "tank.exists", "!tank.buff(Zen Sphere)", "tank.range <= 40", }, "tank" },
   }, "toggle.chistacker" },
 }
 
@@ -148,6 +150,7 @@ local combat = {
   -- Pause
   { "pause", "modifier.lshift" },
   { "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
+  { "/stopcasting\n/stopattack\n/cleartarget\n/stopattack\n/cleartarget", { "player.time >= 300", "toggle.dpstest" }},
 
    -- AutoTarget
   { "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" } },
@@ -240,6 +243,7 @@ local combat = {
     {{
       { "Zen Sphere", "!player.buff(Zen Sphere)" },
       { "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
+      { "Zen Sphere", { "!focus.exists", "tank.exists", "!tank.buff(Zen Sphere)", "tank.range <= 40", }, "tank" },
     }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
     -- Melee range only
@@ -302,7 +306,7 @@ local combat = {
       {{
         { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
         { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
-      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 3.6", "player.chi > 3", "player.buff(Tiger Power).duration > 3.6" }},
+      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 3.6", "player.chi >= 3", "player.buff(Tiger Power).duration > 3.6" }},
 
       { "Hurricane Strike", {
         "talent(7,1)",
