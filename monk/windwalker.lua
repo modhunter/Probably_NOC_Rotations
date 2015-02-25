@@ -40,7 +40,11 @@ local ooc = {
   { buffs, },
 
   { "Expel Harm", "player.health < 100" },
-  { "Expel Harm", "toggle.chistacker" },
+  {{
+    { "Expel Harm" },
+    { "Zen Sphere", "!player.buff(Zen Sphere)" },
+    { "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
+  }, "toggle.chistacker" },
 }
 
 local aoe = {
