@@ -43,6 +43,7 @@ SpecialTargets = {
     77665,      -- Iron Bomber (BRF Blackhand)
     77891,      -- Grasping Earth (BRF Kromog)
     77893,      -- Grasping Earth (BRF Kromog)
+    78583,      -- Dominator Turret (BRF Iron Maidens)
 }
 
 SpecialAuras = {
