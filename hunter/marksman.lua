@@ -152,11 +152,8 @@ local combat = {
       { "Powershot", "player.timetomax > 2.5" },
       { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
 
-      { "Steady Shot", {
-          function()
-              return ( ( (dynamicEval("player.focus.deficit") * dynamicEval("player.casttime(Steady Shot)")) % (14 + dynamicEval("player.spell(Steady Shot).regen")) ) > dynamicEval("player.spell(Rapid Fire).cooldown") )
-          end,
-      }, },
+      { "Steady Shot", "player.timetomax > player.spell(Rapid Fire).cooldown" },
+      --{ "Steady Shot", { function() return ( ( (dynamicEval("player.focus.deficit") * dynamicEval("player.casttime(Steady Shot)")) % (14 + dynamicEval("player.spell(Steady Shot).regen")) ) > dynamicEval("player.spell(Rapid Fire).cooldown") ) end, }, },
       { "Focusing Shot", { "player.focus < 100", "!player.moving",
           function()
               return ( ( (dynamicEval("player.focus.deficit") * dynamicEval("player.casttime(Focusing Shot)")) % (50 + dynamicEval("player.spell(Focusing Shot).regen")) ) > dynamicEval("player.spell(Rapid Fire).cooldown") )
