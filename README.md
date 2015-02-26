@@ -4,15 +4,10 @@ NOC Rotations
 
 ##Status
 - Monk Windwalker
- - **Level 90 & 100: raid ready**
 - Monk Brewmaster
- - **Level 90 & 100: raid ready**
 - Hunter Survival
- - **Level 90 & 100: raid ready**
 - Hunter Beastmaster
- - **Level 90 & 100: raid ready**
 - Hunter Marksman
- - **Level 90 & 100: raid ready**
 
 
 ## Hunter (Survival (6.x), BeastMaster (6.x), & Marksman (6.x))
@@ -21,15 +16,15 @@ NOC Rotations
 ### Features
 ====================
 - Single Target / AoE
-- Stampede is only cast when cooldowns is enabled
-- Toggle button for automatic aspect switching while moving, standing still, or in combat
+- Stampede/AMoC/Rapid Fire is only cast when cooldowns is enabled
+- Toggle button for automatic aspect switching while moving or standing still
 - Toggle button for turning on/off automatic misdirect
 - Toggle button for turning on/off automatic targetting while in combat & automatic target switching to next nearest target - this is to allow for high efficiency when needed
 - Automatic tranq shot when the enemy is enraged/dispellable and not a charmed player
 - Automatic Master's Call when the player is rooted/stunned/snared
 - Multitarget mode will only engage AOE abilities when both the multitarget toggle is set and there are at least 3 active enemies - this means that you can generally leave multitarget toggled on and not worry about only casting multi-shot all the time
 - Pause rotation when in feign death
-- Delayed interrupting: Don't attempt to interrupt until the spellcast is 30% complete
+- Delayed interrupting: Don't attempt to interrupt until the spellcast is 50% complete
 - Toggle to allow for automatic arcane shot on your current mouseover target whenever that target doesn't already have the serpent sting DOT/debuff.  This is a great way to 'DOT-up' multiple enemies that are spread around
 - Revive Pet, Heart of the Phoenix, & Call Pet support
 
@@ -38,14 +33,13 @@ NOC Rotations
 - Left Shift - Pause
 - Left Control - Binding Shot
 - Left Alt - Explosive Trap
-- Left Alt - Snake Trap
 - Left Alt - Ice Trap
 
 ### Survival
 ====================
 - Exhilaration when health below 50%
 - Healthstone when below 40% health
-- Master Healing Potion when below 40% health -- This is still broken when the potion is on a cooldown or shared cooldown
+- Health Tonic when below 40% health
 - Deterrence as a last resort when you are < 10% health
 - Automatic misdirect to focus or pet when you pull too much threat
 - Automatic mend pet (in combat & out of combat) when the pet is < 90% health

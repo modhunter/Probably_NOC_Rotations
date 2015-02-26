@@ -9,13 +9,15 @@ local onLoad = function()
   ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
   ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')
   ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
+  ProbablyEngine.toggle.create('dpstest', 'Interface\\Icons\\inv_misc_pocketwatch_01', 'DPS Test', 'Stop combat after 5 minutes in order to do a controlled DPS test')
   ProbablyEngine.toggle.create('autoAS', 'Interface\\Icons\\ability_hunter_quickshot', 'Mouseover Arcane Shot', 'Automatically apply Arcane Shot to mouseover units while in combat')
 
   BaseStatsInit()
 
   C_Timer.NewTicker(0.25, (
       function()
-          BaseStatsUpdate()
+        PrimaryStatsTableUpdate()
+        SecondaryStatsTableUpdate()
       end),
   nil)
 end
@@ -29,12 +31,12 @@ local ooc = {
   { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)", "!talent(7,3)" }}, -- Mend Pet
 
   {{
-    { "Aspect of the Cheetah", { "player.moving", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
-    { "/cancelaura Aspect of the Cheetah", "!player.moving" },
+    { "Aspect of the Cheetah", { "player.movingfor >= 1", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
+    { "/cancelaura Aspect of the Cheetah", "player.lastmoved >= 2" },
   }, "toggle.aspect" },
 
   -- Keep trap launcher set
-  { "77769", "!player.buff("77769")" },
+  { "77769", "!player.buff(77769)" },
 
   { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
   { "82941", "modifier.lalt", "ground" }, -- Ice Trap
@@ -42,21 +44,21 @@ local ooc = {
 
 local aoe = {
   -- Explosive shot if LnL is up and Barrage is not ready
-  { "Explosive Shot", { "player.buff(Lock and Load)", "player.spell(Barrage).cooldown > 0" }},
+  { "Explosive Shot", { "player.buff(Lock and Load)", "player.spell(Barrage).cooldown > 1" }},
   { "Barrage" },
   { "Black Arrow", "!target.debuff(3674)" },
   { "Explosive Shot", "modifier.enemies <= 4" },
   { "A Murder of Crows", "target.health.actual < 200000" },
   { "Dire Beast" },
 
-  { "Multi-Shot", { "player.buff(34720)", "player.focus > 50",
-  function() return(dynamicEval("player.spell("..s.MultiShot..").regen")<=dynamicEval("player.focus.deficit")) end, }},
+  -- Multi Shot if we have ToTH buff, more than 50 focus, and
+  { "Multi-Shot", { "player.buff(34720)", "player.focus > 50", function() return(dynamicEval("player.spell(Multi-Shot).regen") <= dynamicEval("player.focus.deficit")) end, }},
   { "Multi-Shot", "target.debuff(Serpent Sting).duration <= 5" },
 
   { "Glaive Toss" },
   { "Powershot" },
   { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45",
-  function() return ((dynamicEval("player.focus") + 14 + dynamicEval("player.spell("..s.CobraShot..").regen")) < 80) end, }},
+  function() return ((dynamicEval("player.focus") + 14 + dynamicEval("player.spell(Cobra Shot).regen")) < 80) end, }},
   { "Multi-Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
   { "Focusing Shot", "!player.moving" },
   { "Cobra Shot" },
@@ -66,6 +68,8 @@ local combat = {
   -- Combat
   { "pause", "modifier.lshift" },
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
+
+  { "/stopcasting\n/stopattack\n/cleartarget\n/stopattack\n/cleartarget\n/petfollow", { "player.time >= 300", "toggle.dpstest" }},
 
   -- AutoTarget
   { "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" } },
@@ -90,7 +94,7 @@ local combat = {
   { "/click ExtraActionButton1", { "player.buff(163322)" }},
   -- Feign Death for Infesting Spores when >= 6
   { "5384", "player.debuff(163242).count >= 6" },
-  -- TODO: Add Feign for Iron Maiden's ability
+  -- TODO: Add Feign Death for Iron Maiden's mechanic
 
   -- Interrupt(s)
   { "147362", "target.interruptAt(50)" }, -- Counter Shot at 50% cast time left
@@ -103,7 +107,6 @@ local combat = {
   { "#109223", "player.health < 40" }, -- Healing Tonic
   { "#5512", "player.health < 40" }, -- Healthstone
 
-  -- This is still broken if the potion is on cooldown
   { "#109223", "player.health < 40" }, -- Healing Tonic
   { "136", { "pet.health <= 75", "pet.exists", "!pet.dead", "!pet.buff(136)", "!talent(7,3)" }}, -- Mend Pet
 
@@ -128,6 +131,7 @@ local combat = {
       { "Stampede", "player.agility.proc" },
       { "Stampede", "player.multistrike.proc" },
       { "Stampede", "player.crit.proc" },
+      { "Stampede", "player.hashero" },
       { "A Murder of Crows" },
       { "Lifeblood" },
       { "Berserking" },
@@ -138,23 +142,20 @@ local combat = {
       { "#trinket2" },
     }, "modifier.cooldowns" },
 
-    { "Tranquilizing Shot", { "!target.cc" }, "target" },
+    { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.cc" }, "target" },
 
     -- AoE
     { aoe, { "toggle.multitarget", "modifier.enemies >= 2" }},
 
+    { "A Murder of Crows", "target.health.actual < 200000" },
     { "Black Arrow", "!target.debuff(3674)" },
     { "Explosive Shot" },
-
     { "Dire Beast" },
 
-    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35", function() return (dynamicEval("player.spell(Arcane Shot).regen")<=dynamicEval("player.focus.deficit")) end, }},
+    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35", function() return (dynamicEval("player.spell(Arcane Shot).regen") <= dynamicEval("player.focus.deficit")) end, }},
     { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 3" },
 
-    --{ "Glaive Toss" },
-    --{ "Powershot" },
-    --{ "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
-
+    -- { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
     { "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(Cobra Shot).regen")) <= dynamicEval("player.focus.deficit")) end, }},
 
     { "Arcane Shot", { "player.focus >= 80", "player.spell(Focusing Shot).exists" }},
