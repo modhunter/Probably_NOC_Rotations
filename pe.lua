@@ -182,6 +182,11 @@ ProbablyEngine.condition.register("spell.regen", function(target, spell)
   return cast_time_in_seconds * cur_regen
 end)
 
+ProbablyEngine.condition.register("spell.casttime", function(target, spell)
+    local name, rank, icon, cast_time, min_range, max_range = GetSpellInfo(spell)
+    return cast_time
+end)
+
 ProbablyEngine.condition.register("gcd", function(target)
   local gcd = (1.5/GetHaste(target))
   if gcd < 1 then

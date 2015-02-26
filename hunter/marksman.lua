@@ -152,14 +152,17 @@ local combat = {
       { "Powershot", "player.timetomax > 2.5" },
       { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
 
-      -- TODO: Need to figure out how to implement this:
-      --# Pool max focus for rapid fire so we can spam AimedShot with Careful Aim buff
-      --actions+=/steady_shot,if=focus.deficit*cast_time%(14+cast_regen)>cooldown.rapid_fire.remains
-      --actions+=/focusing_shot,if=focus.deficit*cast_time%(50+cast_regen)>cooldown.rapid_fire.remains&focus<100
-      { "Steady Shot", "player.timetomax > player.spell(Rapid Fire).cooldown" },
-      { "Focusing Shot", { "player.focus < 50", "!player.moving" }},
+      { "Steady Shot", {
+          function()
+              return ( ( (dynamicEval("player.focus.deficit") * dynamicEval("player.casttime(Steady Shot)")) % (14 + dynamicEval("player.spell(Steady Shot).regen")) ) > dynamicEval("player.spell(Rapid Fire).cooldown") )
+          end,
+      }, },
+      { "Focusing Shot", { "player.focus < 100", "!player.moving",
+          function()
+              return ( ( (dynamicEval("player.focus.deficit") * dynamicEval("player.casttime(Focusing Shot)")) % (50 + dynamicEval("player.spell(Focusing Shot).regen")) ) > dynamicEval("player.spell(Rapid Fire).cooldown") )
+          end,
+      }, },
 
-      -- { "Steady Shot", { "player.buff(Steady Focus)", "player.timetomax > 5" }},
       -- { "Steady Shot", {"lastcast(Steady Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
       { "Steady Shot", { "lastcast(Steady Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(Steady Shot).regen")) <= dynamicEval("player.focus.deficit")) end, }},
 
