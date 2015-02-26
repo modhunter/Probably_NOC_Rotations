@@ -44,6 +44,7 @@ SpecialTargets = {
     77891,      -- Grasping Earth (BRF Kromog)
     77893,      -- Grasping Earth (BRF Kromog)
     78583,      -- Dominator Turret (BRF Iron Maidens)
+    78584,      -- Dominator Turret (BRF Iron Maidens)
 }
 
 SpecialAuras = {
