@@ -144,6 +144,8 @@ local combat = {
 
     { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.cc" }, "target" },
 
+    { "Arcane Shot", "!target.debuff(Serpent Sting)" },
+
     -- AoE
     { aoe, { "toggle.multitarget", "modifier.enemies >= 2" }},
 

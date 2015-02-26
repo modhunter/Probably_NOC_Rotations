@@ -42,7 +42,7 @@ local ooc = {
 }
 
 local aoe = {
-  { "Multi-Shot", "!player.buff(Beast Cleave)" },
+  { "Multi-Shot", "!pet.buff(Beast Cleave)" },
   { "Barrage" },
   { "Multi-Shot", "modifier.enemies >= 6" },
   { "Cobra Shot" },
