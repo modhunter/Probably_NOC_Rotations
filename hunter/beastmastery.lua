@@ -45,7 +45,7 @@ local aoe = {
   { "Multi-Shot", "!pet.buff(Beast Cleave)" },
   { "Barrage" },
   { "Multi-Shot", "modifier.enemies >= 6" },
-  { "Cobra Shot" },
+  --{ "Cobra Shot" },
 }
 
 local combat = {
@@ -141,7 +141,7 @@ local combat = {
     { "Focusing Shot", { "player.focus < 50", "!player.moving" }},
 
     -- { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
-    { "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(Cobra Shot).regen")) <= dynamicEval("player.focus.deficit")) end, }},
+    { "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(77767).regen")) <= dynamicEval("player.focus.deficit")) end, }},
 
     { "Glaive Toss" },
     { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle

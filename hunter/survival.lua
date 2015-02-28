@@ -52,13 +52,13 @@ local aoe = {
   { "Dire Beast" },
 
   -- Multi Shot if we have ToTH buff, more than 50 focus, and
-  { "Multi-Shot", { "player.buff(34720)", "player.focus > 50", function() return(dynamicEval("player.spell(Multi-Shot).regen") <= dynamicEval("player.focus.deficit")) end, }},
+  { "Multi-Shot", { "player.buff(34720)", "player.focus > 50", function() return(dynamicEval("player.spell(2643).regen") <= dynamicEval("player.focus.deficit")) end, }},
   { "Multi-Shot", "target.debuff(Serpent Sting).duration <= 5" },
 
   { "Glaive Toss" },
   { "Powershot" },
   { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45",
-  function() return ((dynamicEval("player.focus") + 14 + dynamicEval("player.spell(Cobra Shot).regen")) < 80) end, }},
+  function() return ((dynamicEval("player.focus") + 14 + dynamicEval("player.spell(77767).regen")) < 80) end, }},
   { "Multi-Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
   { "Focusing Shot", "!player.moving" },
   { "Cobra Shot" },
@@ -154,11 +154,11 @@ local combat = {
     { "Explosive Shot" },
     { "Dire Beast" },
 
-    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35", function() return (dynamicEval("player.spell(Arcane Shot).regen") <= dynamicEval("player.focus.deficit")) end, }},
+    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35", function() return (dynamicEval("player.spell(3044).regen") <= dynamicEval("player.focus.deficit")) end, }},
     { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 3" },
 
     -- { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
-    { "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(Cobra Shot).regen")) <= dynamicEval("player.focus.deficit")) end, }},
+    { "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(77767).regen")) <= dynamicEval("player.focus.deficit")) end, }},
 
     { "Arcane Shot", { "player.focus >= 80", "player.spell(Focusing Shot).exists" }},
     { "Focusing Shot", "!player.moving" },

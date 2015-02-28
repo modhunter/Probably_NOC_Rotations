@@ -149,6 +149,8 @@ local opener = {
 local combat = {
   -- Pause
   { "pause", "modifier.lshift" },
+
+  -- TODO: add negative chcek for glyph to not pause
   { "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
   { "/stopcasting\n/stopattack\n/cleartarget\n/stopattack\n/cleartarget", { "player.time >= 300", "toggle.dpstest" }},
 
@@ -218,6 +220,19 @@ local combat = {
 
   -- wrapper for "@NOC.immuneEvents" which prevents the following from occuring when the target is CCed or otherwise not allowed to be attacked
   {{
+    -- ToD prioritization
+    {{
+      -- If not glyphed, Jab immediatley to get enough chi for ToD
+      { "!Jab", { "player.chi < 3", "!player.glyph(Touch of Death)" }},
+      {{
+        -- If not glyphed, Fort Brew Immediatley if we have at least 3 chi
+        { "!Fortifying Brew", { "player.chi >= 3", "!player.glyph(Touch of Death)" }},
+        -- If glyphed, Fort Brew Immediatley
+        { "!Fortifying Brew", "player.glyph(Touch of Death)" }, -- Only if the target's current health is > our max health
+      }, "target.health.actual > player.health.max" }, -- Only if the target's current health is > our max health
+      { "!Touch of Death" },
+    }, { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown < 1", "!target.id(78463)", "!target.id(76829)", "target.range <= 5" }}, -- Don't use ToD if we are targetting the Slag Elemental
+
     -- Chi wave during the first few seconds of combat (even at range) and when not under Serenity
     { "Chi Wave", { "player.time < 10", "!player.buff(Serenity)" }}, -- 40 yard range 0 energy, 0 chi
 
@@ -252,15 +267,6 @@ local combat = {
       -- 'ideal' opener (starting with 5 chi) is:    RSK -> TP -> CB -> CB -> BoK -> TeB -> Serenity
       -- 'unideal' opener (starting with 0 chi) is:  CB -> CB -> RSK -> TP -> Jab -> Jab -> BoK -> TeB -> Serenity
       { opener, { "player.time < 10", "talent(3,3)", "talent(7,3)", "!player.buff(116740)" }},
-
-      -- fortifying_brew, if=target.health.percent<10 & cooldown.touch_of_death.remains=0 & (glyph.touch_of_death.enabled | chi>=3)
-      -- touch_of_death, if=target.health.percent<10 & (glyph.touch_of_death.enabled | chi>=3)
-      -- Use Fortifying Brew offensivley to get bigger ToD damage
-      -- TODO: Add code to handle glyph
-      {{
-         { "!Fortifying Brew", "player.spell(Touch of Death).cooldown < 1" },
-         { "!Touch of Death" },
-      }, { "player.buff(Death Note)", "player.chi >= 3", "!target.id(78463)", "!target.id(76829)" }}, -- Don't use ToD if we are targetting the Slag Elemental
 
       -- If serenity, honor opener
       {{
