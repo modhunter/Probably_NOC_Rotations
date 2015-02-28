@@ -53,7 +53,8 @@ local careful_aim = {
   { aoe, { "toggle.multitarget", "modifier.enemies >= 2" }},
   -- ST
   { "Aimed Shot" },
-  { "Focusing Shot", { "!player.moving", function() return ((50 + dynamicEval("player.spell(152245).regen")) < dynamicEval("player.focus.deficit")) end }},
+  --{ "Focusing Shot", { "!player.moving", function() return ((50 + dynamicEval("player.spell(152245).regen")) < dynamicEval("player.focus.deficit")) end }},
+  { "Focusing Shot", { "!player.moving", "player.focus.deficit > 55" }},
   { "Steady Shot" },
 }
 
@@ -146,30 +147,26 @@ local combat = {
     {{
       { "A Murder of Crows", "target.health.actual < 200000" },
 
-      { "Dire Beast", { function() return ((dynamicEval("player.spell(120679).regen") + dynamicEval("player.spell(19434).regen")) < dynamicEval("player.focus.deficit")) end }},
+      --{ "Dire Beast", { function() return ((dynamicEval("player.spell(120679).regen") + dynamicEval("player.spell(19434).regen")) < dynamicEval("player.focus.deficit")) end }},
+      { "Dire Beast", "player.timetomax > 3" },
 
       { "Glaive Toss" },
       { "Powershot", "player.timetomax > 2.5" },
       { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
 
-      { "Steady Shot", { function() return (dynamicEval("player.timetomax") > dynamicEval("player.spell(3045).cooldown")) end, }, },
-      --{ "Steady Shot", { function() return ( ( (dynamicEval("player.focus.deficit") * dynamicEval("player.casttime(56641)")) % (14 + dynamicEval("player.spell(56641).regen")) ) > dynamicEval("player.spell(3045).cooldown") ) end, }, },
-      { "Focusing Shot", { "player.focus < 100", "!player.moving",
-          function()
-              return ( ( (dynamicEval("player.focus.deficit") * dynamicEval("player.casttime(152245)")) % (50 + dynamicEval("player.spell(152245).regen")) ) > dynamicEval("player.spell(3045).cooldown") )
-          end,
-      }, },
-
-      -- { "Steady Shot", {"lastcast(Steady Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
-      { "Steady Shot", { "lastcast(Steady Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(56641).regen")) <= dynamicEval("player.focus.deficit")) end, }},
+      { "Steady Shot", "player.timetomax > player.spell(Rapid Fire).cooldown" },
+      { "Focusing Shot", { "player.focus < 75", "!player.moving", "player.timetomax > player.spell(Rapid Fire).cooldown" }},
+      { "Steady Shot", {"lastcast(Steady Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
+      --{ "Steady Shot", { "lastcast(Steady Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(56641).regen")) <= dynamicEval("player.focus.deficit")) end, }},
 
       { "Multi-Shot", { "toggle.multitarget", "modifier.enemies >= 7" }},
 
-      { "Aimed Shot", "player.spell(Focusing Shot).exists" },
-      { "Aimed Shot", "player.focus >= 85" },
-      { "Aimed Shot", { "player.buff(34720)", "player.focus > 35", function() return ((dynamicEval("player.focus") + dynamicEval("player.spell(19434).regen")) >= 65) end, }},
+      { "Aimed Shot", "talent(7,2)" },
+      { "Aimed Shot", "player.focus >= 70" },
+      { "Aimed Shot", { "player.buff(34720)", "player.focus > 50" }},
 
-      { "Focusing Shot", { "!player.moving", function() return ((50 + (dynamicEval("player.spell(152245).regen")) - 10) < dynamicEval("player.focus.deficit")) end }},
+      --{ "Focusing Shot", { "!player.moving", function() return ((50 + (dynamicEval("player.spell(152245).regen")) - 10) < dynamicEval("player.focus.deficit")) end }},
+      { "Focusing Shot", { "player.focus.deficit > 55", "!player.moving" }},
       { "Steady Shot" },
     }, { "target.health < 80", "!player.buff(Rapid Fire)" }},
   }, "@NOC.immuneEvents('target')" },

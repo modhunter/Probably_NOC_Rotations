@@ -44,22 +44,24 @@ local ooc = {
 
 local aoe = {
   -- Explosive shot if LnL is up and Barrage is not ready
-  { "Explosive Shot", { "player.buff(Lock and Load)", "player.spell(Barrage).cooldown > 1" }},
-  { "Barrage" },
+  { "Explosive Shot", { "player.buff(Lock and Load)", "!talent(6.1)" }},
+  { "Explosive Shot", { "player.buff(Lock and Load)", "talent(6.1)", "player.spell(Barrage).cooldown > 1" }},
+  { "Barrage", "talnet(6.1)" },
   { "Black Arrow", "!target.debuff(3674)" },
   { "Explosive Shot", "modifier.enemies <= 4" },
   { "A Murder of Crows", "target.health.actual < 200000" },
   { "Dire Beast" },
 
-  -- Multi Shot if we have ToTH buff, more than 50 focus, and
-  { "Multi-Shot", { "player.buff(34720)", "player.focus > 50", function() return(dynamicEval("player.spell(2643).regen") <= dynamicEval("player.focus.deficit")) end, }},
+  { "Multi-Shot", { "player.buff(34720)", "player.focus > 50" }},
   { "Multi-Shot", "target.debuff(Serpent Sting).duration <= 5" },
 
   { "Glaive Toss" },
   { "Powershot" },
-  { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45",
-  function() return ((dynamicEval("player.focus") + 14 + dynamicEval("player.spell(77767).regen")) < 80) end, }},
-  { "Multi-Shot", { "player.focus >= 70", "player.spell(Focusing Shot).exists" }}, -- Multi-Shot
+
+  { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
+--  { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45", function() return ((dynamicEval("player.focus") + 14 + dynamicEval("player.spell(77767).regen")) < 80) end, }},
+
+  { "Multi-Shot", { "player.focus >= 70", "talent(7,2)" }}, -- Multi-Shot
   { "Focusing Shot", "!player.moving" },
   { "Cobra Shot" },
 }
@@ -144,7 +146,7 @@ local combat = {
 
     { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.cc" }, "target" },
 
-    { "Arcane Shot", "!target.debuff(Serpent Sting)" },
+    --{ "Arcane Shot", "!target.debuff(Serpent Sting)" },
 
     -- AoE
     { aoe, { "toggle.multitarget", "modifier.enemies >= 2" }},
@@ -154,13 +156,14 @@ local combat = {
     { "Explosive Shot" },
     { "Dire Beast" },
 
-    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35", function() return (dynamicEval("player.spell(3044).regen") <= dynamicEval("player.focus.deficit")) end, }},
+    { "Arcane Shot", { "player.buff(34720)", "player.focus > 25" }},
+    --{ "Arcane Shot", { "player.buff(34720)", "player.focus > 35", function() return (dynamicEval("player.spell(3044).regen") <= dynamicEval("player.focus.deficit")) end, }},
     { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 3" },
 
-    -- { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
-    { "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(77767).regen")) <= dynamicEval("player.focus.deficit")) end, }},
+    { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
+    --{ "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(77767).regen")) <= dynamicEval("player.focus.deficit")) end, }},
 
-    { "Arcane Shot", { "player.focus >= 80", "player.spell(Focusing Shot).exists" }},
+    { "Arcane Shot", { "player.focus >= 70", "talent(7,2)" }},
     { "Focusing Shot", "!player.moving" },
     { "Cobra Shot" },
   }, "@NOC.immuneEvents('target')" },

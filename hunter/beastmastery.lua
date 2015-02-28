@@ -140,8 +140,8 @@ local combat = {
     { "Kill Shot" },
     { "Focusing Shot", { "player.focus < 50", "!player.moving" }},
 
-    -- { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
-    { "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(77767).regen")) <= dynamicEval("player.focus.deficit")) end, }},
+    { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
+    --{ "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(77767).regen")) <= dynamicEval("player.focus.deficit")) end, }},
 
     { "Glaive Toss" },
     { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
