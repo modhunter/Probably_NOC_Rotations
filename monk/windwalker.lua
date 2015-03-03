@@ -16,7 +16,6 @@ local onLoad = function()
           BaseStatsUpdate()
       end),
   nil)
-
 end
 
 local buffs = {
@@ -54,14 +53,13 @@ local aoe = {
 
   { "Rising Sun Kick", { "player.chidiff = 0" }},
 
-  -- Only use this is we have the RJW talent and there are more than 3 enemies and toggle enabled
-  { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies > 3", "toggle.rjw" }},
+  -- Only use this is we have the RJW talent and there are 3 or more enemies and toggle enabled
+  { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies >= 3", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
   { "Rushing Jade Wind", { "talent(6,1)", "!talent(7,2)" }},
 
   {{
     { "Chi Wave" },
-    --{ "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
   }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
@@ -83,7 +81,7 @@ local aoe = {
     { "Chi Torpoedo", "player.timetomax > 2" },
 
     -- Only do this if we do not have RJW talent and there are more than 3 enemies and toggle enabled
-    { "Spinning Crane Kick", { "modifier.enemies > 3", "toggle.rjw" }},
+    { "Spinning Crane Kick", { "modifier.enemies >= 4", "toggle.rjw" }},
     -- Otherwise, use it 'normally' if we aren't using chi explosion
     { "Spinning Crane Kick", { "!talent(7,2)" }},
 
@@ -94,16 +92,15 @@ local aoe = {
 }
 
 local st = {
+  { "Rising Sun Kick" },
+
   { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
   { "Blackout Kick", "player.buff(Serenity)" },
 
   { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
 
-  { "Rising Sun Kick", "!talent(7,2)" },
-
   {{
     { "Chi Wave" },
-    --{ "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
     { "Chi Torpoedo" },
   }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
@@ -116,19 +113,17 @@ local st_chex = {
 
   { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
 
+  { "Rising Sun Kick" },
+
   {{
     { "Chi Wave" },
-    --{ "Zen Sphere", { "!player.buff(Zen Sphere)" }, "target" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
-  }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
-
-  { "Rising Sun Kick" },
+    { "Chi Torpoedo" },
+  }, { "player.timetomax > 2" }},
 
   { "Tiger Palm", { "player.chi >= 4", "!player.buff(Combo Breaker: Chi Explosion)" }},
 
   { "Chi Explosion", { "player.chi >= 3", "player.spell(Fists of Fury).cooldown > 4" }},
-
-  { "Chi Torpoedo", "player.timetomax > 2" },
 }
 
 local opener = {
@@ -146,11 +141,40 @@ local opener = {
   { "Jab", "player.chidiff >= 2" }, -- 0-3 chi
 }
 
+local interrupts = {
+  { "Paralysis", { -- Paralysis when SHS, and Quaking Palm are all on CD
+     "!target.debuff(Spear Hand Strike)",
+     "player.spell(Spear Hand Strike).cooldown > 1",
+     "player.spell(Quaking Palm).cooldown > 1",
+     "!lastcast(Spear Hand Strike)"
+  }},
+  { "Ring of Peace", { -- Ring of Peace when SHS is on CD
+     "!target.debuff(Spear Hand Strike)",
+     "player.spell(Spear Hand Strike).cooldown > 1",
+     "!lastcast(Spear Hand Strike)"
+  }},
+  { "Leg Sweep", { -- Leg Sweep when SHS is on CD
+     "player.spell(116705).cooldown > 1",
+     "target.range <= 5",
+     "!lastcast(116705)"
+  }},
+  { "Charging Ox Wave", { -- Charging Ox Wave when SHS is on CD
+     "player.spell(116705).cooldown > 1",
+     "target.range <= 30",
+     "!lastcast(116705)"
+  }},
+  { "Quaking Palm", { -- Quaking Palm when SHS is on CD
+     "!target.debuff(Spear Hand Strike)",
+     "player.spell(Spear Hand Strike).cooldown > 1",
+     "!lastcast(Spear Hand Strike)"
+  }},
+  { "Spear Hand Strike" }, -- Spear Hand Strike
+}
+
 local combat = {
   -- Pause
   { "pause", "modifier.lshift" },
 
-  -- TODO: add negative chcek for glyph to not pause
   { "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
   { "/stopcasting\n/stopattack\n/cleartarget\n/stopattack\n/cleartarget", { "player.time >= 300", "toggle.dpstest" }},
 
@@ -170,36 +194,7 @@ local combat = {
   { "Storm, Earth, and Fire", { "toggle.autosef", "!player.buff(137639).count = 2", "@NOC.autoSEF()", },},
   { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }},
 
-  -- Interrupts
-  {{
-    { "Paralysis", { -- Paralysis when SHS, and Quaking Palm are all on CD
-       "!target.debuff(Spear Hand Strike)",
-       "player.spell(Spear Hand Strike).cooldown > 1",
-       "player.spell(Quaking Palm).cooldown > 1",
-       "!lastcast(Spear Hand Strike)"
-    }},
-    { "Ring of Peace", { -- Ring of Peace when SHS is on CD
-       "!target.debuff(Spear Hand Strike)",
-       "player.spell(Spear Hand Strike).cooldown > 1",
-       "!lastcast(Spear Hand Strike)"
-    }},
-    { "Leg Sweep", { -- Leg Sweep when SHS is on CD
-       "player.spell(116705).cooldown > 1",
-       "target.range <= 5",
-       "!lastcast(116705)"
-    }},
-    { "Charging Ox Wave", { -- Charging Ox Wave when SHS is on CD
-       "player.spell(116705).cooldown > 1",
-       "target.range <= 30",
-       "!lastcast(116705)"
-    }},
-    { "Quaking Palm", { -- Quaking Palm when SHS is on CD
-       "!target.debuff(Spear Hand Strike)",
-       "player.spell(Spear Hand Strike).cooldown > 1",
-       "!lastcast(Spear Hand Strike)"
-    }},
-    { "Spear Hand Strike" }, -- Spear Hand Strike
-  }, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
+  { interrupts, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
 
   -- Self-Healing & Defensives
   { "Expel Harm", { "player.health <= 70", "player.chidiff >= 2" }}, -- 10 yard range, 40 energy, 0 chi
@@ -243,27 +238,21 @@ local combat = {
        { "Blood Fury" },
        { "Bear Hug" },
        { "Invoke Xuen, the White Tiger" },
-       --{ "#trinket1", "player.hashero" },
-       --{ "#trinket2", "player.hashero" },
-       -- Use trinkets when we are using TeB
-      -- Use with TeB when not specced into Serenity
-       { "#trinket1", { "!talent(7,3)", "player.buff(116740)" }},
-       { "#trinket2", { "!talent(7,3)", "player.buff(116740)" }},
-       -- Use with Serenity buff when secced into Serenity
-       { "#trinket1", { "talent(7,3)", "player.buff(Serenity)" }},
-       { "#trinket2", { "talent(7,3)", "player.buff(Serenity)" }},
+      -- Use with TeB
+       { "#trinket1", "player.buff(116740)" },
+       { "#trinket2", "player.buff(116740)" },
     }, "modifier.cooldowns" },
 
     -- Should this be moved after the melee-range check? Worried that it may be prioritized too much
     {{
       { "Zen Sphere", "!player.buff(Zen Sphere)" },
-      { "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
-      { "Zen Sphere", { "!focus.exists", "tank.exists", "!tank.buff(Zen Sphere)", "tank.range <= 40", }, "tank" },
+      --{ "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
+      { "Zen Sphere", { "tank.exists", "!tank.buff(Zen Sphere)", "tank.range <= 40", }, "tank" },
     }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
     -- Melee range only
     {{
-      -- Opener priority during the first 10 seconds when serenity talent is selected and we haven't popped TeB yet
+      -- Opener priority during the first 10 seconds when serenity & chi brew talents are selected and we haven't popped TeB yet
       -- 'ideal' opener (starting with 5 chi) is:    RSK -> TP -> CB -> CB -> BoK -> TeB -> Serenity
       -- 'unideal' opener (starting with 0 chi) is:  CB -> CB -> RSK -> TP -> Jab -> Jab -> BoK -> TeB -> Serenity
       { opener, { "player.time < 10", "talent(3,3)", "talent(7,3)", "!player.buff(116740)" }},
@@ -283,36 +272,42 @@ local combat = {
       { "Tiger Palm", { "!talent(7,2)", "player.buff(Tiger Power).duration < 6.6" }},
       { "Tiger Palm", { "talent(7,2)", "player.buff(Tiger Power).duration < 5", "player.spell(Fists of Fury).cooldown < 5" }},
 
-      -- Tigereye Brew
+      -- Tigereye Brew only if the buff isn't up already
       {{
+        -- Use no matter what if we are at 20 stacks
         { "116740", "player.buff(125195).count = 20" },
+
+        -- Use when at 9+ stacks and Serenity buff is up
         { "116740", { "player.buff(125195).count >= 9", "player.buff(Serenity).duration > 1" }},
+
+        -- Only use when RSK debuff & TP buff are active
         {{
-          -- Pop TeB anytime we have any sort of proc or big buff
+          -- Big procs, FoF ready, HS ready, or 16+ stacks
           {{
-            { "116740", "player.spell(Fists of Fury).cooldown < 1" },
-            { "116740", { "player.spell(Hurricane Strike).cooldown < 1", "talent(7,1)" }},
             { "116740", "@NOC.StatProcs('agility')" }, -- Any agility buff
             { "116740", "@NOC.StatProcs('multistrike')" }, -- Any multistrike buff
             { "116740", "player.hashero" },
+            { "116740", { "player.spell(Fists of Fury).cooldown < 1", "player.chi >= 3" }},
+            { "116740", { "player.spell(Hurricane Strike).cooldown < 1", "talent(7,1)", "player.chi >= 3" }},
+            { "116740", "player.buff(125195).count >= 16" },
           },{ "player.chi >= 2", "player.time >= 10" }},
-          --"player.chi >= 3", "player.buff(125195).count >= 9"
-          {{
-            { "116740", { "player.buff(125195).count >= 16" }},
-          },{ "player.chi >= 2" }},
+
         },{ "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)" }},
       },{ "!player.buff(116740)", "!lastcast(116740)" }},
 
       { "Rising Sun Kick", "!target.debuff(Rising Sun Kick)" },
       { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
 
-      -- Serenity whenever TeB buff is up
-      { "Serenity", { "talent(7,3)", "player.buff(116740)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
+      {{
+        -- If we are in the opener, pop Serenity only after we have used TeB
+        { "Serenity", { "player.buff(116740)", "player.time < 10" }},
+        { "Serenity", { "player.time >= 10" }},
+      }, { "talent(7,3)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
       {{
-        { "Fists of Fury", { "!player.moving", "player.lastmoved > 1", "!player.glyph(Glyph of the Floating Butterfly)" }},
-        { "Fists of Fury", "player.glyph(Glyph of the Floating Butterfly)" },
-      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 3.6", "player.chi >= 3", "player.buff(Tiger Power).duration > 3.6" }},
+        { "Fists of Fury", { "!player.moving", "player.lastmoved > 0.5", "!player.glyph(Floating Butterfly)" }},
+        { "Fists of Fury", "player.glyph(Floating Butterfly)" },
+      }, { "!player.buff(Serenity)", "target.debuff(Rising Sun Kick).duration > 3.6", "player.buff(Tiger Power).duration > 3.6" }},
 
       { "Hurricane Strike", {
         "talent(7,1)",
@@ -327,7 +322,7 @@ local combat = {
       },{ "player.spell(Fists of Fury).cooldown > 6", "@NOC.energyTime(50)" }},
 
       -- AoE
-      { aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
+      { aoe, { "toggle.multitarget", "modifier.enemies >= 2" }},
 
       -- Not specced into Chi Explosion
       { st, "!talent(7,2)" },
