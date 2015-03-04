@@ -1,50 +1,51 @@
 local NOC = { }
 local DSL = ProbablyEngine.dsl.get
 
-BASESTATSVALUE = {}
-BASEMULTISTRIKE = 0
 DEBUGLOGLEVEL = 5
-DEBUGTOGGLE = false
-PRIMARYBASESTATS = {}
-SECONDARYBASESTATS = {}
+DEBUGTOGGLE = true
+NOC.baseStatsTable = { }
+tier17set = 0
 
-SpecialTargets = {
-    -- TRAINING DUMMIES
-    31144,      -- Training Dummy - Lvl 80
-    31146,      -- Raider's Training Dummy - Lvl ??
-    32541,      -- Initiate's Training Dummy - Lvl 55 (Scarlet Enclave)
-    32542,      -- Disciple's Training Dummy - Lvl 65
-    32545,      -- Initiate's Training Dummy - Lvl 55
-    32546,      -- Ebon Knight's Training Dummy - Lvl 80
-    32666,      -- Training Dummy - Lvl 60
-    32667,      -- Training Dummy - Lvl 70
-    46647,      -- Training Dummy - Lvl 85
-    60197,      -- Scarlet Monastery Dummy
-    67127,      -- Training Dummy - Lvl 90
-    87761,      -- Dungeoneer's Training Dummy <Damage> HORDE GARRISON
-    88288,      -- Dunteoneer's Training Dummy <Tanking> HORDE GARRISON
-    88289,      -- Training Dummy <Healing> HORDE GARRISON
-    88314,      -- Dungeoneer's Training Dummy <Tanking> ALLIANCE GARRISON
-    88316,      -- Training Dummy <Healing> ALLIANCE GARRISON
-    89078,      -- Training Dummy (Garrison)
-    87318,      -- Dungeoneer's Training Dummy <Damage>
-    -- WOD DUNGEONS/RAIDS
-    71075,      -- Small Illusionary Banshee (Proving Grounds)
-    75966,      -- Defiled Spirit (Shadowmoon Burial Grounds)
-    76220,      -- Blazing Trickster (Auchindoun Normal)
-    76267,      -- Solar Zealot (Skyreach)
-    76518,      -- Ritual of Bones (Shadowmoon Burial Grounds)
-    79511,      -- Blazing Trickster (Auchindoun Heroic)
-    81638,      -- Aqueous Globule (The Everbloom)
-    153792,     -- Rallying Banner (UBRS Black Iron Grunt)
-    77252,      -- Ore Crate (BRF Oregorger)
-    79504,      -- Ore Crate (BRF Oregorger)
-    86644,      -- Ore Crate (BRF Oregorger)
-    77665,      -- Iron Bomber (BRF Blackhand)
-    77891,      -- Grasping Earth (BRF Kromog)
-    77893,      -- Grasping Earth (BRF Kromog)
-    78583,      -- Dominator Turret (BRF Iron Maidens)
-    78584,      -- Dominator Turret (BRF Iron Maidens)
+Whitelist = {
+  -- TRAINING DUMMIES
+  [31144]     = "31144",      -- Training Dummy - Lvl 80
+  [31146]     = "31146",      -- Raider's Training Dummy - Lvl ??
+  [32541]     = "32541",      -- Initiate's Training Dummy - Lvl 55 (Scarlet Enclave)
+  [32542]     = "32542",      -- Disciple's Training Dummy - Lvl 65
+  [32545]     = "32545",      -- Initiate's Training Dummy - Lvl 55
+  [32546]     = "32546",      -- Ebon Knight's Training Dummy - Lvl 80
+  [32666]     = "32666",      -- Training Dummy - Lvl 60
+  [32667]     = "32667",      -- Training Dummy - Lvl 70
+  [46647]     = "46647",      -- Training Dummy - Lvl 85
+  [60197]     = "60197",      -- Scarlet Monastery Dummy
+  [67127]     = "67127",      -- Training Dummy - Lvl 90
+  [87318]     = "87318",      -- Dungeoneer's Training Dummy <Damage> ALLIANCE GARRISON
+  [87761]     = "87761",      -- Dungeoneer's Training Dummy <Damage> HORDE GARRISON
+  [87322]     = "87322",      -- Dungeoneer's Training Dummy <Tanking> ALLIANCE ASHRAN BASE
+  [88314]     = "88314",      -- Dungeoneer's Training Dummy <Tanking> ALLIANCE GARRISON
+  [88836]     = "88836",      -- Dungeoneer's Training Dummy <Tanking> HORDE ASHRAN BASE
+  [88288]     = "88288",      -- Dunteoneer's Training Dummy <Tanking> HORDE GARRISON
+  -- WOD DUNGEONS/RAIDS
+  [75966]     = "75966",      -- Defiled Spirit (Shadowmoon Burial Grounds)
+  [76220]     = "76220",      -- Blazing Trickster (Auchindoun Normal)
+  [76222]     = "76222",      -- Rallying Banner (UBRS Black Iron Grunt)
+  [76267]     = "76267",      -- Solar Zealot (Skyreach)
+  [76518]     = "76518",      -- Ritual of Bones (Shadowmoon Burial Grounds)
+  [77252]     = "77252",      -- Ore Crate (BRF Oregorger)
+  [77665]     = "77665",      -- Iron Bomber (BRF Blackhand)
+  [77891]     = "77891",      -- Grasping Earth (BRF Kromog)
+  [77893]     = "77893",      -- Grasping Earth (BRF Kromog)
+  [78583]     = "78583",      -- Dominator Turret (BRF Iron Maidens)
+  [78584]     = "78584",      -- Dominator Turret (BRF Iron Maidens)
+  [79504]     = "79504",      -- Ore Crate (BRF Oregorger)
+  [79511]     = "79511",      -- Blazing Trickster (Auchindoun Heroic)
+  [81638]     = "81638",      -- Aqueous Globule (The Everbloom)
+  [86644]     = "86644",      -- Ore Crate (BRF Oregorger)
+}
+
+Blacklist = {
+  [76829]     = "76829",      -- Slag Elemental (BrF - Blast Furnace)
+  [78463]     = "78463",      -- Slag Elemental (BrF - Blast Furnace)
 }
 
 SpecialAuras = {
@@ -82,71 +83,74 @@ SpecialAuras = {
   -- WOD DUNGEONS/RAIDS/ELITES
 }
 
--- Credit to StinkyTwitch for the routines to check primary stat buffs
-function BaseStatsInit()
-    for i=1, 5 do
-        BASESTATSVALUE[#BASESTATSVALUE+1] = UnitStat("player", i)
-        --local stat = UnitStat("player", i)
-        --DEBUG(5, "i: "..BASESTATSVALUE[#BASESTATSVALUE+1].." = " ..stat)
-    end
-    BASEMULTISTRIKE = GetMultistrike()
-    DEBUG(5, "GetMultistrike = "..BASEMULTISTRIKE)
+-- Credit to StinkyTwitch for the routines to check stat buffs
+function NOC.BaseStatsTableInit()
+	--[[--------------------------------------------------------------------------------------------
+	Only run this once, as we load a rotation. These become the base values.
+	--------------------------------------------------------------------------------------------]]--
+	NOC.baseStatsTable.strength = UnitStat("player", 1)
+	NOC.baseStatsTable.agility = UnitStat("player", 2)
+	NOC.baseStatsTable.stamina = UnitStat("player", 3)
+	NOC.baseStatsTable.intellect = UnitStat("player", 4)
+	NOC.baseStatsTable.spirit = UnitStat("player", 5)
+	NOC.baseStatsTable.crit = GetCritChance()
+	NOC.baseStatsTable.haste = GetHaste()
+	NOC.baseStatsTable.mastery = GetMastery()
+	NOC.baseStatsTable.multistrike = GetMultistrike()
+	NOC.baseStatsTable.versatility = GetCombatRating(29)
 end
 
-
-function BaseStatsUpdate()
-    if not UnitAffectingCombat("player") then
-        for i=1, 5 do
-            local stat = UnitStat("player", i)
-            if BASESTATSVALUE[i] ~= stat then
-                DEBUG(5, "Updating BASESTATSVALUE[i] ("..BASESTATSVALUE[i]..") = " ..stat)
-                BASESTATSVALUE[i] = stat
-            end
-        end
-        local multistrike = GetMultistrike()
-        if BASEMULTISTRIKE ~= multistrike then
-            DEBUG(5, "Updating BASEMULTISTRIKE ("..BASEMULTISTRIKE..") = " ..multistrike)
-            BASEMULTISTRIKE = multistrike
-        end
-    end
+function NOC.BaseStatsTablePrint()
+	print("Strength: "..NOC.baseStatsTable.strength)
+	print("Agility: "..NOC.baseStatsTable.agility)
+	print("Stamina: "..NOC.baseStatsTable.stamina)
+	print("Intellect: "..NOC.baseStatsTable.intellect)
+	print("Spirit: "..NOC.baseStatsTable.spirit)
+	print("Crit: "..NOC.baseStatsTable.crit)
+	print("Haste: "..NOC.baseStatsTable.haste)
+	print("Mastery: "..NOC.baseStatsTable.mastery)
+	print("Multistrike: "..NOC.baseStatsTable.multistrike)
+	print("Versatility: "..NOC.baseStatsTable.versatility)
 end
 
-
-function NOC.StatProcs(index)
-  local index = string.lower(index)
-
-  if index == "strength" then
-      index = 1
-  elseif index == "agility" then
-      index = 2
-  elseif index == "stamina" then
-      index = 3
-  elseif index == "intellect" then
-      index = 4
-  elseif index == "spirit" then
-      index = 5
-  elseif index == "multistrike" then
-    local multistrike = GetMultistrike()
-    if multistrike > BASEMULTISTRIKE then
-        DEBUG(5, "StatProcs(multistrike): TRUE ("..multistrike.." > "..BASEMULTISTRIKE..")")
-        return true
-    else
-        --DEBUG(5, "StatProcs(multistrike): FALSE ("..multistrike.." <= "..BASEMULTISTRIKE..")")
-        return false
-    end
-  else
-      return false
-  end
-
-  local current_stat = UnitStat("player", index)
-
-  if current_stat > BASESTATSVALUE[index] then
-      DEBUG(5, "StatProcs(): TRUE ("..current_stat.." > "..BASESTATSVALUE[index]..")")
-      return true
-  else
-      --DEBUG(5, "StatProcs(): FALSE ("..current_stat.." <= "..BASESTATSVALUE[index]..")")
-      return false
-  end
+function NOC.BaseStatsTableUpdate()
+	--[[--------------------------------------------------------------------------------------------
+	If the base stats change we want to update them. This could be because of gear changes, food,
+	flasks, buffs, etc. We want to update the base table prior to combat. Once in combat this table
+	is what we check against to see if we have a buff proc.
+	--------------------------------------------------------------------------------------------]]--
+	if not UnitAffectingCombat("player") then
+		if NOC.baseStatsTable.strength ~= UnitStat("player", 1) then
+			NOC.baseStatsTable.strength = UnitStat("player", 1)
+		end
+		if NOC.baseStatsTable.agility ~= UnitStat("player", 2) then
+			NOC.baseStatsTable.agility = UnitStat("player", 2)
+		end
+		if NOC.baseStatsTable.stamina ~= UnitStat("player", 3) then
+			NOC.baseStatsTable.stamina = UnitStat("player", 3)
+		end
+		if NOC.baseStatsTable.intellect ~= UnitStat("player", 4) then
+			NOC.baseStatsTable.intellect = UnitStat("player", 4)
+		end
+		if NOC.baseStatsTable.spirit ~= UnitStat("player", 5) then
+			NOC.baseStatsTable.spirit = UnitStat("player", 5)
+		end
+		if NOC.baseStatsTable.crit ~= GetCritChance() then
+			NOC.baseStatsTable.crit = GetCritChance()
+		end
+		if NOC.baseStatsTable.haste ~= GetHaste() then
+			NOC.baseStatsTable.haste = GetHaste()
+		end
+		if NOC.baseStatsTable.mastery ~= GetMastery() then
+			NOC.baseStatsTable.mastery = GetMastery()
+		end
+		if NOC.baseStatsTable.multistrike ~= GetMultistrike() then
+			NOC.baseStatsTable.multistrike = GetMultistrike()
+		end
+		if NOC.baseStatsTable.versatility ~= GetCombatRating(29) then
+			NOC.baseStatsTable.versatility = GetCombatRating(29)
+		end
+	end
 end
 
 function DEBUG(level, debug_string)
@@ -167,72 +171,52 @@ function DEBUG(level, debug_string)
     end
 end
 
-function NOC.SpecialTargetCheck(unit)
-    local unit = unit
-    local count = table.getn(SpecialTargets)
-
-    if not UnitExists(unit) then
-        return false
-    end
-
-    if UnitGUID(unit) then
-        targets_guid = tonumber(string.match(UnitGUID(unit), "-(%d+)-%x+$"))
-    else
-        targets_guid = 0
-    end
-
-    for i=1, count do
-        if targets_guid == SpecialTargets[i] then
-            return true
-        end
-    end
-
-    return false
+function NOC.isWhitelist(unit)
+	--[[--------------------------------------------------------------------------------------------
+	Unit Exists is a sanity check. If unit is valid get the UnitID from UnitGUID, using strsplit.
+	If the UnitID matches a Special Enemy Unit in the table then return true. Otherwise the unit
+	is not a Special Enemy.
+	--------------------------------------------------------------------------------------------]]--
+	if not UnitExists(unit) then
+		return false
+	end
+	local _,_,_,_,_,unitID = strsplit("-", UnitGUID(unit))
+	if Whitelist[tonumber(unitID)] ~= nil then
+		return true
+	else
+		return false
+	end
 end
 
+function NOC.isBlacklist(unit)
+	if not UnitExists(unit) then
+		return false
+	end
+	local _,_,_,_,_,unitID = strsplit("-", UnitGUID(unit))
+	if Blacklist[tonumber(unitID)] ~= nil then
+		return true
+	else
+		return false
+	end
+end
 
-function NOC.immuneEvents(unit)
-  if NOC.isException(unit) then return true end
-  if not UnitAffectingCombat(unit) then return false end
-  -- Crowd Control
-  local cc = {
-    49203, -- Hungering Cold
-     6770, -- Sap
-     1776, -- Gouge
-    51514, -- Hex
-     9484, -- Shackle Undead
-      118, -- Polymorph
-    28272, -- Polymorph (pig)
-    28271, -- Polymorph (turtle)
-    61305, -- Polymorph (black cat)
-    61025, -- Polymorph (serpent) -- FIXME: gone ?
-    61721, -- Polymorph (rabbit)
-    61780, -- Polymorph (turkey)
-     3355, -- Freezing Trap
-    19386, -- Wyvern Sting
-    20066, -- Repentance
-    90337, -- Bad Manner (Monkey) -- FIXME: to check
-     2637, -- Hibernate
-    82676, -- Ring of Frost
-   115078, -- Paralysis
-    76780, -- Bind Elemental
-     9484, -- Shackle Undead
-     1513, -- Scare Beast
-   115268, -- Mesmerize
-     6358, -- Seduction
-      339, -- Entangling Roots
-  }
-  if NOC.hasDebuffTable(unit, cc) then return false end
-  if UnitAura(unit,GetSpellInfo(116994))
-		or UnitAura(unit,GetSpellInfo(122540))
-		or UnitAura(unit,GetSpellInfo(123250))
-		or UnitAura(unit,GetSpellInfo(106062))
-		or UnitAura(unit,GetSpellInfo(110945))
-		or UnitAura(unit,GetSpellInfo(143593)) -- General Nazgrim: Defensive Stance
-    or UnitAura(unit,GetSpellInfo(143574)) -- Heroic Immerseus: Swelling Corruption
-    --or UnitAura(unit,GetSpellInfo(166591)) -- Sanguine Sphere?
-		then return false end
-  return true
+function NOC.canTOD(unit)
+  return not NOC.isBlacklist(unit)
+end
+
+function NOC.isValidTarget(unit)
+	if not UnitExists(unit) then
+		return false
+	end
+	if isSpecialAura(unit) then
+		return false
+	elseif not UnitCanAttack("player", unit) then
+		return false
+	elseif not UnitAffectingCombat(unit) and not NOC.isWhitelist(unit) then
+		return false
+	else
+		return true
+	end
 end
 
 function NOC.hasDebuffTable(target, spells)
@@ -242,6 +226,7 @@ function NOC.hasDebuffTable(target, spells)
       if spellId == v then return true end
     end
   end
+  return false
 end
 
 
@@ -269,6 +254,7 @@ function NOC.canSEF()
     and UnitCanAttack("player", "mouseover")
     and not UnitIsDeadOrGhost("mouseover")
     and getCreatureType("mouseover")
+    and not NOC.isBlacklist("mouseover")
   then
     return true
   end
@@ -320,30 +306,6 @@ function NOC.noControl()
 	return false
 end
 
--- Thanks to StinkyTwitch for the routine
-function NOC.isException(unit)
-  local unit = unit
-  local count = table.getn(SpecialTargets)
-
-  if not UnitExists(unit) then
-      return false
-  end
-
-  if UnitGUID(unit) then
-      targets_guid = tonumber(string.match(UnitGUID(unit), "-(%d+)-%x+$"))
-  else
-      targets_guid = 0
-  end
-
-  for i=1, count do
-      if targets_guid == SpecialTargets[i] then
-          return true
-      end
-  end
-
-  return false
-end
-
 function GetSpellCD(MySpell)
   if GetSpellCooldown(MySpell) == 0 then
      return 0
@@ -360,12 +322,6 @@ function NOC.KSEnergy()
   local MyNRGregen = select(2, GetPowerRegen("player"))
   local NRGforKS = MyNRG + (MyNRGregen * GetSpellCD(121253))
   return NRGforKS
-end
-
-function tablelength(T)
-  local count = 0
-  for _ in pairs(T) do count = count + 1 end
-  return count
 end
 
 function NOC.guidtoUnit(guid)
@@ -417,13 +373,13 @@ function NOC.autoSEF()
 
     if unit
     and UnitGUID(unit) ~= UnitGUID("target")
-    --and not UnitIsUnit("target",unit)
+    and NOC.isValidTarget(unit)
     and not ProbablyEngine.condition["debuff"](unit,138130)
     and ProbablyEngine.condition["distance"](unit) < 40
-    and getCreatureType(unit)
-    and NOC.immuneEvents(unit)
-    and (UnitAffectingCombat(unit) or NOC.isException(unit))
     and IsSpellInRange(GetSpellInfo(137639), unit)
+    and not NOC.isBlacklist(unit)
+    and getCreatureType(unit)
+    --and (UnitAffectingCombat(unit) or NOC.isException(unit))
     then
       table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
     end
@@ -457,73 +413,28 @@ function NOC.energyTime(energycheck)
   return false
 end
 
-function SpecialAurasCheck(unit)
-  local unit = unit
-  if not UnitExists(unit) then
-    return false
-  end
-
-  for i = 1, 40 do
-    local debuff = select(11, UnitDebuff(unit, i))
-    if debuff == nil then
-      break
-    end
-    if SpecialAuras[tonumber(debuff)] ~= nil then
-      return true
-    end
-  end
-  return false
+function isSpecialAura(unit)
+	--[[--------------------------------------------------------------------------------------------
+	UnitExists is a sanity check.
+	Loop through the number of possible debuffs, 1-40.
+	If we encounter a spellID (select 11) that is nil then we've reached the end of the debuffs for
+	this particular Unit. No need to continue.
+	Each debuff found, check against the Special Auras table. If a match is found return True.
+	--------------------------------------------------------------------------------------------]]--
+	if not UnitExists(unit) then
+		return false
+	end
+	for i = 1, 40 do
+		local debuff = select(11, UnitDebuff(unit, i))
+		if debuff == nil then
+			break
+		end
+		if SpecialAuras[tonumber(debuff)] ~= nil then
+			return true
+		end
+	end
+	return false
 end
 
-function PrimaryStatsTableInit()
-  for i=1, 5 do
-    PRIMARYBASESTATS[#PRIMARYBASESTATS+1] = UnitStat("player", i)
-  end
-end
-
-function PrimaryStatsTableUpdate()
-  if not UnitAffectingCombat("player") then
-    for i=1, 5 do
-      local stat = UnitStat("player", i)
-      if PRIMARYBASESTATS[i] ~= stat then
-        PRIMARYBASESTATS[i] = stat
-      end
-    end
-  end
-end
-
-function SecondaryStatsTableInit()
-  SECONDARYBASESTATS[1] = GetCritChance()
-  SECONDARYBASESTATS[2] = GetHaste()
-  SECONDARYBASESTATS[3] = GetMastery()
-  SECONDARYBASESTATS[4] = GetMultistrike()
-  SECONDARYBASESTATS[5] = GetCombatRating(29)
-end
-
-function SecondaryStatsTableUpdate()
-  if not UnitAffectingCombat("player") then
-    local crit = GetCritChance()
-    local haste = GetHaste()
-    local mastery = GetMastery()
-    local multistrike = GetMultistrike()
-    local versatility = GetCombatRating(29)
-
-    if SECONDARYBASESTATS[1] ~= crit then
-      SECONDARYBASESTATS[1] = crit
-    end
-    if SECONDARYBASESTATS[2] ~= haste then
-      SECONDARYBASESTATS[2] = haste
-    end
-    if SECONDARYBASESTATS[3] ~= mastery then
-      SECONDARYBASESTATS[3] = mastery
-    end
-    if SECONDARYBASESTATS[4] ~= multistrike then
-      SECONDARYBASESTATS[4] = multistrike
-    end
-    if SECONDARYBASESTATS[5] ~= versatility then
-      SECONDARYBASESTATS[5] = versatility
-    end
-  end
-end
 
 ProbablyEngine.library.register("NOC", NOC)

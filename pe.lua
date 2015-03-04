@@ -19,12 +19,31 @@ ProbablyEngine.condition.register("cc", function(target)
   if not UnitExists(target) then
     return false
   else
-    if SpecialAurasCheck(target) then
+    if isSpecialAura(target) then
       return true
     else
       return false
     end
   end
+end)
+
+
+-- To check if you have the hero/timewarp/bloodlust debuff
+local heroismDebuffs = { 57724, 57724, 80354 }
+ProbablyEngine.condition.register("hasherodebuff", function(unit, spell)
+  return NOC.hasDebuffTable(unit, heroismDebuffs)
+--    for i = 1, #heroismDebuffs do
+--    -- TODO: Not sure if this implementation will work, 'UnitDebuff' is declared locally in PE's system/conditions/core.lua. May need to re-implement here or check for the UnitDebuff a different way
+--    if UnitDebuff('player', GetSpellName(heroismDebuffs[i])) then
+--        return true
+--    end
+--    end
+--    return false
+end)
+
+-- Tier 17 Set
+ProbablyEngine.condition.register("tier17", function(target)
+   return tier17set
 end)
 
 ProbablyEngine.condition.register("focus.deficit", function(target)
@@ -33,138 +52,125 @@ ProbablyEngine.condition.register("focus.deficit", function(target)
   return max_power - cur_power
 end)
 
-ProbablyEngine.condition.register("anystats.proc", function(target, spell)
-  -- Check Primary Stats
-  for i=1, 5 do
-    local stat = UnitStat("player", i)
-    if stat > PRIMARYBASESTATS[i] then
-      return true
-    end
-  end
-  -- Check Secondary Stats
-  local crit = GetCritChance()
-  local haste = GetHaste()
-  local mastery = GetMastery()
-  local multistrike = GetMultistrike()
-  local versatility = GetCombatRating(29)
+ProbablyEngine.condition.register("proc", function(target, stat)
+	local stat = string.lower(stat)
 
-  if crit > SECONDARYSTATSTABLE[1] then
-    return true
-  end
-  if haste > SECONDARYSTATSTABLE[2] then
-    return true
-  end
-  if mastery > SECONDARYSTATSTABLE[3] then
-    return true
-  end
-  if multistrike > SECONDARYSTATSTABLE[4] then
-    return true
-  end
-  if versatility > SECONDARYSTATSTABLE[5] then
-    return true
-  end
-
-  return false
+	if stat == "strength" then
+		if UnitStat("player", 1) > NOC.baseStatsTable.strength then
+			--NOC.Debug(5, "strength proc found!")
+			return true
+		else
+			return false
+		end
+	end
+	if stat == "agility" then
+		if UnitStat("player", 2) > NOC.baseStatsTable.agility then
+			--NOC.Debug(1, "agility proc found!")
+			return true
+		else
+			return false
+		end
+	end
+	if stat == "stamina" then
+		if UnitStat("player", 3) > NOC.baseStatsTable.stamina then
+			--NOC.Debug(5, "stamina proc found!")
+			return true
+		else
+			return false
+		end
+	end
+	if stat == "intellect" then
+		if UnitStat("player", 4) > NOC.baseStatsTable.intellect then
+			--NOC.Debug(5, "intellect proc found!")
+			return true
+		else
+			return false
+		end
+	end
+	if stat == "spirit" then
+		if UnitStat("player", 5) > NOC.baseStatsTable.spirit then
+			--NOC.Debug(5, "spirit proc found!")
+			return true
+		else
+			return false
+		end
+	end
+	if stat == "crit" then
+		if GetCritChance() > NOC.baseStatsTable.crit then
+			--NOC.Debug(5, "crit proc found!")
+			return true
+		else
+			return false
+		end
+	end
+	if stat == "haste" then
+		if GetHaste() > NOC.baseStatsTable.haste then
+			--NOC.Debug(5, "haste proc found!")
+			return true
+		else
+			return false
+		end
+	end
+	if stat == "mastery" then
+		if GetMastery() > NOC.baseStatsTable.mastery then
+			--NOC.Debug(5, "mastery proc found!")
+			return true
+		else
+			return false
+		end
+	end
+	if stat == "multistrike" then
+		if GetMultistrike() > NOC.baseStatsTable.multistrike then
+			--NOC.Debug(1, "multistrike proc found!")
+			return true
+		else
+			return false
+		end
+	end
+	if stat == "versatility" then
+		if GetCombatRating(29) > NOC.baseStatsTable.versatility then
+			--NOC.Debug(5, "versatility proc found!")
+			return true
+		else
+			return false
+		end
+	end
 end)
 
-ProbablyEngine.condition.register("strength.proc", function(target, spell)
-  local stat = UnitStat("player", 1)
-
-  if stat > PRIMARYBASESTATS[1] then
-    return true
-  else
-    return false
-  end
-end)
-
-ProbablyEngine.condition.register("agility.proc", function(target, spell)
-  local stat = UnitStat("player", 2)
-
-  if stat > PRIMARYBASESTATS[2] then
-    return true
-  else
-    return false
-  end
-end)
-
-ProbablyEngine.condition.register("stamina.proc", function(target, spell)
-  local stat = UnitStat("player", 3)
-
-  if stat > PRIMARYBASESTATS[3] then
-    return true
-  else
-    return false
-  end
-end)
-
-ProbablyEngine.condition.register("intellect.proc", function(target, spell)
-  local stat = UnitStat("player", 4)
-
-  if stat > PRIMARYBASESTATS[4] then
-    return true
-  else
-    return false
-  end
-end)
-
-ProbablyEngine.condition.register("spirit.proc", function(target, spell)
-  local stat = UnitStat("player", 5)
-
-  if stat > PRIMARYBASESTATS[5] then
-    return true
-  else
-    return false
-  end
-end)
-
-ProbablyEngine.condition.register("crit.proc", function(target, spell)
-  local crit = GetCritChance()
-
-  if crit > SECONDARYBASESTATS[1] then
-    return true
-  else
-    return false
-  end
-end)
-
-ProbablyEngine.condition.register("haste.proc", function(target, spell)
-  local haste = GetHaste()
-
-  if haste > SECONDARYBASESTATS[2] then
-    return true
-  else
-    return false
-  end
-end)
-
-ProbablyEngine.condition.register("mastery.proc", function(target, spell)
-  local mastery = GetMastery()
-
-  if mastery > SECONDARYBASESTATS[3] then
-    return true
-  else
-    return false
-  end
-end)
-
-ProbablyEngine.condition.register("multistrike.proc", function(target, spell)
-  local multistrike = GetMultistrike()
-
-  if multistrike > SECONDARYBASESTATS[4] then
-    return true
-  else
-    return false
-  end
-end)
-
-ProbablyEngine.condition.register("versatility.proc", function(target, spell)
-  local versatility = GetCombatRating(29)
-
-  if versatility > SECONDARYBASESTATS[5] then
-    return true
-  else
-    return false
-  end
+ProbablyEngine.condition.register("proc.any", function(target)
+	if UnitStat("player", 1) > NOC.baseStatsTable.strength then
+		--NOC.Debug(5, "any proc found strength proc!")
+		return true
+	elseif UnitStat("player", 2) > NOC.baseStatsTable.agility then
+		--NOC.Debug(5, "any proc found agility proc!")
+		return true
+	elseif UnitStat("player", 3) > NOC.baseStatsTable.stamina then
+		--NOC.Debug(5, "any proc found stamina proc!")
+		return true
+	elseif UnitStat("player", 4) > NOC.baseStatsTable.intellect then
+		--NOC.Debug(5, "any proc found intellect proc!")
+		return true
+	elseif UnitStat("player", 5) > NOC.baseStatsTable.spirit then
+		--NOC.Debug(5, "any proc found spirit proc!")
+		return true
+	elseif GetCritChance() > NOC.baseStatsTable.crit then
+		--NOC.Debug(5, "any proc found crit proc!")
+		return true
+	elseif GetHaste() > NOC.baseStatsTable.haste then
+		--NOC.Debug(5, "any proc found haste proc!")
+		return true
+	elseif GetMastery() > NOC.baseStatsTable.mastery then
+		--NOC.Debug(5, "any proc found mastery proc!")
+		return true
+	elseif GetMultistrike() > NOC.baseStatsTable.multistrike then
+		--NOC.Debug(5, "any proc found multistrike proc!")
+		return true
+	elseif GetCombatRating(29) > NOC.baseStatsTable.versatility then
+		--NOC.Debug(5, "any proc found versatility proc!")
+		return true
+	else
+		return false
+	end
 end)
 
 ProbablyEngine.condition.register("power.regen", function(target)

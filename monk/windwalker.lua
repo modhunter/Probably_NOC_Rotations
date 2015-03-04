@@ -9,11 +9,13 @@ local onLoad = function()
   ProbablyEngine.toggle.create('dpstest', 'Interface\\Icons\\inv_misc_pocketwatch_01', 'DPS Test', 'Stop combat after 5 minutes in order to do a controlled DPS test')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
 
-  BaseStatsInit()
+  NOC.BaseStatsTableInit()
 
   C_Timer.NewTicker(0.25, (
       function()
-          BaseStatsUpdate()
+        if ProbablyEngine.config.read('button_states', 'MasterToggle', false) then
+          NOC.BaseStatsTableUpdate()
+        end
       end),
   nil)
 end
@@ -213,7 +215,7 @@ local combat = {
   { "Nimble Brew", "@NOC.noControl()" },
   { "Tiger's Lust", "@NOC.noControl()" },
 
-  -- wrapper for "@NOC.immuneEvents" which prevents the following from occuring when the target is CCed or otherwise not allowed to be attacked
+  -- wrapper for "@NOC.isValidTarget" which prevents the following from occuring when the target is CCed or otherwise not allowed to be attacked
   {{
     -- ToD prioritization
     {{
@@ -226,7 +228,7 @@ local combat = {
         { "!Fortifying Brew", "player.glyph(Touch of Death)" }, -- Only if the target's current health is > our max health
       }, "target.health.actual > player.health.max" }, -- Only if the target's current health is > our max health
       { "!Touch of Death" },
-    }, { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown < 1", "!target.id(78463)", "!target.id(76829)", "target.range <= 5" }}, -- Don't use ToD if we are targetting the Slag Elemental
+    }, { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown < 1", "@NOC.canTOD('target')", "target.range <= 5" }}, -- Don't use ToD if we are targetting a blacklisted unit
 
     -- Chi wave during the first few seconds of combat (even at range) and when not under Serenity
     { "Chi Wave", { "player.time < 10", "!player.buff(Serenity)" }}, -- 40 yard range 0 energy, 0 chi
@@ -284,8 +286,8 @@ local combat = {
         {{
           -- Big procs, FoF ready, HS ready, or 16+ stacks
           {{
-            { "116740", "@NOC.StatProcs('agility')" }, -- Any agility buff
-            { "116740", "@NOC.StatProcs('multistrike')" }, -- Any multistrike buff
+            { "116740", "player.proc(agility)" }, -- Any agility buff
+            { "116740", "player.proc(multistrike)" }, -- Any multistrike buff
             { "116740", "player.hashero" },
             { "116740", { "player.spell(Fists of Fury).cooldown < 1", "player.chi >= 3" }},
             { "116740", { "player.spell(Hurricane Strike).cooldown < 1", "talent(7,1)", "player.chi >= 3" }},
@@ -342,7 +344,7 @@ local combat = {
       {"/stopcasting", { "target.range <= 5", "player.casting(Crackling Jade Lightning)" }},
       { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "target.combat" }},
     }, "toggle.cjl" },
-  }, "@NOC.immuneEvents('target')" },
+  }, "@NOC.isValidTarget('target')" },
 }
 
 ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk|r", combat, ooc, onLoad)

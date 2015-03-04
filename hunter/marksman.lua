@@ -12,12 +12,13 @@ local onLoad = function()
   ProbablyEngine.toggle.create('dpstest', 'Interface\\Icons\\inv_misc_pocketwatch_01', 'DPS Test', 'Stop combat after 5 minutes in order to do a controlled DPS test')
   ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
 
-  BaseStatsInit()
+  NOC.BaseStatsTableInit()
 
   C_Timer.NewTicker(0.25, (
       function()
-        PrimaryStatsTableUpdate()
-        SecondaryStatsTableUpdate()
+        if ProbablyEngine.config.read('button_states', 'MasterToggle', false) then
+          NOC.BaseStatsTableUpdate()
+        end
       end),
   nil)
 end
@@ -119,9 +120,7 @@ local combat = {
   {{
     -- Cooldowns
     {{
-      { "Stampede", "player.agility.proc" },
-      { "Stampede", "player.multistrike.proc" },
-      { "Stampede", "player.crit.proc" },
+      { "Stampede", "player.proc.any" },
       { "Stampede", "player.hashero" },
       { "A Murder of Crows" },
       { "Rapid Fire" },
@@ -169,7 +168,7 @@ local combat = {
       { "Focusing Shot", { "player.focus.deficit > 55", "!player.moving" }},
       { "Steady Shot" },
     }, { "target.health < 80", "!player.buff(Rapid Fire)" }},
-  }, "@NOC.immuneEvents('target')" },
+  }, "@NOC.isValidTarget('target')" },
 }
 
 ProbablyEngine.rotation.register_custom(254, "NOC Marksman Hunter", combat, ooc, onLoad)
