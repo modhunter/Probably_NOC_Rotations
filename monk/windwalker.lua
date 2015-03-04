@@ -173,6 +173,14 @@ local interrupts = {
   { "Spear Hand Strike" }, -- Spear Hand Strike
 }
 
+local teb = {
+  { "116740", "player.proc(agility)" }, -- Any agility buff
+  { "116740", "player.proc(multistrike)" }, -- Any multistrike buff
+  { "116740", "player.hashero" },
+  { "116740", { "player.spell(Fists of Fury).cooldown < 1", "player.chi >= 3" }},
+  { "116740", { "player.spell(Hurricane Strike).cooldown < 1", "talent(7,1)", "player.chi >= 3" }},
+}
+
 local combat = {
   -- Pause
   { "pause", "modifier.lshift" },
@@ -286,11 +294,8 @@ local combat = {
         {{
           -- Big procs, FoF ready, HS ready, or 16+ stacks
           {{
-            { "116740", "player.proc(agility)" }, -- Any agility buff
-            { "116740", "player.proc(multistrike)" }, -- Any multistrike buff
-            { "116740", "player.hashero" },
-            { "116740", { "player.spell(Fists of Fury).cooldown < 1", "player.chi >= 3" }},
-            { "116740", { "player.spell(Hurricane Strike).cooldown < 1", "talent(7,1)", "player.chi >= 3" }},
+            { teb, { "player.tier17 >= 4", "player.buff(125195).count >= 8" }}, -- 8+ stacks with T17 4pc set
+            { teb, { "player.tier17 < 4" }}, -- Pop any time when not using T17 4pc set
             { "116740", "player.buff(125195).count >= 16" },
           },{ "player.chi >= 2", "player.time >= 10" }},
 

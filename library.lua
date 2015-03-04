@@ -1,5 +1,7 @@
-local NOC = { }
-local DSL = ProbablyEngine.dsl.get
+NOC = {}
+ProbablyEngine.library.register("NOC", NOC)
+
+--local DSL = ProbablyEngine.dsl.get
 
 DEBUGLOGLEVEL = 5
 DEBUGTOGGLE = true
@@ -435,6 +437,3 @@ function isSpecialAura(unit)
 	end
 	return false
 end
-
-
-ProbablyEngine.library.register("NOC", NOC)
