@@ -228,7 +228,7 @@ local combat = {
         { "!Fortifying Brew", "player.glyph(Touch of Death)" }, -- Only if the target's current health is > our max health
       }, "target.health.actual > player.health.max" }, -- Only if the target's current health is > our max health
       { "!Touch of Death" },
-    }, { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown < 1", "@NOC.canTOD('target')", "target.range <= 5" }}, -- Don't use ToD if we are targetting a blacklisted unit
+    }, { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown < 1", "@NOC.notBlacklist('target')", "target.range <= 5" }}, -- Don't use ToD if we are targetting a blacklisted unit
 
     -- Chi wave during the first few seconds of combat (even at range) and when not under Serenity
     { "Chi Wave", { "player.time < 10", "!player.buff(Serenity)" }}, -- 40 yard range 0 energy, 0 chi

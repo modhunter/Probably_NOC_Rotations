@@ -200,7 +200,7 @@ function NOC.isBlacklist(unit)
 	end
 end
 
-function NOC.canTOD(unit)
+function NOC.notBlacklist(unit)
   return not NOC.isBlacklist(unit)
 end
 
