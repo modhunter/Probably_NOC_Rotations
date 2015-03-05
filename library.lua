@@ -4,7 +4,7 @@ ProbablyEngine.library.register("NOC", NOC)
 --local DSL = ProbablyEngine.dsl.get
 
 DEBUGLOGLEVEL = 4
-DEBUGTOGGLE = true
+DEBUGTOGGLE = false
 NOC.baseStatsTable = { }
 tier17set = 0
 
