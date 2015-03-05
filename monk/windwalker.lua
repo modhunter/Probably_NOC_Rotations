@@ -199,7 +199,7 @@ local combat = {
   -- Buffs
   { buffs, },
 
-  { "Storm, Earth, and Fire", { "!mouseover.debuff(138130)", "!player.buff(137639).count = 2", "@NOC.canSEF()" }, "mouseover" },
+  { "Storm, Earth, and Fire", { "!player.buff(137639).count = 2", "@NOC.canSEF('mouseover')" }, "mouseover" },
   -- Auto SEF when enabled
   { "Storm, Earth, and Fire", { "toggle.autosef", "!player.buff(137639).count = 2", "@NOC.autoSEF()", },},
   { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }},
@@ -294,8 +294,8 @@ local combat = {
         {{
           -- Big procs, FoF ready, HS ready, or 16+ stacks
           {{
-            { teb, { "player.tier17 >= 4", "player.buff(125195).count >= 8" }}, -- 8+ stacks with T17 4pc set
-            { teb, { "player.tier17 < 4" }}, -- Pop any time when not using T17 4pc set
+            { teb, { "player.tier17 >= 4", "player.buff(125195).count >= 9" }}, -- 9+ stacks (with proc) with T17 4pc set
+            { teb, { "player.tier17 < 4" }}, -- Pop any time (with proc) when not using T17 4pc set
             { "116740", "player.buff(125195).count >= 16" },
           },{ "player.chi >= 2", "player.time >= 10" }},
 

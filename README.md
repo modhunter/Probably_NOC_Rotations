@@ -104,7 +104,12 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-- Cancel CJL when target <= 5 yards (not working?)
+- Include more detailed checks for stat 'procs' e.g. only consider it a stat proc if there is a certain percentage increase.  In other words don't consider it an agility proc unless the % increase is above some level (20%+?)
+- Objectmaker ideas:
+  - Auto ToD any in-range qualified enemies
+  - Better auto SEF
+  - Auto stop FSK & Chi Torpedo
+  - Auto-place zen sphere on highest health enemy closest to the boss
 
 
 ## Brewmaster Monk (6.x)
@@ -163,3 +168,9 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
+- Objectmaker ideas:
+  - Auto ToD any in-range qualified enemies
+  - Auto-place ox statue in optimal location
+  - Auto keg brew throw thing
+  - Auto stop FSK & Chi Torpedo
+  - Auto-place zen sphere on highest health enemy closest to the boss

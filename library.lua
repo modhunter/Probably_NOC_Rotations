@@ -83,6 +83,7 @@ SpecialAuras = {
   [143574]    = "143574",     -- Swelling Corruption (Immerseus)
   [143593]    = "143593",     -- Defensive Stance (General Nazgrim)
   -- WOD DUNGEONS/RAIDS/ELITES
+  [155176]    = "155176",     -- Damage Shield (Primal Elementalists - Blast Furnace)
 }
 
 -- Credit to StinkyTwitch for the routines to check stat buffs
@@ -103,6 +104,20 @@ function NOC.BaseStatsTableInit()
   if DEBUGTOGGLE and DEBUGLOGLEVEL >= 4 then
     NOC.BaseStatsTablePrint()
   end
+
+  local specID = GetSpecializationInfo(GetSpecialization())
+
+   -- Reset while checking
+   if tier17 ~= 0 then tier17 = 0 end
+
+   -- WW Monk Tier 17
+   if specID == 269 then
+      local tier17 = {115555,115556,115557,115558,115559}
+
+      for i=1,#tier17 do
+         if IsEquippedItem(tier17[i]) then tier17set = tier17set + 1 end
+      end
+   end
 end
 
 function NOC.BaseStatsTablePrint()
@@ -253,19 +268,6 @@ function getCreatureType(unit)
    end
 end
 
--- Various checks to ensure that we can SEF the mouseover unit
-function NOC.canSEF()
-  if (UnitGUID('target')) ~= (UnitGUID('mouseover'))
-    and UnitCanAttack("player", "mouseover")
-    and not UnitIsDeadOrGhost("mouseover")
-    and getCreatureType("mouseover")
-    and not NOC.isBlacklist("mouseover")
-  then
-    return true
-  end
-  return false
-end
-
 function NOC.StaggerValue ()
     local staggerLight, _, iconLight, _, _, remainingLight, _, _, _, _, _, _, _, _, valueStaggerLight, _, _ = UnitAura("player", GetSpellInfo(124275), "", "HARMFUL")
     local staggerModerate, _, iconModerate, _, _, remainingModerate, _, _, _, _, _, _, _, _, valueStaggerModerate, _, _ = UnitAura("player", GetSpellInfo(124274), "", "HARMFUL")
@@ -359,6 +361,23 @@ function NOC.guidtoUnit(guid)
   return false
 end
 
+-- Various checks to ensure that we can SEF the unit
+function NOC.canSEF(unit)
+  if unit
+  and UnitGUID(unit) ~= UnitGUID("target")
+  and NOC.isValidTarget(unit)
+  and not NOC.isBlacklist(unit)
+  and getCreatureType(unit)
+  and not UnitIsDeadOrGhost(unit)
+  and not ProbablyEngine.condition["debuff"](unit,138130)
+  and ProbablyEngine.condition["distance"](unit) < 40
+  and IsSpellInRange(GetSpellInfo(137639), unit)
+  then
+    return true
+  end
+  return false
+end
+
 function NOC.autoSEF()
   -- Initialize 'targets' every call of the function
   local targets = {}
@@ -376,16 +395,7 @@ function NOC.autoSEF()
     -- ObjectManager based solution
     local unit = NOC.guidtoUnit(ProbablyEngine.module.combatTracker.enemy[i]['guid'])
 
-    if unit
-    and UnitGUID(unit) ~= UnitGUID("target")
-    and NOC.isValidTarget(unit)
-    and not ProbablyEngine.condition["debuff"](unit,138130)
-    and ProbablyEngine.condition["distance"](unit) < 40
-    and IsSpellInRange(GetSpellInfo(137639), unit)
-    and not NOC.isBlacklist(unit)
-    and getCreatureType(unit)
-    --and (UnitAffectingCombat(unit) or NOC.isException(unit))
-    then
+    if unit and NOC.canSEF(unit) then
       table.insert(targets, { Name = UnitName(unit), Unit = unit, HP = UnitHealth(unit), Range = ProbablyEngine.condition["distance"](unit) } )
     end
   end
