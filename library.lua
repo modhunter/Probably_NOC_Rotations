@@ -3,7 +3,7 @@ ProbablyEngine.library.register("NOC", NOC)
 
 --local DSL = ProbablyEngine.dsl.get
 
-DEBUGLOGLEVEL = 5
+DEBUGLOGLEVEL = 4
 DEBUGTOGGLE = true
 NOC.baseStatsTable = { }
 tier17set = 0
@@ -100,6 +100,9 @@ function NOC.BaseStatsTableInit()
 	NOC.baseStatsTable.mastery = GetMastery()
 	NOC.baseStatsTable.multistrike = GetMultistrike()
 	NOC.baseStatsTable.versatility = GetCombatRating(29)
+  if DEBUGTOGGLE and DEBUGLOGLEVEL >= 4 then
+    NOC.BaseStatsTablePrint()
+  end
 end
 
 function NOC.BaseStatsTablePrint()
@@ -155,7 +158,7 @@ function NOC.BaseStatsTableUpdate()
 	end
 end
 
-function DEBUG(level, debug_string)
+function NOC.DEBUG(level, debug_string)
     if DEBUGTOGGLE then
         if level == 5 and DEBUGLOGLEVEL >= 5 then
             print(debug_string)
@@ -408,7 +411,7 @@ function NOC.energyTime(energycheck)
     local gcd = (1.5/GetHaste("player"))+1
     local energytime = (energy + energy_regen)
     if energytime < energycheck then
-      DEBUG(5, "NOC.energyTime2 returning: "..energytime.." ("..energy.."+"..energy_regen..")*"..gcd.."")
+      NOC.DEBUG(5, "NOC.energyTime2 returning: "..energytime.." ("..energy.."+"..energy_regen..")*"..gcd.."")
     end
     return energytime < energycheck
   end
