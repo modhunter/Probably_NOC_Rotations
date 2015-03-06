@@ -30,10 +30,7 @@ local ooc = {
   { "982", "pet.dead" }, -- Revive Pet
   { "136", { "pet.health <= 90", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
 
-  {{
-    { "Aspect of the Cheetah", { "player.movingfor >= 1", "!player.buff(Aspect of the Cheetah)" }}, -- Cheetah
-    { "/cancelaura Aspect of the Cheetah", "player.lastmoved >= 2" },
-  }, "toggle.aspect" },
+  { "Aspect of the Cheetah", { "player.movingfor >= 0.25", "!player.buff(Aspect of the Cheetah)", "toggle.aspect" }},
 
   -- Keep trap launcher set
   { "77769", "!player.buff(77769)" },
@@ -53,6 +50,8 @@ local combat = {
   -- Combat
   { "pause", "modifier.lshift" },
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
+
+  { "/cancelaura Aspect of the Cheetah", { "!player.glyph(Aspect of the Cheetah)", "player.buff(Aspect of the Cheetah)" }},
 
   { "/stopcasting\n/stopattack\n/cleartarget\n/stopattack\n/cleartarget\n/petpassive", { "player.time >= 300", "toggle.dpstest" }},
 
