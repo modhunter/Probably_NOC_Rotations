@@ -37,6 +37,7 @@ Whitelist = {
   [77665]     = "77665",      -- Iron Bomber (BRF Blackhand)
   [77891]     = "77891",      -- Grasping Earth (BRF Kromog)
   [77893]     = "77893",      -- Grasping Earth (BRF Kromog)
+  [86752]     = "86752",      -- Stone Pillars (BRF Mythic Kromog)
   [78583]     = "78583",      -- Dominator Turret (BRF Iron Maidens)
   [78584]     = "78584",      -- Dominator Turret (BRF Iron Maidens)
   [79504]     = "79504",      -- Ore Crate (BRF Oregorger)
