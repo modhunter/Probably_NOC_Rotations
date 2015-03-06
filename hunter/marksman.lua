@@ -64,7 +64,7 @@ local combat = {
   { "pause", "modifier.lshift" },
   { "pause","player.buff(5384)" }, -- Pause for Feign Death
 
-  { "/stopcasting\n/stopattack\n/cleartarget\n/stopattack\n/cleartarget\n/petfollow", { "player.time >= 300", "toggle.dpstest" }},
+  { "/stopcasting\n/stopattack\n/cleartarget\n/stopattack\n/cleartarget\n/petpassive", { "player.time >= 300", "toggle.dpstest" }},
 
   -- AutoTarget
   { "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" } },
