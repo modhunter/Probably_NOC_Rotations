@@ -59,7 +59,8 @@ local aoe = {
   { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45" }},
 --  { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 45", function() return ((dynamicEval("player.focus") + 14 + dynamicEval("player.spell(77767).regen")) < 80) end, }},
 
-  { "Multi-Shot", { "player.focus >= 70", "talent(7,2)" }}, -- Multi-Shot
+  { "Multi-Shot", "player.focus >= 70" },
+  { "Multi-Shot", "talent(7,2)" },
   { "Focusing Shot", "!player.moving" },
   { "Cobra Shot" },
 }
@@ -161,7 +162,8 @@ local combat = {
     { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
     --{ "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(77767).regen")) <= dynamicEval("player.focus.deficit")) end, }},
 
-    { "Arcane Shot", { "player.focus >= 70", "talent(7,2)" }},
+    { "Arcane Shot", "player.focus >= 80" },
+    { "Arcane Shot", "talent(7,2)" },
     { "Focusing Shot", "!player.moving" },
     { "Cobra Shot" },
   }, "@NOC.isValidTarget('target')" },
