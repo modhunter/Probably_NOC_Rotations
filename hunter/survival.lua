@@ -44,7 +44,7 @@ local aoe = {
   -- Explosive shot if LnL is up and Barrage is not ready
   { "Explosive Shot", { "player.buff(Lock and Load)", "!talent(6,1)" }},
   { "Explosive Shot", { "player.buff(Lock and Load)", "talent(6,1)", "player.spell(Barrage).cooldown > 1" }},
-  { "Barrage", "talent(6,1)" },
+  { "Barrage", "talent(6,3)" },
   { "Black Arrow", "!target.debuff(3674)" },
   { "Explosive Shot", "modifier.enemies <= 4" },
   { "A Murder of Crows", "target.health.actual < 200000" },
