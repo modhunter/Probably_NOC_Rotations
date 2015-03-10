@@ -74,13 +74,11 @@ local aoe = {
       { "Blackout Kick", "player.buff(Serenity).duration > 0" },
     },{ "!talent(7,2)" }},
     { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2", "player.spell(Fists of Fury).cooldown > 3"  }},
-    { "Chi Torpoedo", "player.timetomax > 2" },
   }, { "talent(6,1)" }},
 
   -- If we do NOT have RJW
   {{
     { "Blackout Kick", { "!talent(7,2)", "player.chidiff < 2" }},
-    { "Chi Torpoedo", "player.timetomax > 2" },
 
     -- Only do this if we do not have RJW talent and there are more than 3 enemies and toggle enabled
     { "Spinning Crane Kick", { "modifier.enemies >= 4", "toggle.rjw" }},
@@ -104,7 +102,6 @@ local st = {
   {{
     { "Chi Wave" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
-    { "Chi Torpoedo" },
   }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
   { "Blackout Kick", "player.chidiff < 2" },
@@ -120,7 +117,6 @@ local st_chex = {
   {{
     { "Chi Wave" },
     { "Chi Burst", { "!player.moving", "talent(2,3)" }},
-    { "Chi Torpoedo" },
   }, { "player.timetomax > 2" }},
 
   { "Tiger Palm", { "player.chi >= 4", "!player.buff(Combo Breaker: Chi Explosion)" }},

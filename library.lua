@@ -441,7 +441,7 @@ function isSpecialAura(unit)
 		return false
 	end
 	for i = 1, 40 do
-		local debuff = select(11, UnitDebuff(unit, i))
+      local debuff = select(11, UnitAura(unit, i, "HELPFUL|HARMFUL"))
 		if debuff == nil then
 			break
 		end
