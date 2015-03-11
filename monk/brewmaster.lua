@@ -41,6 +41,7 @@ local ooc = {
 	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
 	{ "Expel Harm", "player.health < 100" }, -- Expel Harm when not at full health
 	{{
+		{ "Expel Harm" },
     { "Zen Sphere", "!player.buff(Zen Sphere)" },
     { "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
     { "Zen Sphere", { "!focus.exists", "tank.exists", "!tank.buff(Zen Sphere)", "tank.range <= 40", }, "tank" },
@@ -79,28 +80,24 @@ local interrupts = {
 }
 
 local aoe = {
-	{ "Chi Explosion", "player.chi >= 4" },
-
-	{ "Breath of Fire", {
-			"player.buff(115307).duration >= 9",
-			"!target.debuff(Breath of Fire)",
-			"player.chi >= 3",
-			"!talent(7,2)",
-	}},
+	{ "Chi Explosion", { "player.chi >= 4", "talent(7,2)" }},
 
 	{{
-		-- Only use this is we have the RJW talent and there are more than 3 enemies and toggle enabled
-		{ "Rushing Jade Wind", { "modifier.enemies > 3", "toggle.rjw" }},
+		{ "Breath of Fire", "player.chi >= 3" },
+		{ "Breath of Fire", "player.buff(Serenity)" },
+	}, { "player.buff(Shuffle).duration >= 6", "target.debuff(Breath of Fire).duration < 2.4", "!talent(7,2)" }},
+
+	{{
+		{ "Rushing Jade Wind", "toggle.rjw" },
 		-- Otherwise, use it 'normally' if we aren't using chi explosion
 		{ "Rushing Jade Wind", "!talent(7,2)" },
-	}, { "talent(6,1)", "player.chidiff >= 1" }},
+	}, { "talent(6,1)", "player.chidiff >= 1", "!player.buff(Serenity)" }},
 
 	{{
-		-- Only do this if we do not have RJW talent and there are more than 3 enemies and toggle enabled
-		{ "Spinning Crane Kick", { "modifier.enemies > 3", "toggle.rjw" }},
+		{ "Spinning Crane Kick", "toggle.rjw" },
 		-- Otherwise, use it 'normally' if we aren't using chi explosion
 		{ "Spinning Crane Kick", "!talent(7,2)" },
-	}, { "!talent(6,1)", "player.chidiff >= 1" }},
+	}, { "!talent(6,1)", "player.chidiff >= 1", "!player.buff(Serenity)" }},
 }
 
 local combat = {
@@ -125,27 +122,27 @@ local combat = {
   { "#109223", "player.health < 40" }, -- Healing Tonic
 	{ "#5512", "player.health < 40" }, --Healthstone when less than 40% health
 
-	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger when not using Chi Explosion
-	{ "Purifying Brew", { "@NOC.DrinkStagger", "!talent(7,2)" }},
-
-	-- Purify only at heavy stagger when using Chi Explosion
-	--{ "Purifying Brew", { "player.debuff(124273)", "talent(7,2)" }},
-
-	-- Purify if Serenity is about to fall-off
-	{ "Purifying Brew", { "player.buff(157558)", "player.buff(157558).duration <= 2" }},
+	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
+	{ "Purifying Brew", { "@NOC.DrinkStagger" }},
+	-- Purify when under Serenity & light stagger
+	{ "Purifying Brew", { "player.buff(Serenity)", "player.buff(124275)" }},
 
 	-- Defensives
-	-- Fortifying Brew when < 25% health and DM/DH are not being used
-	{ "Fortifying Brew", { "player.health <= 25", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "toggle.def" }, "player" },
+	-- Fortifying Brew when < 25% health and DM/DH/EB are not being used
+	{ "Fortifying Brew", { "player.health <= 25", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "!player.buff(115308)", "toggle.def" }, "player" },
 
-	-- Guard when glyphed and not active (basically on CD)
-	{ "Guard", { "player.glyph(123401)", "!player.buff(123402)", "toggle.def" }, "player" },
-	-- Guard when not glyphed, not ative, and <= 60% health
-	{ "Guard", { "!player.glyph(123401)", "player.health <= 60", "toggle.def", "!player.buff(115295)" }, "player" },
+	{ "Guard", { "player.spell(Guard).charges = 1", "player.spell(Guard).recharge < 5", "toggle.def" }, "player" },
+	{ "Guard", { "player.spell(Guard).charges = 2", "toggle.def" }, "player" },
 
-	-- TODO: add check for buff.elusive_brew_activated.down
+	{{
+		{ "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge < 5" }},
+		{ "Chi Brew", { "player.spell(Chi Brew).charges = 2" }},
+	}, { "player.chidiff >= 2", "player.buff(128939).count <= 10" }},
+	{ "Chi Brew", { "player.chi < 1", "player.debuff(124273)" }},
+	{ "Chi Brew", { "player.chi < 2", "!player.buff(Shuffle)" }},
+
 	--Elusive Brew at 8+ Stacks and under 80% health
-	{ "115308", { "player.buff(128939).count >= 8", "player.health <= 80", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)" }},
+	{ "115308", { "player.buff(128939).count >= 9", "player.health <= 80", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "!player.buff(115308)" }},
 	-- Elusive Brew at 14+ stacks no matter what
 	{ "115308", "player.buff(128939).count >= 14" },
 
@@ -183,56 +180,61 @@ local combat = {
 		"mouseover.range > 10"
 	}, "ground" },
 
+	{{
+		{ "Chi Wave" },
+		{ "Chi Burst", { "!player.moving", "talent(2,3)" }},
+	}, { "player.timetomax > 2", "!player.buff(Serenity)" }},
+
+	{{
+		{ "Zen Sphere", "!player.buff(Zen Sphere)" },
+		{ "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
+		{ "Zen Sphere", { "tank.exists", "!tank.buff(Zen Sphere)", "tank.range <= 40", }, "tank" },
+	}, { "player.timetomax > 2", "!player.buff(Serenity)" }},
+
 	-- Main Rotation (melee)
 	{{
 		-- During the first 10 seconds of combat, consider these items as a priority
-		{{
-			{ "Keg Smash", { "!player.buff(157558)", "toggle.kegsmash" }},
-			{ "Tiger Palm", "!player.buff(Tiger Power)" },
-			{ "Blackout Kick", "!player.buff(115307)" },
-			{ "Blackout Kick", "player.buff(115307).duration < 3" },
-			--{ "Blackout Kick",  "player.chi >= 4" },
-		}, "player.time < 10" },
+		--{{
+		--	{ "Keg Smash", { "!player.buff(Serenity)", "toggle.kegsmash" }},
+		--	{ "Tiger Palm", "!player.buff(Tiger Power)" },
+		--	{ "Blackout Kick", "!player.buff(Serenity)" },
+		--	{ "Blackout Kick", "player.buff(Serenity).duration < 3" },
+		--	--{ "Blackout Kick",  "player.chi >= 4" },
+		--}, "player.time < 10" },
 
-		{ "Serenity", { "player.chidiff >= 1", "player.buff(Tiger Power).duration >= 10", "modifier.cooldowns" }},
-
-		{ "Keg Smash", { "player.chidiff >= 2", "toggle.kegsmash" }},
-
-		{ "Blackout Kick", "player.buff(157558)" },
-
-		{ "Chi Brew", {
-			"player.chidiff >= 2",
-			"player.buff(128939).count <= 10",
-		}},
-
-		{ "Blackout Kick", "!player.buff(115307)" },
-		{ "Blackout Kick", "player.buff(115307).duration < 9" },
-
-		{ "Chi Explosion", "player.chi >= 3" },
-
-		{ "Tiger Palm", "!player.buff(Tiger Power)" },
-
-		{ "Touch of Death", "player.buff(Death Note)" },
-
-		{ "Chi Burst" },
-		{ "Chi Wave" },
+		{ "!Touch of Death", "player.buff(Death Note)" },
 
 		{ aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
-		{ "Expel Harm", "player.health <= 75 "},
+		{ "Serenity", { "talent(7,3)", "player.chi >= 2", "player.spell(Keg Smash).cooldown > 6", "modifier.cooldowns" }},
 
-		{ "Blackout Kick", "player.chidiff = 0" },
+		{ "Blackout Kick", "!player.buff(Shuffle)" },
 
-		-- Use Jab when we are not chi-capped and Keg Smash and Expel Harm are on CD
+		{ "Chi Explosion", { "player.chi >= 3", "talent(7,2)" }},
+
+		{ "Keg Smash", { "player.chidiff >= 1", "!player.buff(Serenity)", "toggle.kegsmash" }},
+
+		{ "Blackout Kick", "player.chidiff < 2" },
+
+		--actions.st+=/blackout_kick,if=buff.shuffle.remains<=3 & cooldown.keg_smash.remains>=gcd
+		-- TODO: This needs more work around GCD
+		{ "Blackout Kick", { "player.buff(Shuffle).duration <= 3", "player.spell(Keg Smash).cooldown >= 1.5" }},
+		--actions.st+=/blackout_kick,if=buff.serenity.up
+		{ "Blackout Kick", "player.buff(Serenity)" },
+
+		--expel_harm,if= chi.max-chi>=1 & cooldown.keg_smash.remains>=gcd & (energy+(energy.regen*(cooldown.keg_smash.remains)))>=80
+		-- TODO: This needs more work around GCD
+		{ "Expel Harm", { "player.chidiff >= 1", "player.spell(Keg Smash).cooldown >= 1.5", "@NOC.KSEnergy(80)" }},
+
 		{ "Jab", {
 			"player.chidiff >= 1",
-			--"player.spell(Keg Smash).cooldown > 0",
-			--"player.spell(Expel Harm).cooldown > 0",
-			"player.energy > 70",
+			"player.spell(Keg Smash).cooldown > 1",
+			"player.spell(Expel Harm).cooldown > 1",
+			"@NOC.KSEnergy(80)",
 		}},
 
 		{ "Tiger Palm" },
-	}, { "target.exists", "target.alive", "player.alive", "target.range <= 5", "!player.casting" }},
+	}, { "target.range <= 5" }},
 
 	{ "Tiger's Lust", { "target.range >= 15", "player.moving", "player.movingfor > 1" }},
 }

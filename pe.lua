@@ -202,6 +202,9 @@ ProbablyEngine.condition.register("gcd", function(target)
   else
     return gcd
   end
+  
+  -- TODO: use this instead??
+  --return 1.5/(1+UnitSpellHaste("player")/100)
 end)
 
 -- Implementing native API combat tracker for # of enemies

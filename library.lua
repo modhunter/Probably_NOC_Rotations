@@ -325,11 +325,16 @@ function GetSpellCD(MySpell)
 end
 
 -- Return the amount of energy you will have by the time KS is ready to use
-function NOC.KSEnergy()
-  local MyNRG = UnitPower("player", 3)
-  local MyNRGregen = select(2, GetPowerRegen("player"))
-  local NRGforKS = MyNRG + (MyNRGregen * GetSpellCD(121253))
-  return NRGforKS
+function NOC.KSEnergy(energycheck)
+  if energycheck then
+    local MyNRG = UnitPower("player", 3)
+    local MyNRGregen = select(2, GetPowerRegen("player"))
+    local cd = GetSpellCD(121253)
+    local NRGforKS = MyNRG + (MyNRGregen * GetSpellCD(121253))
+    NOC.DEBUG(4, "NOC.KSEnergy returning: "..NRGforKS.." ("..MyNRG.."+("..MyNRGregen.."*"..cd..")")
+    return NRGforKS >= energycheck
+  end
+  return false
 end
 
 function NOC.guidtoUnit(guid)
