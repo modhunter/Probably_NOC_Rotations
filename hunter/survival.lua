@@ -159,8 +159,9 @@ local combat = {
     --{ "Arcane Shot", { "player.buff(34720)", "player.focus > 35", function() return (dynamicEval("player.spell(3044).regen") <= dynamicEval("player.focus.deficit")) end, }},
     { "Arcane Shot", "target.debuff(Serpent Sting).duration <= 3" },
 
-    { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
-    --{ "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(77767).regen")) <= dynamicEval("player.focus.deficit")) end, }},
+    --{ "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},    
+    { "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 4" }},
+    { "Cobra Shot", { "player.buff(Steady Focus).duration < 5", "player.focus < 60" }},
 
     { "Arcane Shot", "player.focus >= 80" },
     { "Arcane Shot", "talent(7,2)" },
