@@ -3,10 +3,20 @@
 
 local onLoad = function()
 	ProbablyEngine.toggle.create('def', 'Interface\\Icons\\INV_SummerFest_Symbol_Medium.png', 'Defensive CDs Toggle', 'Enable or Disable usage of Guard / Fortifying Brew')
---	ProbablyEngine.toggle.create('autotaunt', 'Interface\\Icons\\Spell_Magic_PolymorphRabbit.png',	'SoO Auto autotaunt Toggle', 'Enable or Disable Auto autotaunt in SoO\nImmerseus 1 Stack\nNorushen 4 Stacks\nSha of Pride 1 Stack\nIron Juggernaut 3 Stacks\nDark Shamans 5 Stacks\nGeneral Nazgrim 3 Stacks\nMalkorok 13 Stacks\nBlackfuse 3 Stacks\nThok 3 Stacks\nGarrosh 3 Stacks\nSET 2ND TANK TO FOCUS')
+	ProbablyEngine.toggle.create('zs', 'Interface\\Icons\\ability_monk_expelharm', 'Auto Zen Sphere', 'Keep Zen Sphere up on yourself and the other tank even OoC')
+	--ProbablyEngine.toggle.create('autotaunt', 'Interface\\Icons\\Spell_Magic_PolymorphRabbit.png',	'SoO Auto autotaunt Toggle', 'Enable or Disable Auto autotaunt in SoO\nImmerseus 1 Stack\nNorushen 4 Stacks\nSha of Pride 1 Stack\nIron Juggernaut 3 Stacks\nDark Shamans 5 Stacks\nGeneral Nazgrim 3 Stacks\nMalkorok 13 Stacks\nBlackfuse 3 Stacks\nThok 3 Stacks\nGarrosh 3 Stacks\nSET 2ND TANK TO FOCUS')
 	ProbablyEngine.toggle.create('kegsmash', 'Interface\\Icons\\achievement_brewery_2.png',	'Keg Smash Toggle',	'Enable or Disable Keg Smash to avoid cleave')
 	ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
-	ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
+
+	NOC.BaseStatsTableInit()
+
+  C_Timer.NewTicker(0.25, (
+      function()
+        if ProbablyEngine.config.read('button_states', 'MasterToggle', false) then
+          NOC.BaseStatsTableUpdate()
+        end
+      end),
+  nil)
 end
 
 local buffs = {
@@ -30,7 +40,42 @@ local ooc = {
 	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
 	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
 	{ "Expel Harm", "player.health < 100" }, -- Expel Harm when not at full health
+	{{
+    { "Zen Sphere", "!player.buff(Zen Sphere)" },
+    { "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
+    { "Zen Sphere", { "!focus.exists", "tank.exists", "!tank.buff(Zen Sphere)", "tank.range <= 40", }, "tank" },
+  }, "toggle.zs" },
 	{ buffs, },
+}
+
+local interrupts = {
+  { "Paralysis", { -- Paralysis when SHS, and Quaking Palm are all on CD
+     "!target.debuff(Spear Hand Strike)",
+     "player.spell(Spear Hand Strike).cooldown > 1",
+     "player.spell(Quaking Palm).cooldown > 1",
+     "!lastcast(Spear Hand Strike)"
+  }},
+  { "Ring of Peace", { -- Ring of Peace when SHS is on CD
+     "!target.debuff(Spear Hand Strike)",
+     "player.spell(Spear Hand Strike).cooldown > 1",
+     "!lastcast(Spear Hand Strike)"
+  }},
+  { "Leg Sweep", { -- Leg Sweep when SHS is on CD
+     "player.spell(116705).cooldown > 1",
+     "target.range <= 5",
+     "!lastcast(116705)"
+  }},
+  { "Charging Ox Wave", { -- Charging Ox Wave when SHS is on CD
+     "player.spell(116705).cooldown > 1",
+     "target.range <= 30",
+     "!lastcast(116705)"
+  }},
+  { "Quaking Palm", { -- Quaking Palm when SHS is on CD
+     "!target.debuff(Spear Hand Strike)",
+     "player.spell(Spear Hand Strike).cooldown > 1",
+     "!lastcast(Spear Hand Strike)"
+  }},
+  { "Spear Hand Strike" }, -- Spear Hand Strike
 }
 
 local aoe = {
@@ -61,48 +106,18 @@ local aoe = {
 local combat = {
 	-- Hotkeys
 	{ "pause", "modifier.lshift" },
-	--{ "pause", "@NOC.pause()" },
 	{ "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
 	{ "115180", "modifier.lcontrol", "ground" }, -- Dizzying Haze
 	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
 
 	-- AutoTarget
-	{ "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" } },
-	{ "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" } },
+  { "/targetenemy [noexists]", "!target.exists" },
+  { "/targetenemy [dead]", { "target.exists", "target.dead" } },
 
 	-- Buffs
 	{ buffs, },
 
-	-- Interrupts
-	{{
-		{ "115078", { -- Paralysis when SHS and Quaking Palm are all on CD
-			"!target.debuff(Spear Hand Strike)",
-			"player.spell(116705).cooldown > 0",
-			"player.spell(107079).cooldown > 0",
-			"!modifier.lastcast(116705)"
-		}},
-		{ "116844", { -- Ring of Peace when SHS is on CD
-			"!target.debuff(Spear Hand Strike)",
-			"player.spell(116705).cooldown > 0",
-			"!modifier.lastcast(116705)"
-		}},
-		{ "Leg Sweep", { -- Leg Sweep when SHS is on CD
-			"player.spell(116705).cooldown > 0",
-			"target.range <= 5",
-			"!modifier.lastcast(116705)"
-		}},
-		{ "Charging Ox Wave", { -- Charging Ox Wave when SHS is on CD
-			"player.spell(116705).cooldown > 0",
-			"target.range <= 30",
-			"!modifier.lastcast(116705)"
-		}},
-		{ "107079", { -- Quaking Palm when SHS on CD
-			"!target.debuff(Spear Hand Strike)",
-			"player.spell(116705).cooldown > 0",
-			"!modifier.lastcast(116705)"
-		}},
-		{ "116705" }, -- Spear Hand Strike
-	}, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
+	{ interrupts, "target.interruptAt(40)" }, -- Interrupt when 40% into the cast time
 
 	-- Self Heal
 	{ "Zen Sphere", "!player.buff(Zen Sphere)" },

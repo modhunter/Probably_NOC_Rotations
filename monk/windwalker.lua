@@ -3,7 +3,6 @@
 
 local onLoad = function()
   ProbablyEngine.toggle.create('chistacker', 'Interface\\Icons\\ability_monk_expelharm', 'Stack Chi', 'Keep Chi at full even OoC...')
-  --ProbablyEngine.toggle.create('autotarget', 'Interface\\Icons\\ability_hunter_snipershot', 'Auto Target', 'Automatically target the nearest enemy when target dies or does not exist')
   ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
   ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
   ProbablyEngine.toggle.create('dpstest', 'Interface\\Icons\\inv_misc_pocketwatch_01', 'DPS Test', 'Stop combat after 5 minutes in order to do a controlled DPS test')
@@ -184,9 +183,9 @@ local combat = {
   { "pause", "player.casting(115176)" }, -- Pause for Zen Meditation
   { "/stopcasting\n/stopattack\n/cleartarget\n/stopattack\n/cleartarget", { "player.time >= 300", "toggle.dpstest" }},
 
-   -- AutoTarget
-  { "/targetenemy [noexists]", { "toggle.autotarget", "!target.exists" } },
-  { "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" } },
+  -- AutoTarget
+  { "/targetenemy [noexists]", "!target.exists" },
+  { "/targetenemy [dead]", { "target.exists", "target.dead" } },
 
   -- Keyboard modifiers
   { "Leg Sweep", "modifier.lcontrol" },
