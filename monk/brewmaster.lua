@@ -128,11 +128,13 @@ local combat = {
 	{ "Purifying Brew", { "player.buff(Serenity)", "player.buff(124275)" }},
 
 	-- Defensives
-	-- Fortifying Brew when < 25% health and DM/DH/EB are not being used
-	{ "Fortifying Brew", { "player.health <= 25", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "!player.buff(115308)", "toggle.def" }, "player" },
+	{{
+		-- Fortifying Brew when < 25% health and DM/DH/EB are not being used
+		{ "Fortifying Brew", { "player.health <= 25", "!player.buff(Dampen Harm)", "!player.buff(Diffuse Magic)", "!player.buff(115308)" }, "player" },
 
-	{ "Guard", { "player.spell(Guard).charges = 1", "player.spell(Guard).recharge < 5", "toggle.def" }, "player" },
-	{ "Guard", { "player.spell(Guard).charges = 2", "toggle.def" }, "player" },
+		{ "Guard", { "player.spell(Guard).charges = 1", "player.spell(Guard).recharge < 5" }, "player" },
+		{ "Guard", { "player.spell(Guard).charges = 2", }, "player" },
+	}, "toggle.def" },
 
 	{{
 		{ "Chi Brew", { "player.spell(Chi Brew).charges = 1", "player.spell(Chi Brew).recharge < 5" }},
@@ -209,6 +211,7 @@ local combat = {
 		{ "Serenity", { "talent(7,3)", "player.chi >= 2", "player.spell(Keg Smash).cooldown > 6", "modifier.cooldowns" }},
 
 		{ "Blackout Kick", "!player.buff(Shuffle)" },
+		{ "Blackout Kick", "player.buff(Shuffle).duration <= 6" },
 
 		{ "Chi Explosion", { "player.chi >= 3", "talent(7,2)" }},
 
@@ -239,4 +242,4 @@ local combat = {
 	{ "Tiger's Lust", { "target.range >= 15", "player.moving", "player.movingfor > 1" }},
 }
 
-ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk 6.0|r", combat, ooc, onLoad)
+ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk BETA|r", combat, ooc, onLoad)
