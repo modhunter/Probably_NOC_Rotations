@@ -4,7 +4,7 @@ ProbablyEngine.library.register("NOC", NOC)
 --local DSL = ProbablyEngine.dsl.get
 
 DEBUGLOGLEVEL = 4
-DEBUGTOGGLE = false
+DEBUGTOGGLE = true
 NOC.baseStatsTable = { }
 tier17set = 0
 
@@ -331,7 +331,7 @@ function NOC.KSEnergy(energycheck)
     local MyNRGregen = select(2, GetPowerRegen("player"))
     local cd = GetSpellCD(121253)
     local NRGforKS = MyNRG + (MyNRGregen * GetSpellCD(121253))
-    NOC.DEBUG(4, "NOC.KSEnergy returning: "..NRGforKS.." ("..MyNRG.."+("..MyNRGregen.."*"..cd..")")
+    NOC.DEBUG(5, "NOC.KSEnergy returning: "..NRGforKS.." ("..MyNRG.."+("..MyNRGregen.."*"..cd..")")
     return NRGforKS >= energycheck
   end
   return false
