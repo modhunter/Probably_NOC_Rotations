@@ -41,7 +41,6 @@ local ooc = {
 	{ "115315", "modifier.lalt", "ground" }, -- Black Ox Statue
 	{ "Expel Harm", "player.health < 100" }, -- Expel Harm when not at full health
 	{{
-		{ "Expel Harm" },
     { "Zen Sphere", "!player.buff(Zen Sphere)" },
     { "Zen Sphere", { "focus.exists", "!focus.buff(Zen Sphere)", "focus.range <= 40", }, "focus" },
     { "Zen Sphere", { "!focus.exists", "tank.exists", "!tank.buff(Zen Sphere)", "tank.range <= 40", }, "tank" },
@@ -242,4 +241,4 @@ local combat = {
 	{ "Tiger's Lust", { "target.range >= 15", "player.moving", "player.movingfor > 1" }},
 }
 
-ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk BETA|r", combat, ooc, onLoad)
+ProbablyEngine.rotation.register_custom(268, "|cFF32ff84NOC Brewmaster Monk |r", combat, ooc, onLoad)
