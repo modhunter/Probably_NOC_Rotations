@@ -6,6 +6,7 @@ local onLoad = function()
   ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
   ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
   ProbablyEngine.toggle.create('dpstest', 'Interface\\Icons\\inv_misc_pocketwatch_01', 'DPS Test', 'Stop combat after 5 minutes in order to do a controlled DPS test')
+  ProbablyEngine.toggle.create('opener_fof', 'Interface\\Icons\\monk_ability_fistoffury', 'Opener with FoF', 'Experimental Opener with FoF before Serenity')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
 
   NOC.BaseStatsTableInit()
@@ -98,11 +99,6 @@ local st = {
 
   { "Tiger Palm", { "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
 
-  {{
-    { "Chi Wave" },
-    { "Chi Burst", { "!player.moving", "talent(2,3)" }},
-  }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
-
   { "Blackout Kick", "player.chidiff < 2" },
 }
 
@@ -113,14 +109,35 @@ local st_chex = {
 
   { "Rising Sun Kick" },
 
-  {{
-    { "Chi Wave" },
-    { "Chi Burst", { "!player.moving", "talent(2,3)" }},
-  }, { "player.timetomax > 2" }},
-
   { "Tiger Palm", { "player.chi >= 4", "!player.buff(Combo Breaker: Chi Explosion)" }},
 
   { "Chi Explosion", { "player.chi >= 3", "player.spell(Fists of Fury).cooldown > 4" }},
+}
+
+local opener_fof = {
+  -- old 'ideal' opener (starting with 5 chi) is:    RSK -> TP -> CB -> CB -> BoK -> TeB -> Serenity (~4 GCD before serenity?)
+  -- new 'ideal' opener (starting with 5 chi) is:    RSK -> TP -> CB -> CB -> BoK -> TeB -> FoF -> Jab -> Serenity (~10 GCD before serenity?)
+
+  -- old 'unideal' opener (starting with 0 chi) is:  CB -> CB -> RSK -> TP -> Jab -> Jab -> BoK -> TeB -> Serenity
+  -- new 'unideal' opener (starting with 0 chi) is:  CB -> CB -> RSK -> TP -> Jab -> Jab -> BoK -> TeB -> FoF -> Jab -> Serenity
+  {{
+    -- This should 'constrain' BoK to be only casted once during the opener
+    { "Blackout Kick", { "player.chidiff <= 1", "player.spell(Blackout Kick).casted = 0" }},
+
+    -- Only FoF if TeB & BoK have been casted
+    {{
+      { "Fists of Fury", { "!player.moving", "player.lastmoved > 0.5", "!player.glyph(Floating Butterfly)" }},
+      { "Fists of Fury", "player.glyph(Floating Butterfly)" },
+    }, { "player.buff(116740)", "player.spell(Blackout Kick).casted != 0" }},
+
+    -- TeB when we have used both Chi Brews and have casted BoK at least once
+    { "116740", { "!player.buff(116740)", "player.spell(Chi Brew).charges = 0", "player.spell(Blackout Kick).casted != 0" }},
+
+  }, { "player.buff(Tiger Power)", "target.debuff(Rising Sun Kick)" }},
+
+  { "Chi Brew", { "!lastcast(Chi Brew)", "player.chidiff >= 2" }}, -- 0-3 chi
+
+  { "Jab", "player.chidiff >= 2" }, -- 0-3 chi
 }
 
 local opener = {
@@ -223,18 +240,20 @@ local combat = {
     -- ToD prioritization
     {{
       -- If not glyphed, Jab immediatley to get enough chi for ToD
-      { "!Jab", { "player.chi < 3", "!player.glyph(Touch of Death)" }},
+      { "Jab", { "player.chi < 3", "!player.glyph(Touch of Death)" }},
       {{
         -- If not glyphed, Fort Brew Immediatley if we have at least 3 chi
-        { "!Fortifying Brew", { "player.chi >= 3", "!player.glyph(Touch of Death)" }},
+        { "Fortifying Brew", { "player.chi >= 3", "!player.glyph(Touch of Death)" }},
         -- If glyphed, Fort Brew Immediatley
-        { "!Fortifying Brew", "player.glyph(Touch of Death)" }, -- Only if the target's current health is > our max health
+        { "Fortifying Brew", "player.glyph(Touch of Death)" }, -- Only if the target's current health is > our max health
       }, "target.health.actual > player.health.max" }, -- Only if the target's current health is > our max health
       { "!Touch of Death" },
     }, { "player.buff(Death Note)", "player.spell(Touch of Death).cooldown < 1", "@NOC.notBlacklist('target')", "target.range <= 5" }}, -- Don't use ToD if we are targetting a blacklisted unit
 
-    -- Chi wave during the first few seconds of combat (even at range) and when not under Serenity
-    { "Chi Wave", { "player.time < 10", "!player.buff(Serenity)" }}, -- 40 yard range 0 energy, 0 chi
+    {{
+      { "Chi Wave" }, -- 40 yard range 0 energy, 0 chi
+      { "Chi Burst", { "!player.moving", "talent(2,3)" }},
+    }, { "player.timetomax > 2", "!player.buff(Serenity)" }},
 
     {{
        -- Cooldowns/Racials
@@ -258,9 +277,8 @@ local combat = {
     -- Melee range only
     {{
       -- Opener priority during the first 10 seconds when serenity & chi brew talents are selected and we haven't popped TeB yet
-      -- 'ideal' opener (starting with 5 chi) is:    RSK -> TP -> CB -> CB -> BoK -> TeB -> Serenity
-      -- 'unideal' opener (starting with 0 chi) is:  CB -> CB -> RSK -> TP -> Jab -> Jab -> BoK -> TeB -> Serenity
-      { opener, { "player.time < 10", "talent(3,3)", "talent(7,3)", "!player.buff(116740)" }},
+      { opener, { "player.time < 10", "talent(3,3)", "talent(7,3)", "!player.buff(116740)", "!toggle.opener_fof" }},
+      { opener_fof, { "player.time < 16", "talent(3,3)", "talent(7,3)", "player.spell(Fists of Fury).casted = 0", "toggle.opener_fof" }},
 
       -- If serenity, honor opener
       {{
@@ -301,8 +319,8 @@ local combat = {
       { "Rising Sun Kick", "target.debuff(Rising Sun Kick).duration < 3" },
 
       {{
-        -- If we are in the opener, pop Serenity only after we have used TeB
-        { "Serenity", { "player.buff(116740)", "player.time < 10" }},
+        -- If we are in the opener, pop Serenity only after we have used TeB & FoF
+        { "Serenity", { "player.buff(116740)", "player.time < 10", "player.spell(Fists of Fury).casted != 0" }},
         { "Serenity", { "player.time >= 10" }},
       }, { "talent(7,3)", "player.chi >= 2", "target.debuff(Rising Sun Kick)", "player.buff(Tiger Power)", "modifier.cooldowns" }},
 
