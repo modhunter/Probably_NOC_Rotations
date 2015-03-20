@@ -126,8 +126,6 @@ local combat = {
       { "Lifeblood" },
       { "Berserking" },
       { "Blood Fury" },
-      { "Bear Hug" },
-      -- { "53401" }, -- Rabid
       { "#trinket1" },
       { "#trinket2" },
     }, "modifier.cooldowns" },

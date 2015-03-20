@@ -446,11 +446,12 @@ function isSpecialAura(unit)
 		return false
 	end
 	for i = 1, 40 do
-      local debuff = select(11, UnitAura(unit, i, "HELPFUL|HARMFUL"))
-		if debuff == nil then
+      local buff = select(11, UnitBuff(unit, i))
+      local debuff = select(11, UnitDebuff(unit, i))
+		if debuff == nil or buff == nil then
 			break
 		end
-		if SpecialAuras[tonumber(debuff)] ~= nil then
+    if SpecialAuras[tonumber(buff)] or SpecialAuras[tonumber(debuff)] ~= nil then
 			return true
 		end
 	end

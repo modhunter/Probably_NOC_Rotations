@@ -164,7 +164,6 @@ local combat = {
 			{ "Lifeblood" },
 			{ "Berserking" },
 			{ "Blood Fury" },
-			{ "Bear Hug" },
 			{ "Invoke Xuen, the White Tiger", "player.time > 5" },
 			{ "#trinket1" },
 			{ "#trinket2" },

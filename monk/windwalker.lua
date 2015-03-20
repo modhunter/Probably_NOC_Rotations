@@ -244,7 +244,6 @@ local combat = {
          { "Lifeblood" },
          { "Berserking" },
          { "Blood Fury" },
-         { "Bear Hug" },
          { "Invoke Xuen, the White Tiger" },
         -- Use with TeB
          { "#trinket1", "player.buff(116740)" },
