@@ -107,9 +107,12 @@ NOC Rotations
 - Include more detailed checks for stat 'procs' e.g. only consider it a stat proc if there is a certain percentage increase.  In other words don't consider it an agility proc unless the % increase is above some level (20%+?)
 - Objectmaker ideas:
   - Auto ToD any in-range qualified enemies
-  - Better auto SEF
-  - Auto stop FSK & Chi Torpedo
-  - Auto-place zen sphere on highest health enemy closest to the boss
+  - Better auto SEF to pick enemies quicker instead of relying on legacy checks
+  - Auto stop FSK & Chi Torpedo??
+  - Auto-place zen sphere on highest health player closest to the boss/target
+  - Completely accurate enemies count using range around me to determine true number of qualified enemies
+  - Smart chex checking to know # of enemeis that would be affected to pinpoint 3 or 4 chi chex usage
+  - Smart RJW/SCK usage using exact info to determine how many enemeis will be hit - idea is that we would only ever use these if it would be beneficial based on enemies that would truly be hit
 
 
 ## Brewmaster Monk (6.x)
