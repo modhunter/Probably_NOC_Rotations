@@ -260,7 +260,7 @@ local combat = {
       -- Melee range only
       {{
         -- Opener priority during the first 10 seconds when serenity & chi brew talents are selected and we haven't popped TeB yet
-        { opener, { "player.time < 16", "talent(3,3)", "talent(7,3)", "player.spell(Fists of Fury).casted = 0" }},
+        { opener, { "player.time < 16", "talent(3,3)", "talent(7,3)", "player.spell(Fists of Fury).casted = 0", "!player.buff(Serenity)" }},
 
         -- If serenity, honor opener
         {{
