@@ -5,6 +5,11 @@ ProbablyEngine.library.register("NOC", NOC)
 
 DEBUGLOGLEVEL = 4
 DEBUGTOGGLE = false
+
+NOC.debugLogLevel = 5
+NOC.debugToggle = true
+NOC.debugTrack = { }
+
 NOC.baseStatsTable = { }
 tier17set = 0
 
@@ -174,6 +179,7 @@ function NOC.BaseStatsTableUpdate()
 	end
 end
 
+--[[
 function NOC.DEBUG(level, debug_string)
     if DEBUGTOGGLE then
         if level == 5 and DEBUGLOGLEVEL >= 5 then
@@ -188,6 +194,65 @@ function NOC.DEBUG(level, debug_string)
             print(debug_string)
         else
             return
+        end
+    end
+end
+]]
+
+function NOC.DEBUG(level, string, name, printonce)
+    --[[--------------------------------------------------------------------------------------------
+    Debug is used mainly for testing/beta development phases.
+    If debug is currently true (debugToggle) then drop into the logic.
+    Basically a level for each message is passed. If the current log level is that high or higher
+    debug will print out the string supplied.
+    -- Example Usage
+    -- NOC.DEBUG(loglevel, string, name)
+    -- NOC.DEBUG(5, "SpecialAurasCheck true", "cc")
+    --------------------------------------------------------------------------------------------]]--
+    local throttle = 1
+
+    if name == nil then
+      name = "default"
+    end
+
+    if NOC.debugTrack[name] then
+        local time = (GetTime() - NOC.debugTrack[name].start)
+        --print(time)
+        if (GetTime() - NOC.debugTrack[name].start) >= throttle or printonce then
+            NOC.debugTrack[name].start = GetTime()
+            if NOC.debugToggle then
+                if level == 5 and NOC.debugLogLevel >= 5 then
+                  print(name, string)
+                elseif level == 4 and NOC.debugLogLevel >= 4 then
+                  print(name, string)
+                elseif level == 3 and NOC.debugLogLevel >= 3 then
+                  print(name, string)
+                elseif level == 2 and NOC.debugLogLevel >= 2 then
+                  print(name, string)
+                elseif level == 1 and NOC.debugLogLevel >= 1 then
+                  print(name, string)
+                else
+                    return
+                end
+            end
+        end
+    else
+        NOC.debugTrack[name] = { }
+        NOC.debugTrack[name].start = GetTime()
+        if NOC.debugToggle then
+            if level == 5 and NOC.debugLogLevel >= 5 then
+              print(name, string)
+            elseif level == 4 and NOC.debugLogLevel >= 4 then
+              print(name, string)
+            elseif level == 3 and NOC.debugLogLevel >= 3 then
+              print(name, string)
+            elseif level == 2 and NOC.debugLogLevel >= 2 then
+              print(name, string)
+            elseif level == 1 and NOC.debugLogLevel >= 1 then
+              print(name, string)
+            else
+                return
+            end
         end
     end
 end
@@ -414,6 +479,7 @@ function NOC.autoSEF()
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
   if #targets > 0 then
     --print(targets[1].Unit..","..targets[1].Name..","..#targets)
+    NOC.DEBUG(5, "autoSEF: "..targets[1].Unit..","..targets[1].Name..","..#targets.."")
     ProbablyEngine.dsl.parsedTarget = targets[1].Unit
     return true
   end
