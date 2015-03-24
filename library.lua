@@ -3,10 +3,7 @@ ProbablyEngine.library.register("NOC", NOC)
 
 --local DSL = ProbablyEngine.dsl.get
 
-DEBUGLOGLEVEL = 4
-DEBUGTOGGLE = false
-
-NOC.debugLogLevel = 5
+NOC.debugLogLevel = 4
 NOC.debugToggle = true
 NOC.debugTrack = { }
 
@@ -179,26 +176,6 @@ function NOC.BaseStatsTableUpdate()
 	end
 end
 
---[[
-function NOC.DEBUG(level, debug_string)
-    if DEBUGTOGGLE then
-        if level == 5 and DEBUGLOGLEVEL >= 5 then
-            print(debug_string)
-        elseif level == 4 and DEBUGLOGLEVEL >= 4 then
-            print(debug_string)
-        elseif level == 3 and DEBUGLOGLEVEL >= 3 then
-            print(debug_string)
-        elseif level == 2 and DEBUGLOGLEVEL >= 2 then
-            print(debug_string)
-        elseif level == 1 and DEBUGLOGLEVEL >= 1 then
-            print(debug_string)
-        else
-            return
-        end
-    end
-end
-]]
-
 function NOC.DEBUG(level, string, name, printonce)
     --[[--------------------------------------------------------------------------------------------
     Debug is used mainly for testing/beta development phases.
@@ -268,6 +245,7 @@ function NOC.isWhitelist(unit)
 	end
 	local _,_,_,_,_,unitID = strsplit("-", UnitGUID(unit))
 	if Whitelist[tonumber(unitID)] ~= nil then
+    NOC.DEBUG(5, "found: "..unitID.."", "whitelist")
 		return true
 	else
 		return false
@@ -280,6 +258,7 @@ function NOC.isBlacklist(unit)
 	end
 	local _,_,_,_,_,unitID = strsplit("-", UnitGUID(unit))
 	if Blacklist[tonumber(unitID)] ~= nil then
+    NOC.DEBUG(4, "found: "..unitID.."", "blacklist")
 		return true
 	else
 		return false
@@ -348,12 +327,15 @@ end
 
 function NOC.DrinkStagger()
     if (UnitPower("player", 12) >= 1 or UnitBuff("player", GetSpellInfo(138237))) then
-        if UnitDebuff("player", GetSpellInfo(124273))
-            then return true
+        if UnitDebuff("player", GetSpellInfo(124273)) then
+          NOC.DEBUG(4, "heavy stagger", "drinkstagger")
+          return true
         end
         if UnitDebuff("player", GetSpellInfo(124274))
             and NOC.StaggerValue() > 25
-            then return true
+            then
+              NOC.DEBUG(4, "NOC.StaggerValue() > 25", "drinkstagger")
+              return true
         end
     end
     return false
@@ -367,12 +349,14 @@ function NOC.noControl()
 	-- Hunter
 		if select(3, UnitClass("player")) == 3 then
 			if text == LOSS_OF_CONTROL_DISPLAY_ROOT or text == LOSS_OF_CONTROL_DISPLAY_SNARE then
+        NOC.DEBUG(4, "ROOT or SNARE", "noControl")
 				return true
 			end
 		end
 	-- Monk
 		if select(3, UnitClass("player")) == 10 then
 			if text == LOSS_OF_CONTROL_DISPLAY_STUN or text == LOSS_OF_CONTROL_DISPLAY_FEAR or text == LOSS_OF_CONTROL_DISPLAY_ROOT or text == LOSS_OF_CONTROL_DISPLAY_HORROR then
+        NOC.DEBUG(4, "STUN or FEAR or ROOT or HORROR", "noControl")
 				return true
 			end
 		end
@@ -398,7 +382,7 @@ function NOC.KSEnergy(energycheck)
     local MyNRGregen = select(2, GetPowerRegen("player"))
     local cd = GetSpellCD(121253)
     local NRGforKS = MyNRG + (MyNRGregen * GetSpellCD(121253))
-    NOC.DEBUG(5, "NOC.KSEnergy returning: "..NRGforKS.." ("..MyNRG.."+("..MyNRGregen.."*"..cd..")")
+    NOC.DEBUG(4, NRGforKS.."="..MyNRG.."+("..MyNRGregen.."*"..cd..")", "KSEnergy")
     return NRGforKS >= energycheck
   end
   return false
@@ -478,8 +462,7 @@ function NOC.autoSEF()
 
   -- auto-cast SE&F on 1 or 2 targets depending on how many enemies are around us
   if #targets > 0 then
-    --print(targets[1].Unit..","..targets[1].Name..","..#targets)
-    NOC.DEBUG(5, "autoSEF: "..targets[1].Unit..","..targets[1].Name..","..#targets.."")
+    NOC.DEBUG(4, targets[1].Unit..","..targets[1].Name..","..#targets.."", "autoSEF")
     ProbablyEngine.dsl.parsedTarget = targets[1].Unit
     return true
   end
@@ -495,9 +478,9 @@ function NOC.energyTime(energycheck)
     local gcd = (1.5/GetHaste("player"))+1
     local energytime = (energy + energy_regen)
     if energytime < energycheck then
-      NOC.DEBUG(5, "NOC.energyTime2 returning: "..energytime.." ("..energy.."+"..energy_regen..")*"..gcd.."")
+      NOC.DEBUG(5, math.floor(energytime).." ("..math.floor(energy).." + "..math.floor(energy_regen)..") < "..energycheck, "energyTime")
+      return energytime < energycheck
     end
-    return energytime < energycheck
   end
   return false
 end
@@ -520,6 +503,7 @@ function isSpecialAura(unit)
 			break
 		end
     if SpecialAuras[tonumber(buff)] or SpecialAuras[tonumber(debuff)] ~= nil then
+      NOC.DEBUG(4, unit..": "..buff.." or "..debuff, "isSpecialAura")
 			return true
 		end
 	end

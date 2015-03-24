@@ -56,8 +56,9 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 	local stat = string.lower(stat)
 
 	if stat == "strength" then
-		if UnitStat("player", 1) > NOC.baseStatsTable.strength then
-			NOC.DEBUG(4, "strength proc found!")
+    local str = UnitStat("player", 1)
+		if str > NOC.baseStatsTable.strength then
+      NOC.DEBUG(4, "proc found: "..str.." > "..NOC.baseStatsTable.strength, "strproc")
 			return true
 		else
 			return false
@@ -65,8 +66,8 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 	end
 	if stat == "agility" then
     local agil = UnitStat("player", 2)
-		if UnitStat("player", 2) > NOC.baseStatsTable.agility then
-			NOC.DEBUG(4, "agility proc found: "..agil.." > "..NOC.baseStatsTable.agility)
+		if agil > NOC.baseStatsTable.agility then
+			NOC.DEBUG(4, "proc found: "..agil.." > "..NOC.baseStatsTable.agility, "agiproc")
 			return true
 		else
 			return false
@@ -74,7 +75,7 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 	end
 	if stat == "stamina" then
 		if UnitStat("player", 3) > NOC.baseStatsTable.stamina then
-			NOC.DEBUG(4, "stamina proc found!")
+			NOC.DEBUG(4, "proc found!", "stamproc")
 			return true
 		else
 			return false
@@ -82,7 +83,7 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 	end
 	if stat == "intellect" then
 		if UnitStat("player", 4) > NOC.baseStatsTable.intellect then
-			NOC.DEBUG(4, "intellect proc found!")
+			NOC.DEBUG(4, "proc found!", "intproc")
 			return true
 		else
 			return false
@@ -90,7 +91,7 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 	end
 	if stat == "spirit" then
 		if UnitStat("player", 5) > NOC.baseStatsTable.spirit then
-			NOC.DEBUG(4, "spirit proc found!")
+			NOC.DEBUG(4, "proc found!", "spiritproc")
 			return true
 		else
 			return false
@@ -98,15 +99,16 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 	end
 	if stat == "crit" then
 		if GetCritChance() > NOC.baseStatsTable.crit then
-			NOC.DEBUG(4, "crit proc found!")
+			NOC.DEBUG(4, "proc found!", "critproc")
 			return true
 		else
 			return false
 		end
 	end
 	if stat == "haste" then
-		if GetHaste() > NOC.baseStatsTable.haste then
-			NOC.DEBUG(4, "haste proc found!")
+    local haste = GetHaste()
+		if haste > NOC.baseStatsTable.haste then
+      NOC.DEBUG(4, "proc found: "..haste.." > "..NOC.baseStatsTable.haste, "hasteproc")
 			return true
 		else
 			return false
@@ -114,7 +116,7 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 	end
 	if stat == "mastery" then
 		if GetMastery() > NOC.baseStatsTable.mastery then
-			NOC.DEBUG(4, "mastery proc found!")
+			NOC.DEBUG(4, "mastery proc found!", "masterproc")
 			return true
 		else
 			return false
@@ -122,8 +124,8 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 	end
 	if stat == "multistrike" then
     local ms = GetMultistrike()
-		if GetMultistrike() > NOC.baseStatsTable.multistrike then
-      NOC.DEBUG(4, "multistrike proc found: "..ms.." > "..NOC.baseStatsTable.multistrike)
+		if ms > NOC.baseStatsTable.multistrike then
+      NOC.DEBUG(4, "proc found: "..ms.." > "..NOC.baseStatsTable.multistrike, "msproc")
 			return true
 		else
 			return false
@@ -131,7 +133,7 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 	end
 	if stat == "versatility" then
 		if GetCombatRating(29) > NOC.baseStatsTable.versatility then
-			NOC.DEBUG(4, "versatility proc found!")
+			NOC.DEBUG(4, "versatility proc found!", "verproc")
 			return true
 		else
 			return false
@@ -141,34 +143,34 @@ end)
 
 ProbablyEngine.condition.register("proc.any", function(target)
 	if UnitStat("player", 1) > NOC.baseStatsTable.strength then
-		--NOC.DEBUG(5, "any proc found strength proc!")
+		NOC.DEBUG(4, "any proc found strength proc!")
 		return true
 	elseif UnitStat("player", 2) > NOC.baseStatsTable.agility then
-		--NOC.DEBUG(5, "any proc found agility proc!")
+		NOC.DEBUG(4, "any proc found agility proc!")
 		return true
 	elseif UnitStat("player", 3) > NOC.baseStatsTable.stamina then
-		--NOC.DEBUG(5, "any proc found stamina proc!")
+		NOC.DEBUG(4, "any proc found stamina proc!")
 		return true
 	elseif UnitStat("player", 4) > NOC.baseStatsTable.intellect then
-		--NOC.DEBUG(5, "any proc found intellect proc!")
+		NOC.DEBUG(4, "any proc found intellect proc!")
 		return true
 	elseif UnitStat("player", 5) > NOC.baseStatsTable.spirit then
-		--NOC.DEBUG(5, "any proc found spirit proc!")
+		NOC.DEBUG(4, "any proc found spirit proc!")
 		return true
 	elseif GetCritChance() > NOC.baseStatsTable.crit then
-		--NOC.DEBUG(5, "any proc found crit proc!")
+		NOC.DEBUG(4, "any proc found crit proc!")
 		return true
 	elseif GetHaste() > NOC.baseStatsTable.haste then
-		--NOC.DEBUG(5, "any proc found haste proc!")
+		NOC.DEBUG(4, "any proc found haste proc!")
 		return true
 	elseif GetMastery() > NOC.baseStatsTable.mastery then
-		--NOC.DEBUG(5, "any proc found mastery proc!")
+		NOC.DEBUG(4, "any proc found mastery proc!")
 		return true
 	elseif GetMultistrike() > NOC.baseStatsTable.multistrike then
-		--NOC.DEBUG(5, "any proc found multistrike proc!")
+		NOC.DEBUG(4, "any proc found multistrike proc!")
 		return true
 	elseif GetCombatRating(29) > NOC.baseStatsTable.versatility then
-		--NOC.DEBUG(5, "any proc found versatility proc!")
+		NOC.DEBUG(4, "any proc found versatility proc!")
 		return true
 	else
 		return false
@@ -202,7 +204,7 @@ ProbablyEngine.condition.register("gcd", function(target)
   else
     return gcd
   end
-  
+
   -- TODO: use this instead??
   --return 1.5/(1+UnitSpellHaste("player")/100)
 end)
