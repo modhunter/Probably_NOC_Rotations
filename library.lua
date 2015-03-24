@@ -176,7 +176,7 @@ function NOC.BaseStatsTableUpdate()
 	end
 end
 
-function NOC.DEBUG(level, string, name, printonce)
+function NOC.DEBUG(...)
     --[[--------------------------------------------------------------------------------------------
     Debug is used mainly for testing/beta development phases.
     If debug is currently true (debugToggle) then drop into the logic.
@@ -186,16 +186,20 @@ function NOC.DEBUG(level, string, name, printonce)
     -- NOC.DEBUG(loglevel, string, name)
     -- NOC.DEBUG(5, "SpecialAurasCheck true", "cc")
     --------------------------------------------------------------------------------------------]]--
+    local arg = {...}
+    local level = arg[1]
+    local string = arg[2]
+    local name = nil
     local throttle = 1
 
-    if name == nil then
-      name = "default"
+    if arg[3] == nil then
+      name = "debug"
+    else
+      name = arg[3]
     end
 
     if NOC.debugTrack[name] then
-        local time = (GetTime() - NOC.debugTrack[name].start)
-        --print(time)
-        if (GetTime() - NOC.debugTrack[name].start) >= throttle or printonce then
+        if (GetTime() - NOC.debugTrack[name].start) >= throttle then
             NOC.debugTrack[name].start = GetTime()
             if NOC.debugToggle then
                 if level == 5 and NOC.debugLogLevel >= 5 then
