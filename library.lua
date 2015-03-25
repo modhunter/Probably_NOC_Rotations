@@ -173,47 +173,44 @@ function NOC.BaseStatsTableUpdate()
 end
 
 --[[------------------------------------------------------------------------------------------------
-	Name: Debug
-	Type: Function
-	Arguments:  logLevel - Arbitrary level assigned to this print statement.
-			    string - String to print if debugging is enabled.
-			    (optional) debugName - The name associated with this specific call to Debug.
-	Returns: Nothing
-	Description: Debug will print out a supplied string if debugging is enabled AND the supplied
-	level is equal to or higher than the configured logging level. Print output is throttle by
-	the variable printThrottle. Default is 1 second. This keeps the chat frame from being spammed.
+    Name: Debug
+    Type: Function
+    Arguments:  logLevel - Arbitrary level assigned to this print statement.
+                string - String to print if debugging is enabled.
+                name - The name associated with this specific call to Debug.
+    Returns: Nothing
+    Description: Debug will print out a supplied string if debugging is enabled AND the supplied
+    level is equal to or higher than the configured logging level. Print output is throttle by
+    the variable printThrottle. Default is 1 second. This keeps the chat frame from being spammed.
 --]]
 NOC.debugLogLevel = 4
 NOC.debugToggle = true
 NOC.debugTrack = { }
-function NOC.DEBUG(logLevel, string, ...)
-	local arg = {...}
-	local printThrottle = 1
+function NOC.DEBUG(logLevel, string, name)
+    local printThrottle = 1
 
-	if arg[1] == nil then
-		name = "debug"
-	else
-		name = arg[1]
-	end
+    if name == nil then
+        name = "debug"
+    end
 
-	if NOC.debugTrack[name] then
-		if (GetTime() - NOC.debugTrack[name].start) >= printThrottle then
-			NOC.debugTrack[name].start = GetTime()
-			if NOC.debugToggle then
-				if logLevel >= NOC.debugLogLevel then
-					print(name, string)
-				end
-			end
-		end
-	else
-		NOC.debugTrack[name] = { }
-		NOC.debugTrack[name].start = GetTime()
-		if NOC.debugToggle then
-			if logLevel >= NOC.debugLogLevel then
-				print(name, string)
-			end
-		end
-	end
+    if NOC.debugTrack[name] then
+        if (GetTime() - NOC.debugTrack[name].start) >= printThrottle then
+            NOC.debugTrack[name].start = GetTime()
+            if NOC.debugToggle then
+                if logLevel >= NOC.debugLogLevel then
+                    print(name, string)
+                end
+            end
+        end
+    else
+        NOC.debugTrack[name] = { }
+        NOC.debugTrack[name].start = GetTime()
+        if NOC.debugToggle then
+            if logLevel >= NOC.debugLogLevel then
+                print(name, string)
+            end
+        end
+    end
 end
 
 function NOC.isWhitelist(unit)
