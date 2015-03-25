@@ -3,10 +3,6 @@ ProbablyEngine.library.register("NOC", NOC)
 
 --local DSL = ProbablyEngine.dsl.get
 
-NOC.debugLogLevel = 4
-NOC.debugToggle = true
-NOC.debugTrack = { }
-
 NOC.baseStatsTable = { }
 tier17set = 0
 
@@ -176,66 +172,48 @@ function NOC.BaseStatsTableUpdate()
 	end
 end
 
-function NOC.DEBUG(...)
-    --[[--------------------------------------------------------------------------------------------
-    Debug is used mainly for testing/beta development phases.
-    If debug is currently true (debugToggle) then drop into the logic.
-    Basically a level for each message is passed. If the current log level is that high or higher
-    debug will print out the string supplied.
-    -- Example Usage
-    -- NOC.DEBUG(loglevel, string, name)
-    -- NOC.DEBUG(5, "SpecialAurasCheck true", "cc")
-    --------------------------------------------------------------------------------------------]]--
-    local arg = {...}
-    local level = arg[1]
-    local string = arg[2]
-    local name = nil
-    local throttle = 1
+--[[------------------------------------------------------------------------------------------------
+	Name: Debug
+	Type: Function
+	Arguments:  logLevel - Arbitrary level assigned to this print statement.
+			    string - String to print if debugging is enabled.
+			    (optional) debugName - The name associated with this specific call to Debug.
+	Returns: Nothing
+	Description: Debug will print out a supplied string if debugging is enabled AND the supplied
+	level is equal to or higher than the configured logging level. Print output is throttle by
+	the variable printThrottle. Default is 1 second. This keeps the chat frame from being spammed.
+--]]
+NOC.debugLogLevel = 4
+NOC.debugToggle = true
+NOC.debugTrack = { }
+function NOC.DEBUG(logLevel, string, ...)
+	local arg = {...}
+	local printThrottle = 1
 
-    if arg[3] == nil then
-      name = "debug"
-    else
-      name = arg[3]
-    end
+	if arg[1] == nil then
+		name = "debug"
+	else
+		name = arg[1]
+	end
 
-    if NOC.debugTrack[name] then
-        if (GetTime() - NOC.debugTrack[name].start) >= throttle then
-            NOC.debugTrack[name].start = GetTime()
-            if NOC.debugToggle then
-                if level == 5 and NOC.debugLogLevel >= 5 then
-                  print(name, string)
-                elseif level == 4 and NOC.debugLogLevel >= 4 then
-                  print(name, string)
-                elseif level == 3 and NOC.debugLogLevel >= 3 then
-                  print(name, string)
-                elseif level == 2 and NOC.debugLogLevel >= 2 then
-                  print(name, string)
-                elseif level == 1 and NOC.debugLogLevel >= 1 then
-                  print(name, string)
-                else
-                    return
-                end
-            end
-        end
-    else
-        NOC.debugTrack[name] = { }
-        NOC.debugTrack[name].start = GetTime()
-        if NOC.debugToggle then
-            if level == 5 and NOC.debugLogLevel >= 5 then
-              print(name, string)
-            elseif level == 4 and NOC.debugLogLevel >= 4 then
-              print(name, string)
-            elseif level == 3 and NOC.debugLogLevel >= 3 then
-              print(name, string)
-            elseif level == 2 and NOC.debugLogLevel >= 2 then
-              print(name, string)
-            elseif level == 1 and NOC.debugLogLevel >= 1 then
-              print(name, string)
-            else
-                return
-            end
-        end
-    end
+	if NOC.debugTrack[name] then
+		if (GetTime() - NOC.debugTrack[name].start) >= printThrottle then
+			NOC.debugTrack[name].start = GetTime()
+			if NOC.debugToggle then
+				if logLevel >= NOC.debugLogLevel then
+					print(name, string)
+				end
+			end
+		end
+	else
+		NOC.debugTrack[name] = { }
+		NOC.debugTrack[name].start = GetTime()
+		if NOC.debugToggle then
+			if logLevel >= NOC.debugLogLevel then
+				print(name, string)
+			end
+		end
+	end
 end
 
 function NOC.isWhitelist(unit)
