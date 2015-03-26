@@ -184,7 +184,7 @@ end
     the variable printThrottle. Default is 1 second. This keeps the chat frame from being spammed.
 --]]
 NOC.debugLogLevel = 4
-NOC.debugToggle = true
+NOC.debugToggle = false
 NOC.debugTrack = { }
 function NOC.DEBUG(logLevel, string, name)
     local printThrottle = 1
