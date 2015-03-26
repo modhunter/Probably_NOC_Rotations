@@ -81,10 +81,11 @@ local interrupts = {
 local aoe = {
 	{ "Chi Explosion", { "player.chi >= 4", "talent(7,2)" }},
 
-	{{
-		{ "Breath of Fire", "player.chi >= 3" },
-		{ "Breath of Fire", "player.buff(Serenity)" },
-	}, { "player.buff(Shuffle).duration >= 6", "target.debuff(Breath of Fire).duration < 2.4", "!talent(7,2)" }},
+	-- removed from the simc APL, so commenting-out here for now (sadface)
+	--{{
+	--	{ "Breath of Fire", "player.chi >= 3" },
+	--	{ "Breath of Fire", "player.buff(Serenity)" },
+	--}, { "player.buff(Shuffle).duration >= 6", "target.debuff(Breath of Fire).duration < 2.4", "!talent(7,2)" }},
 
 	{{
 		{ "Rushing Jade Wind", "toggle.rjw" },
@@ -213,7 +214,9 @@ local combat = {
 
 		{ "Chi Explosion", { "player.chi >= 3", "talent(7,2)" }},
 
-		{ "Keg Smash", { "player.chidiff >= 1", "!player.buff(Serenity)", "toggle.kegsmash" }},
+		{ "Chi Brew", { "target.health < 10", "player.spell(Touch of Death).cooldown < 1", "player.chidiff >= 2", "player.buff(Shuffle).duration >= 6", "!player.glyph(Touch of Death)" }},
+
+		{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
 
 		{ "Blackout Kick", "player.chidiff < 2" },
 
