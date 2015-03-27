@@ -58,7 +58,7 @@ local aoe = {
   -- Only use this is we have the RJW talent and there are 3 or more enemies and toggle enabled
   { "Rushing Jade Wind", { "talent(6,1)", "modifier.enemies >= 3", "toggle.rjw" }},
   -- Otherwise, use it 'normally' if we aren't using chi explosion
-  { "Rushing Jade Wind", { "talent(6,1)", "!talent(7,2)" }},
+  { "Rushing Jade Wind", { "talent(6,1)", "!talent(7,2)", "!player.buff(Serenity)" }},
 
   {{
     { "Chi Wave" },
@@ -83,7 +83,7 @@ local aoe = {
     -- Only do this if we do not have RJW talent and there are more than 3 enemies and toggle enabled
     { "Spinning Crane Kick", { "modifier.enemies >= 4", "toggle.rjw" }},
     -- Otherwise, use it 'normally' if we aren't using chi explosion
-    { "Spinning Crane Kick", { "!talent(7,2)" }},
+    { "Spinning Crane Kick", { "!talent(7,2)", "!player.buff(Serenity)" }},
 
   }, { "!talent(6,1)" }},
 
