@@ -35,8 +35,8 @@ local ooc = {
 }
 
 local aoe = {
-  { "Multi-Shot", "!pet.buff(Beast Cleave)" },
-  { "Barrage" },
+  { "Multi-Shot", { "!pet.buff(Beast Cleave)", "!lastcast(Cobra Shot)" }},
+  { "Barrage", "!lastcast(Cobra Shot)" },
   --{ "Multi-Shot", "modifier.enemies >= 6" },
   --{ "Cobra Shot" },
 }
@@ -62,9 +62,10 @@ local focusfire = {
 		}, },
 		{ "Focus Fire", {
 			"player.buff(Frenzy).count >= 1",
-			"player.buff(Bestial Wrath).cooldown = 0",
+			"player.buff(Bestial Wrath).cooldown < 1 ",
+      "!player.buff(Bestial Wrath)",
 		}, },
-	}, { "pet.exists", "!player.buff(Focus Fire)", }, },
+	}, { "pet.exists", "!player.buff(Focus Fire)", "!lastcast(Cobra Shot)", }, },
 }
 
 local combat = {
@@ -143,24 +144,26 @@ local combat = {
     -- Shared
     { focusfire, },
     {{
-      { "Cobra Shot", { "!player.buff(Steady Focus)", }, },
-      { "Bestial Wrath", { "player.buff(Steady Focus)", }, },
-    }, { "player.spell(Bestial Wrath).cooldown < 1", "!player.buff(Bestial Wrath)", }, },
+      { "Cobra Shot", { "!player.buff(Steady Focus)", "talent(4,1)" }},
+      { "Cobra Shot", { "player.focus < 35", "!talent(4,1)" }},
+      { "Bestial Wrath", { "player.buff(Steady Focus)", "talent(4,1)" }},
+      { "Bestial Wrath", "!talent(4,1)" },
+    }, { "player.spell(Bestial Wrath).cooldown < 1", "!player.buff(Bestial Wrath)", "!lastcast(Cobra Shot)" }},
 
-    { "Dire Beast" },
+    { "Dire Beast", "!lastcast(Cobra Shot)" },
 
     -- AoE
     { aoe, { "toggle.multitarget", "modifier.enemies >= 2" }},
 
-    { "Kill Command" },
+    { "Kill Command", "!lastcast(Cobra Shot)" },
     --{ "A Murder of Crows", "target.health.actual < 200000" },
-    { "!Kill Shot", { "!player.channeling", "player.spell(Kill Shot).cooldown < 0.5" }},
-    { "!Kill Shot", "!player.channeling" },
-    { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
+    { "!Kill Shot", { "!player.channeling", "player.spell(Kill Shot).cooldown < 0.5", "!lastcast(Cobra Shot)" }},
+    { "!Kill Shot", { "!player.channeling", "!lastcast(Cobra Shot)" }},
+    { "Barrage", "!lastcast(Cobra Shot)" },
     --{ "Powershot", "player.timetomax > 2.5" },
     { "Cobra Shot", { "!player.buff(Bestial Wrath)", "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 4", "talent(4,1)" }},
     { "Cobra Shot", { "!player.buff(Bestial Wrath)", "player.buff(Steady Focus).duration < 5", "talent(4,1)", "player.focus < 60" }},
-    { "Arcane Shot", "player.focus > 75" },
+    { "Arcane Shot", "player.focus >= 70" },
     { "Cobra Shot" },
   }, "@NOC.isValidTarget('target')" },
 }
