@@ -1,11 +1,6 @@
 -- ProbablyEngine Rotation Packager
 -- NO CARRIER's Beastmaster Hunter Rotation
 
-local function dynamicEval(condition, spell)
-  if not condition then return false end
-  return ProbablyEngine.dsl.parse(condition, spell or '')
-end
-
 local onLoad = function()
   ProbablyEngine.toggle.create('aspect', 'Interface\\Icons\\ability_mount_jungletiger', 'Auto Aspect', 'Automatically switch aspect when moving and not in combat')
   ProbablyEngine.toggle.create('md', 'Interface\\Icons\\ability_hunter_misdirection', 'Auto Misdirect', 'Automatially Misdirect when necessary')
@@ -40,10 +35,37 @@ local ooc = {
 }
 
 local aoe = {
-  { "Multi-Shot", "!pet.buff(Beast Cleave)" },
-  { "Barrage" },
-  { "Multi-Shot", "modifier.enemies >= 6" },
+  { "Multi-Shot", { "!pet.buff(Beast Cleave)", "!lastcast(Cobra Shot)" }},
+  { "Barrage", "!lastcast(Cobra Shot)" },
+  --{ "Multi-Shot", "modifier.enemies >= 6" },
   --{ "Cobra Shot" },
+}
+
+local focusfire = {
+	{{
+		{ "Focus Fire", {
+			"player.buff(Frenzy).count = 5",
+			"!player.spell(Bestial Wrath).cooldown >= 10",
+			"!player.spell(Bestial Wrath).cooldown <= 19",
+		}, },
+		{ "Focus Fire", {
+			"player.buff(Frenzy).count >= 1",
+			"player.buff(Bestial Wrath).duration >= 3",
+		}, },
+		{ "Focus Fire", {
+			"player.buff(Frenzy).count >= 1",
+			"player.buff(Frenzy).duration <= 1",
+		}, },
+		{ "Focus Fire", {
+			"player.buff(Frenzy).count >= 1",
+			"player.buff(Stampede).cooldown >= 260",
+		}, },
+		{ "Focus Fire", {
+			"player.buff(Frenzy).count >= 1",
+			"player.buff(Bestial Wrath).cooldown < 1 ",
+      "!player.buff(Bestial Wrath)",
+		}, },
+	}, { "pet.exists", "!player.buff(Focus Fire)", "!lastcast(Cobra Shot)", }, },
 }
 
 local combat = {
@@ -60,9 +82,9 @@ local combat = {
   { "/targetenemy [dead]", { "toggle.autotarget", "target.exists", "target.dead" } },
 
   -- Pet
-  { "883", { "!pet.dead", "!pet.exists" }}, -- Call Pet 1
-  { "55709", "pet.dead" }, -- Heart of the Phoenix (55709)
-  { "982", "pet.dead" }, -- Revive Pet
+  --{ "883", { "!pet.dead", "!pet.exists" }}, -- Call Pet 1
+  { "55709", { "player.alive", "pet.dead", "!player.debuff(55711)" }}, -- Heart of the Phoenix (55709)
+  { "982", { "pet.dead", "player.alive", }}, -- Revive Pet
 
   { "82939", "modifier.lalt", "ground" }, -- Explosive Trap
   { "82941", "modifier.lalt", "ground" }, -- Ice Trap
@@ -85,9 +107,8 @@ local combat = {
   { "Deterrence", "player.health < 10" }, -- Deterrence as a last resort
   { "#109223", "player.health < 40" }, -- Healing Tonic
   { "#5512", "player.health < 40" }, -- Healthstone
-
   { "#109223", "player.health < 40" }, -- Healing Tonic
-  { "136", { "pet.health <= 75", "pet.exists", "!pet.dead", "!pet.buff(136)" }}, -- Mend Pet
+  { "136", { "pet.health <= 75", "pet.exists", "!pet.dead", "!pet.buff(136)" }, "pet", }, -- Mend Pet
 
   -- Misdirect to focus target or pet when threat is above a certain threshhold
   {{
@@ -109,7 +130,8 @@ local combat = {
     {{
       { "Stampede", "player.proc.any" },
       { "Stampede", "player.hashero" },
-      { "A Murder of Crows" },
+      { "Stampede", "player.buff(Frenzy).count >= 4", },
+      --{ "A Murder of Crows" },
       { "Lifeblood" },
       { "Berserking" },
       { "Blood Fury" },
@@ -120,32 +142,28 @@ local combat = {
     { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.cc" }, "target" },
 
     -- Shared
-    { "Dire Beast" },
+    { focusfire, },
     {{
-      { "Focus Fire", "player.spell(Bestial Wrath).cooldown < 1" },
-      { "Focus Fire", "player.buff(Stampede)" },
-    }, "!player.buff(Focus Fire)" },
-    { "Bestial Wrath", { "player.focus > 30", "!player.buff(Bestial Wrath)" }},
+      { "Cobra Shot", { "!player.buff(Steady Focus)", "talent(4,1)" }},
+      { "Cobra Shot", { "player.focus < 35", "!talent(4,1)" }},
+      { "Bestial Wrath", { "player.buff(Steady Focus)", "talent(4,1)" }},
+      { "Bestial Wrath", "!talent(4,1)" },
+    }, { "player.spell(Bestial Wrath).cooldown < 1", "!player.buff(Bestial Wrath)", "!lastcast(Cobra Shot)" }},
+
+    { "Dire Beast", "!lastcast(Cobra Shot)" },
 
     -- AoE
     { aoe, { "toggle.multitarget", "modifier.enemies >= 2" }},
 
-    { "Focus Fire", "player.buff(Frenzy).count = 5" },
-    { "Kill Command" },
-    { "A Murder of Crows", "target.health.actual < 200000" },
-    { "Kill Shot" },
-    { "Focusing Shot", { "player.focus < 50", "!player.moving" }},
-
-    { "Cobra Shot", {"lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 7", "player.focus < 60"}},
-    --{ "Cobra Shot", { "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 5", function() return ((14 + dynamicEval("player.spell(77767).regen")) <= dynamicEval("player.focus.deficit")) end, }},
-
-    { "Glaive Toss" },
-    { "Barrage" }, -- Do we really want this in ST? May want to put on a toggle
-    { "Powershot", "player.timetomax > 2.5" },
-    { "Dire Beast" },
-    { "Arcane Shot", { "player.buff(34720)", "player.focus > 35" }},
-    { "Arcane Shot", "player.buff(Bestial Wrath)" },
-    { "Arcane Shot", "player.focus > 75" },
+    { "Kill Command", "!lastcast(Cobra Shot)" },
+    --{ "A Murder of Crows", "target.health.actual < 200000" },
+    { "!Kill Shot", { "!player.channeling", "player.spell(Kill Shot).cooldown < 0.5", "!lastcast(Cobra Shot)" }},
+    { "!Kill Shot", { "!player.channeling", "!lastcast(Cobra Shot)" }},
+    { "Barrage", "!lastcast(Cobra Shot)" },
+    --{ "Powershot", "player.timetomax > 2.5" },
+    { "Cobra Shot", { "!player.buff(Bestial Wrath)", "lastcast(Cobra Shot)", "player.buff(Steady Focus).duration < 4", "talent(4,1)" }},
+    { "Cobra Shot", { "!player.buff(Bestial Wrath)", "player.buff(Steady Focus).duration < 5", "talent(4,1)", "player.focus < 60" }},
+    { "Arcane Shot", "player.focus >= 70" },
     { "Cobra Shot" },
   }, "@NOC.isValidTarget('target')" },
 }

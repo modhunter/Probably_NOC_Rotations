@@ -6,7 +6,6 @@
 library.lua
 pe.lua
 hunter\beastmastery.lua
-hunter\beastmastery_beta.lua
 hunter\survival.lua
 hunter\marksman.lua
 monk\brewmaster.lua
