@@ -43,23 +43,24 @@ local aoe = {
 
 local focusfire = {
 	{{
-		{ "Focus Fire", {
-			"player.buff(Frenzy).count = 5",
-			"!player.spell(Bestial Wrath).cooldown >= 10",
-			"!player.spell(Bestial Wrath).cooldown <= 19",
-		}, },
+    { "Focus Fire", { "player.buff(Frenzy).count = 5", "player.spell(19574).cooldown < 10", }, },
+    { "Focus Fire", { "player.buff(Frenzy).count = 5", "player.spell(19574).cooldown > 19", }, },
+
 		{ "Focus Fire", {
 			"player.buff(Frenzy).count >= 1",
 			"player.buff(Bestial Wrath).duration >= 3",
 		}, },
+
 		{ "Focus Fire", {
 			"player.buff(Frenzy).count >= 1",
 			"player.buff(Frenzy).duration <= 1",
 		}, },
+
 		{ "Focus Fire", {
 			"player.buff(Frenzy).count >= 1",
-			"player.buff(Stampede).cooldown >= 260",
+			"player.buff(Stampede).cooldown < 1",
 		}, },
+
 		{ "Focus Fire", {
 			"player.buff(Frenzy).count >= 1",
 			"player.buff(Bestial Wrath).cooldown < 1 ",
