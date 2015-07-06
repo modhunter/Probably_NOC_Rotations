@@ -17,7 +17,6 @@ Whitelist = {
   [32666]     = "32666",      -- Training Dummy - Lvl 60
   [32667]     = "32667",      -- Training Dummy - Lvl 70
   [46647]     = "46647",      -- Training Dummy - Lvl 85
-  [60197]     = "60197",      -- Scarlet Monastery Dummy
   [67127]     = "67127",      -- Training Dummy - Lvl 90
   [87318]     = "87318",      -- Dungeoneer's Training Dummy <Damage> ALLIANCE GARRISON
   [87761]     = "87761",      -- Dungeoneer's Training Dummy <Damage> HORDE GARRISON
@@ -25,6 +24,15 @@ Whitelist = {
   [88314]     = "88314",      -- Dungeoneer's Training Dummy <Tanking> ALLIANCE GARRISON
   [88836]     = "88836",      -- Dungeoneer's Training Dummy <Tanking> HORDE ASHRAN BASE
   [88288]     = "88288",      -- Dunteoneer's Training Dummy <Tanking> HORDE GARRISON
+  [87317]     = "87317",      -- Dungeoneer's Training Dummy - Lvl 102 (Lunarfall - Damage)
+  [87320]     = "87320",      -- Raider's Training Dummy - Lvl ?? (Stormshield - Damage)
+  [87321]     = "87321",      -- Training Dummy - Lvl 100 (Stormshield, Warspear - Healing)
+  [87329]     = "87329",      -- Raider's Training Dummy - Lvl ?? (Stormshield - Tank)
+  [87762]     = "87762",      -- Raider's Training Dummy - Lvl ?? (Warspear - Damage)
+  [88837]     = "88837",      -- Raider's Training Dummy - Lvl ?? (Warspear - Tank)
+  [88906]     = "88906",      -- Combat Dummy - Lvl 100 (Nagrand)
+  [88967]     = "88967",      -- Training Dummy - Lvl 100 (Lunarfall, Frostwall)
+  [89078]     = "89078",      -- Training Dummy - Lvl 100 (Lunarfall, Frostwall)
   -- WOD DUNGEONS/RAIDS
   [75966]     = "75966",      -- Defiled Spirit (Shadowmoon Burial Grounds)
   [76220]     = "76220",      -- Blazing Trickster (Auchindoun Normal)
@@ -51,13 +59,13 @@ Whitelist = {
   [93717]     = "93717",      -- Volatile Firebomb (HFC)
   [94865]     = "94865",      -- Grasping Hand (HFC)
   [93838]     = "93838",      -- Grasping Hand (HFC)
-  [94865]     = "94865",      -- Grasping Hand (HFC)
   [93839]     = "93839",      -- Dragging Hand (HFC)
   [91368]     = "91368",      -- Crushing Hand (HFC)
   [94455]     = "94455",      -- Blademaster Jubei'thos (HFC)
   [90387]     = "90387",      -- Shadowy Construct (HFC)
   [90508]     = "90508",      -- Gorebound Construct (HFC)
   [90568]     = "90568",      -- Gorebound Essence (HFC)
+  [94996]     = "94996",      -- Fragment of the Crone (HFC)
   [95656]     = "95656",      -- Carrion Swarm (HFC)
   [91540]     = "91540",      -- Illusionary Outcast (HFC)
 }
@@ -65,6 +73,11 @@ Whitelist = {
 Blacklist = {
   [76829]     = "76829",      -- Slag Elemental (BrF - Blast Furnace)
   [78463]     = "78463",      -- Slag Elemental (BrF - Blast Furnace)
+  [60197]     = "60197",      -- Scarlet Monastery Dummy
+  [64446]     = "64446",      -- Scarlet Monastery Dummy
+  [93391]     = "93391",      -- Captured Prisoner (HFC)
+  [93392]     = "93392",      -- Captured Prisoner (HFC)
+  [93828]     = "93828",      -- Training Dummy (HFC)
 }
 
 SpecialAuras = {
@@ -101,6 +114,14 @@ SpecialAuras = {
   [143593]    = "143593",     -- Defensive Stance (General Nazgrim)
   -- WOD DUNGEONS/RAIDS/ELITES
   [155176]    = "155176",     -- Damage Shield (Primal Elementalists - Blast Furnace)
+  [155185]    = "155185",     -- Cotainment (Primal Elementalists - BRF)
+  [155233]    = "155233",     -- Dormant (Blast Furnace)
+  [155265]    = "155265",     -- Cotainment (Primal Elementalists - BRF)
+  [155266]    = "155266",     -- Cotainment (Primal Elementalists - BRF)
+  [155267]    = "155267",     -- Cotainment (Primal Elementalists - BRF)
+  [157289]    = "157289",     -- Arcane Protection (Imperator Mar'Gok)
+  [174057]    = "174057",     -- Arcane Protection (Imperator Mar'Gok)
+  [184053]    = "184053",     -- Fel Barrier (Socrethar)
 }
 
 -- Credit to StinkyTwitch for the routines to check stat buffs
