@@ -6,6 +6,7 @@ local onLoad = function()
   ProbablyEngine.toggle.create('chistacker', 'Interface\\Icons\\ability_monk_expelharm', 'Stack Chi', 'Keep Chi at full even OoC...')
   ProbablyEngine.toggle.create('rjw', 'Interface\\Icons\\ability_monk_rushingjadewind', 'RJW/SCK', 'Enable use of Rushing Jade Wind or Spinning Crane Kick when using Chi Explosion')
   ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
+  ProbablyEngine.toggle.create('nb', 'Interface\\Icons\\spell_monk_nimblebrew', 'Automatic use of Nimble Brew/Tigers Lust', 'Enable use of automatic Nimble Brew/Tigers Lust when the player is rooted')
   ProbablyEngine.toggle.create('dpstest', 'Interface\\Icons\\inv_misc_pocketwatch_01', 'DPS Test', 'Stop combat after 5 minutes in order to do a controlled DPS test')
   ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
 
@@ -216,8 +217,8 @@ local combat = {
     { "#5512", "player.health < 40" }, -- Healthstone
 
     { "Detox", "player.dispellable(Detox)", "player" },
-    { "Nimble Brew", "@NOC.noControl()" },
-    { "Tiger's Lust", "@NOC.noControl()" },
+    { "Nimble Brew", { "@NOC.noControl()", "toggle.nb" }},
+    { "Tiger's Lust", { "@NOC.noControl()", "toggle.nb" }},
 
     -- wrapper for "@NOC.isValidTarget" which prevents the following from occuring when the target is CCed or otherwise not allowed to be attacked
     {{
