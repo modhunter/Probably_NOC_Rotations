@@ -5,6 +5,8 @@ ProbablyEngine.library.register("NOC", NOC)
 
 NOC.baseStatsTable = { }
 tier17set = 0
+tier18set = 0
+
 
 Whitelist = {
   -- TRAINING DUMMIES
@@ -147,13 +149,18 @@ function NOC.BaseStatsTableInit()
 
    -- Reset while checking
    if tier17 ~= 0 then tier17 = 0 end
+   if tier18 ~= 0 then tier18 = 0 end
 
    -- WW Monk Tier 17
    if specID == 269 then
       local tier17 = {115555,115556,115557,115558,115559}
+      local tier18 = {124247,124256,124268,124262,124273}
 
       for i=1,#tier17 do
          if IsEquippedItem(tier17[i]) then tier17set = tier17set + 1 end
+      end
+      for i=1,#tier18 do
+         if IsEquippedItem(tier18[i]) then tier18set = tier18set + 1 end
       end
    end
 end

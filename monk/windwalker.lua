@@ -93,6 +93,13 @@ local aoe = {
 }
 
 local st = {
+
+  --+actions.st=blackout_kick,if=set_bonus.tier18_2pc=1&buff.combo_breaker_bok.react
+  { "Blackout Kick", { "player.tier18 >= 2", "player.buff(Combo Breaker: Blackout Kick)" }},
+
+  --+actions.st+=/tiger_palm,if=set_bonus.tier18_2pc=1&buff.combo_breaker_tp.react&buff.combo_breaker_tp.remains<=2
+  { "Tiger Palm", { "player.tier18 >= 2", "player.buff(Combo Breaker: Tiger Palm)", "player.buff(Combo Breaker: Tiger Palm).duration <= 2" }},
+
   { "Rising Sun Kick" },
 
   { "Blackout Kick", "player.buff(Combo Breaker: Blackout Kick)" },
