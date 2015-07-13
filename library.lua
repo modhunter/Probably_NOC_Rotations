@@ -123,6 +123,7 @@ SpecialAuras = {
   [155267]    = "155267",     -- Cotainment (Primal Elementalists - BRF)
   [157289]    = "157289",     -- Arcane Protection (Imperator Mar'Gok)
   [174057]    = "174057",     -- Arcane Protection (Imperator Mar'Gok)
+  [182055]    = "182055",     -- Full Charge (Iron Reaver)
   [184053]    = "184053",     -- Fel Barrier (Socrethar)
 }
 
