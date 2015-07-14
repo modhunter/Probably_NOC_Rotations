@@ -221,7 +221,7 @@ local combat = {
 		{{
 			{ "Keg Smash", { "player.tier18 >= 4", "player.spell(Expel Harm).cooldown > 1" }},
 			{ "Keg Smash", { "player.tier18 < 4" }},
-		} { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
+		}, { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
 
 		{ "Blackout Kick", "player.chidiff < 2" },
 
