@@ -46,6 +46,11 @@ ProbablyEngine.condition.register("tier17", function(target)
    return tier17set
 end)
 
+-- Tier 18 Set
+ProbablyEngine.condition.register("tier18", function(target)
+   return tier18set
+end)
+
 ProbablyEngine.condition.register("focus.deficit", function(target)
   local max_power = UnitPowerMax(target)
   local cur_power = UnitPower(target)

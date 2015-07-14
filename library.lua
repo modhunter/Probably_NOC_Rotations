@@ -153,7 +153,7 @@ function NOC.BaseStatsTableInit()
    if tier18 ~= 0 then tier18 = 0 end
 
    -- WW Monk Tier 17
-   if specID == 269 then
+   if specID == 269 or specID == 268 then
       local tier17 = {115555,115556,115557,115558,115559}
       local tier18 = {124247,124256,124268,124262,124273}
 
