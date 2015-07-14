@@ -205,6 +205,8 @@ local combat = {
 
 		{ "!Touch of Death", "player.buff(Death Note)" },
 
+		{ "Expel Harm", { "player.tier18 >= 4" }},
+
 		{ aoe, { "toggle.multitarget", "modifier.enemies >= 3" }},
 
 		{ "Serenity", { "talent(7,3)", "player.chi >= 2", "player.spell(Keg Smash).cooldown > 6", "modifier.cooldowns" }},
@@ -216,7 +218,10 @@ local combat = {
 
 		{ "Chi Brew", { "target.health < 10", "player.spell(Touch of Death).cooldown < 1", "player.chidiff >= 2", "player.buff(Shuffle).duration >= 6", "!player.glyph(Touch of Death)" }},
 
-		{ "Keg Smash", { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
+		{{
+			{ "Keg Smash", { "player.tier18 >= 4", "player.spell(Expel Harm).cooldown > 1" }},
+			{ "Keg Smash", { "player.tier18 < 4" }},
+		} { "player.chidiff >= 2", "!player.buff(Serenity)", "toggle.kegsmash" }},
 
 		{ "Blackout Kick", "player.chidiff < 2" },
 

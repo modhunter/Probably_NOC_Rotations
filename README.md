@@ -5,12 +5,12 @@ NOC Rotations
 ##Status
 - Monk Windwalker
 - Monk Brewmaster
-- Hunter Survival
-- Hunter Beastmaster
-- Hunter Marksman
+- Hunter Survival (on hiatus)
+- Hunter Beastmaster (on hiatus)
+- Hunter Marksman (on hiatus)
 
 
-## Hunter (Survival (6.x), BeastMaster (6.x), & Marksman (6.x))
+## Hunter (Survival (6.1), BeastMaster (6.1), & Marksman (6.1)) - CURRENTLY ON HIATUS
 ====================
 
 ### Features
@@ -52,7 +52,7 @@ NOC Rotations
 ====================
 - Add logic to allow casting movment-restricted spells while under aspect of the fox
 
-## Windwalker Monk (6.x)
+## Windwalker Monk (6.2)
 ====================
 
 ### Features
@@ -77,7 +77,8 @@ NOC Rotations
   - Dampen Harm (/mWW qtFive)
 - Automatic & smart Storm, Earth, and Fire on mouseover. It will not apply more than 2 clones, will prevent you from castting on your current target, and if you switch to a target with one on, it will cancel the spell. Thanks to Tao for the routine
 - Toggle button for turning on/off automatic targetting while in combat & automatic target switching to next nearest target - this is to allow for high efficiency when needed
-- Toggle button for switching Fists of Furon on/off.  This may be necessary to use for an encounter or phase of an enounter where FoF is problematic.  For example Fof the adds during Garrosh phase 1 can kill the tank due to the stun.
+- Toggle button for switching Nimble Brew on/off.  This may be necessary to use for an encounter where breaking out of a movement-imparing effect will cause excessive raid-wide damage.
+
 
 ### Hotkeys
 ====================
@@ -104,7 +105,6 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-- Include more detailed checks for stat 'procs' e.g. only consider it a stat proc if there is a certain percentage increase.  In other words don't consider it an agility proc unless the % increase is above some level (20%+?)
 - Objectmaker ideas:
   - Auto ToD any in-range qualified enemies
   - Better auto SEF to pick enemies quicker instead of relying on legacy checks
@@ -115,7 +115,7 @@ NOC Rotations
   - Smart RJW/SCK usage using exact info to determine how many enemeis will be hit - idea is that we would only ever use these if it would be beneficial based on enemies that would truly be hit
 
 
-## Brewmaster Monk (6.x)
+## Brewmaster Monk (6.2)
 ====================
 
 ### Features
