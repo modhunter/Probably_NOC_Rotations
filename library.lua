@@ -80,6 +80,7 @@ Blacklist = {
   [93391]     = "93391",      -- Captured Prisoner (HFC)
   [93392]     = "93392",      -- Captured Prisoner (HFC)
   [93828]     = "93828",      -- Training Dummy (HFC)
+  [93926]     = "93926",      -- Gul'dan (HFC, Mannaroth)
 }
 
 SpecialAuras = {

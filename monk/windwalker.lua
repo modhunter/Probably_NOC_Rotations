@@ -342,7 +342,7 @@ local combat = {
         { "Expel Harm", { "player.health <= 95", "player.chidiff >= 2" }},
         { "Jab", "player.chidiff >= 2" },
 
-      }, { "!player.casting", "target.range <= 5" }},
+      }, { "!player.channeling", "target.range <= 5" }},
 
       -- Tiger's Lust if the target is out of melee range and we are moving for at least 0.5 second
       { "Tiger's Lust", { "target.range > 5", "player.movingfor > 0.5", "target.alive" }},
@@ -353,7 +353,7 @@ local combat = {
         { "Crackling Jade Lightning", { "target.range > 8", "target.range <= 40", "!player.moving", "target.combat" }},
       }, "toggle.cjl" },
     }, "@NOC.isValidTarget('target')" },
-  }, "!player.casting" },
+  }, "!player.channeling" },
 }
 
 ProbablyEngine.rotation.register_custom(269, "|cFF32ff84NOC Windwalker Monk|r", combat, ooc, onLoad)
