@@ -61,6 +61,7 @@ Whitelist = {
   [90485]     = "90485",      -- Felfire Artillery (HFC)
   [93435]     = "93435",      -- Felfire Transporter (HFC)
   [93717]     = "93717",      -- Volatile Firebomb (HFC)
+  [188293]     = "188293",      -- Reinforced Firebomb (HFC)
   [94865]     = "94865",      -- Grasping Hand (HFC)
   [93838]     = "93838",      -- Grasping Hand (HFC)
   [93839]     = "93839",      -- Dragging Hand (HFC)
