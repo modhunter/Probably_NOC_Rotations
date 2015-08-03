@@ -125,7 +125,7 @@ local combat = {
 	-- Purify always at Heavy Stagger and only when shuffle is at least 25% of health with Moderate Stagger
 	{ "Purifying Brew", { "@NOC.DrinkStagger" }},
 	-- Purify when under Serenity & light stagger
-	{ "Purifying Brew", { "player.buff(Serenity)", "player.buff(124275)" }},
+	{ "Purifying Brew", { "player.buff(Serenity)", "player.debuff(124275)" }},
 
 	-- Defensives
 	{{
