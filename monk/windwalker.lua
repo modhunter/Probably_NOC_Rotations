@@ -254,8 +254,8 @@ local combat = {
          { "Blood Fury" },
          { "Invoke Xuen, the White Tiger" },
         -- Use with TeB
-         { "#trinket1", "player.buff(116740)" },
-         { "#trinket2", "player.buff(116740)" },
+         --{ "#trinket1", "player.buff(116740)" },
+         --{ "#trinket2", "player.buff(116740)" },
       }, "modifier.cooldowns" },
 
       -- Should this be moved after the melee-range check? Worried that it may be prioritized too much
