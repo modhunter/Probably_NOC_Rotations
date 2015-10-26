@@ -126,8 +126,8 @@ local combat = {
       { "Lifeblood" },
       { "Berserking" },
       { "Blood Fury" },
-      { "#trinket1" },
-      { "#trinket2" },
+      --{ "#trinket1" },
+      --{ "#trinket2" },
     }, "modifier.cooldowns" },
 
     { "Tranquilizing Shot", { "target.dispellable(Tranquilizing Shot)", "!target.cc" }, "target" },
