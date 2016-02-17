@@ -90,6 +90,12 @@ Blacklist = {
   [93392]     = "93392",      -- Captured Prisoner (HFC)
   [93828]     = "93828",      -- Training Dummy (HFC)
   [93926]     = "93926",      -- Gul'dan (HFC, Mannaroth)
+  [93288] = "93288",  -- Corrupted Soul (HFC, Gorefiend)
+  [91765] = "91765",  -- Crystalline Fel Prison (Socrethar)
+  [96119] = "96119",  -- Source of Chaos (Archimonde)
+  [91809] = "91809",  -- Gorefiend (HFC, Gorefiend)
+  [90199] = "90199",  -- Gorefiend (HFC, Gorefiend)
+
 }
 
 SpecialAuras = {
