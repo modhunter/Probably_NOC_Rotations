@@ -201,7 +201,7 @@ local combat = {
   -- Buffs
   { buffs, },
 
-  { "Storm, Earth, and Fire", { "!player.buff(137639).count = 2", "@NOC.canSEF('mouseover')" }, "mouseover" },
+  { "Storm, Earth, and Fire", { "toggle.autosef", "!player.buff(137639).count = 2", "@NOC.canSEF('mouseover')" }, "mouseover" },
   -- Auto SEF when enabled
   { "Storm, Earth, and Fire", { "toggle.autosef", "!player.buff(137639).count = 2", "@NOC.autoSEF()", },},
   { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }},
@@ -252,11 +252,15 @@ local combat = {
          { "Lifeblood" },
          { "Berserking" },
          { "Blood Fury" },
-         { "Invoke Xuen, the White Tiger" },
+         -- { "Invoke Xuen, the White Tiger" },
+         -- Use Xuen only while hero or potion is active
+         { "Invoke Xuen, the White Tiger", "player.hashero" },
+         { "Invoke Xuen, the White Tiger", "player.buff(156423)" },
         -- Use with TeB
          --{ "#trinket1", "player.buff(116740)" },
          --{ "#trinket2", "player.buff(116740)" },
       }, "modifier.cooldowns" },
+
 
       -- Should this be moved after the melee-range check? Worried that it may be prioritized too much
       {{
