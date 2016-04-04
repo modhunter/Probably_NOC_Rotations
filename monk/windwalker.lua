@@ -252,7 +252,6 @@ local combat = {
          { "Lifeblood" },
          { "Berserking" },
          { "Blood Fury" },
-         -- { "Invoke Xuen, the White Tiger" },
          -- Use Xuen only while hero or potion is active
          { "Invoke Xuen, the White Tiger", "player.hashero" },
          { "Invoke Xuen, the White Tiger", "player.buff(156423)" },
