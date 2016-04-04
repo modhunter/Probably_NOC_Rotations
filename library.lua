@@ -142,6 +142,7 @@ SpecialAuras = {
   [182055]    = "182055",     -- Full Charge (Iron Reaver)
   [184053]    = "184053",     -- Fel Barrier (Socrethar)
   [180040]    = "180040",     -- Sovereign's Ward (HFC - Tyrant)
+  [187355]    = "187355",     -- Sovereign's Ward (HFC - Tyrant)
 }
 
 -- Credit to StinkyTwitch for the routines to check stat buffs
