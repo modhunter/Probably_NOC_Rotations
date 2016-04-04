@@ -141,6 +141,7 @@ SpecialAuras = {
   [174057]    = "174057",     -- Arcane Protection (Imperator Mar'Gok)
   [182055]    = "182055",     -- Full Charge (Iron Reaver)
   [184053]    = "184053",     -- Fel Barrier (Socrethar)
+  [180040]    = "180040",     -- Sovereign's Ward (HFC - Tyrant)
 }
 
 -- Credit to StinkyTwitch for the routines to check stat buffs
