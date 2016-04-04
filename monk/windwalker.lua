@@ -205,6 +205,7 @@ local combat = {
   -- Auto SEF when enabled
   { "Storm, Earth, and Fire", { "toggle.autosef", "!player.buff(137639).count = 2", "@NOC.autoSEF()", },},
   { "/cancelaura Storm, Earth, and Fire", { "target.debuff(Storm, Earth, and Fire)" }},
+  { "/cancelaura Storm, Earth, and Fire", { "!toggle.autosef" }},
 
   { interrupts, { "target.interruptsAt(40)", "toggle.sint" }}, -- Interrupt when 40% into the cast time
   { interrupts, { "target.interruptAt(40)", "!toggle.sint" }}, -- Interrupt when 40% into the cast time
