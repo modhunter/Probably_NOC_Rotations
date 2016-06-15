@@ -154,11 +154,10 @@ function NOC.BaseStatsTableInit()
 	NOC.baseStatsTable.agility = UnitStat("player", 2)
 	NOC.baseStatsTable.stamina = UnitStat("player", 3)
 	NOC.baseStatsTable.intellect = UnitStat("player", 4)
-	NOC.baseStatsTable.spirit = UnitStat("player", 5)
+	-- NOC.baseStatsTable.spirit = UnitStat("player", 5)
 	NOC.baseStatsTable.crit = GetCritChance()
 	NOC.baseStatsTable.haste = GetHaste()
 	NOC.baseStatsTable.mastery = GetMastery()
-	NOC.baseStatsTable.multistrike = GetMultistrike()
 	NOC.baseStatsTable.versatility = GetCombatRating(29)
   if DEBUGTOGGLE and DEBUGLOGLEVEL >= 4 then
     NOC.BaseStatsTablePrint()
@@ -216,9 +215,9 @@ function NOC.BaseStatsTableUpdate()
 		if NOC.baseStatsTable.intellect ~= UnitStat("player", 4) then
 			NOC.baseStatsTable.intellect = UnitStat("player", 4)
 		end
-		if NOC.baseStatsTable.spirit ~= UnitStat("player", 5) then
-			NOC.baseStatsTable.spirit = UnitStat("player", 5)
-		end
+		-- if NOC.baseStatsTable.spirit ~= UnitStat("player", 5) then
+		-- 	NOC.baseStatsTable.spirit = UnitStat("player", 5)
+		-- end
 		if NOC.baseStatsTable.crit ~= GetCritChance() then
 			NOC.baseStatsTable.crit = GetCritChance()
 		end
@@ -227,9 +226,6 @@ function NOC.BaseStatsTableUpdate()
 		end
 		if NOC.baseStatsTable.mastery ~= GetMastery() then
 			NOC.baseStatsTable.mastery = GetMastery()
-		end
-		if NOC.baseStatsTable.multistrike ~= GetMultistrike() then
-			NOC.baseStatsTable.multistrike = GetMultistrike()
 		end
 		if NOC.baseStatsTable.versatility ~= GetCombatRating(29) then
 			NOC.baseStatsTable.versatility = GetCombatRating(29)

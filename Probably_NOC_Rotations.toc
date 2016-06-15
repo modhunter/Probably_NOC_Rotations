@@ -10,3 +10,4 @@ hunter\survival.lua
 hunter\marksman.lua
 monk\brewmaster.lua
 monk\windwalker.lua
+demonhunter\havoc.lua

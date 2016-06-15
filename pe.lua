@@ -127,15 +127,6 @@ ProbablyEngine.condition.register("proc", function(target, stat)
 			return false
 		end
 	end
-	if stat == "multistrike" then
-    local ms = GetMultistrike()
-		if ms > NOC.baseStatsTable.multistrike then
-      NOC.DEBUG(4, "proc found: "..ms.." > "..NOC.baseStatsTable.multistrike, "msproc")
-			return true
-		else
-			return false
-		end
-	end
 	if stat == "versatility" then
 		if GetCombatRating(29) > NOC.baseStatsTable.versatility then
 			NOC.DEBUG(4, "versatility proc found!", "verproc")
@@ -170,9 +161,6 @@ ProbablyEngine.condition.register("proc.any", function(target)
 		return true
 	elseif GetMastery() > NOC.baseStatsTable.mastery then
 		NOC.DEBUG(4, "any proc found mastery proc!")
-		return true
-	elseif GetMultistrike() > NOC.baseStatsTable.multistrike then
-		NOC.DEBUG(4, "any proc found multistrike proc!")
 		return true
 	elseif GetCombatRating(29) > NOC.baseStatsTable.versatility then
 		NOC.DEBUG(4, "any proc found versatility proc!")
