@@ -3,6 +3,7 @@ NOC Rotations
 ====================
 
 ##Status
+- Demonk Hunter Havoc
 - Monk Windwalker
 - Monk Brewmaster
 - Hunter Survival (on hiatus)
@@ -10,39 +11,20 @@ NOC Rotations
 - Hunter Marksman (on hiatus)
 
 
-## Hunter (Survival (6.1), BeastMaster (6.1), & Marksman (6.1)) - CURRENTLY ON HIATUS
+## Demon Hunter (Havoc) -
 ====================
 
 ### Features
 ====================
-- Single Target / AoE
-- Stampede/AMoC/Rapid Fire is only cast when cooldowns is enabled
-- Toggle button for automatic aspect switching while moving or standing still
-- Toggle button for turning on/off automatic misdirect
-- Toggle button for turning on/off automatic targetting while in combat & automatic target switching to next nearest target - this is to allow for high efficiency when needed
-- Automatic tranq shot when the enemy is enraged/dispellable and not a charmed player
-- Automatic Master's Call when the player is rooted/stunned/snared
-- Multitarget mode will only engage AOE abilities when both the multitarget toggle is set and there are at least 3 active enemies - this means that you can generally leave multitarget toggled on and not worry about only casting multi-shot all the time
-- Pause rotation when in feign death
-- Delayed interrupting: Don't attempt to interrupt until the spellcast is 50% complete
-- Toggle to allow for automatic arcane shot on your current mouseover target whenever that target doesn't already have the serpent sting DOT/debuff.  This is a great way to 'DOT-up' multiple enemies that are spread around
-- Revive Pet, Heart of the Phoenix, & Call Pet support
 
 ### Hotkeys
 ====================
 - Left Shift - Pause
-- Left Control - Binding Shot
-- Left Alt - Explosive Trap
-- Left Alt - Ice Trap
+- Left Control -
+- Left Alt -
 
 ### Survival
 ====================
-- Exhilaration when health below 50%
-- Healthstone when below 40% health
-- Health Tonic when below 40% health
-- Deterrence as a last resort when you are < 10% health
-- Automatic misdirect to focus or pet when you pull too much threat
-- Automatic mend pet (in combat & out of combat) when the pet is < 90% health
 
 ### Rotation
 ====================
@@ -50,7 +32,12 @@ NOC Rotations
 
 ### Issues/Todo
 ====================
-- Add logic to allow casting movment-restricted spells while under aspect of the fox
+- Make Metamorphosis cast correctly at the ground Automatically using generic unlock
+- Add appropriate simc APL conditionals
+- Add AOE Rotation
+- Add automatic (toggleable) vengeful retreat & fel rush logic
+- Add automatic jump (JumpOrAscendStart()) & cancel (AscendStop()) when doing vengeful retreat and Fel Rush
+
 
 ## Windwalker Monk (6.2)
 ====================

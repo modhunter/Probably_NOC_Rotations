@@ -15,6 +15,13 @@ ProbablyEngine.condition.register("chidiff", function(target, spell)
     return (max - curr)
 end)
 
+-- Returns the number of fury you have left till max (e.g. you have a max of 100 fury and 75 now, so it will return 25)
+ProbablyEngine.condition.register("furydiff", function(target, spell)
+    local max = UnitPowerMax(target, SPELL_POWER_FURY)
+    local curr = UnitPower(target, SPELL_POWER_FURY)
+    return (max - curr)
+end)
+
 ProbablyEngine.condition.register("cc", function(target)
   if not UnitExists(target) then
     return false
