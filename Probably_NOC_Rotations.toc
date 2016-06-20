@@ -11,3 +11,4 @@ hunter\marksman.lua
 monk\brewmaster.lua
 monk\windwalker.lua
 demonhunter\havoc.lua
+demonhunter\vengeance.lua
