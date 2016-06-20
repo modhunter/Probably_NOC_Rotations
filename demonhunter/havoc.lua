@@ -56,8 +56,8 @@ local combat = {
         { "Eye Beam", "!talent(3,2)" },
         { "Eye Beam", "player.fury >= 80" },
         { "Eye Beam", "player.furydiff < 30" },
-      }, { "talent(5,1)", "!player.buff(Momentum)" }},
-      { "Eye Beam", { "!talent(5,1)", "toggle.multitarget", "modifier.enemies >= 2" }},
+      }, { "talent(5,1)", "!player.buff(Momentum)", "target.range <= 20" }},
+      { "Eye Beam", { "!talent(5,1)", "toggle.multitarget", "modifier.enemies >= 2", "target.range <= 20" }},
 
       { "Throw Glaive", { "talent(3,3)", "talent(1,2)", "toggle.multitarget", "modifier.enemies >= 2" }},
       { "Throw Glaive", { "!player.buff(Metamorphosis)", "talent(3,3)" }},
@@ -69,27 +69,29 @@ local combat = {
          { "Berserking" },
          { "Blood Fury" },
          {{
-           { "Metamorphosis", { "player.spell(Chaos Blades).cooldown < 1" }, "target" },
-           { "Metamorphosis", { "player.buff(Chaos Blades)" }, "target" },
-           { "Metamorphosis", { "!talent(6,3)" }, "target" },
+           { "Metamorphosis", { "player.spell(Chaos Blades).cooldown < 1" }, "player" },
+           { "Metamorphosis", { "player.buff(Chaos Blades)" }, "player" },
+           { "Metamorphosis", { "!talent(6,3)" }, "player" },
            -- TODO: Handle demonic talent and eye beam
          }, { "!player.buff(Metamorphosis)" }},
       }, "modifier.cooldowns" },
+
+      {{
+        {{
+          { "Vengeful Retreat", { "talent(5,1)", "!player.buff(Momentum)" }},
+          { "Vengeful Retreat", { "!talent(5,1)" }},
+        }, { "target.range <= 5" }},
+        {{
+          { "Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Fel Rush).charges = 2" }},
+          { "Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Vengeful Retreat).cooldown > 4" }},
+        }, { "target.range > 5" }},
+      }, "toggle.auto_jump" },
 
       -- { "Nemsis", "target.ttd < 60" },
       { "Nemsis" },
 
       -- Melee range only
       {{
-        {{
-          { "/run AscendStop()", "player.buff(Vengeful Retreat)" },
-          { "/run AscendStop()", "player.buff(Fel Rush)" },
-          { "Vengeful Retreat", { "talent(5,1)", "!player.buff(Momentum)" }},
-          { "Vengeful Retreat", { "!talent(5,1)" }},
-          { "Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Fel Rush).charges = 2" }},
-          { "Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Vengeful Retreat).cooldown > 4" }},
-        }, "toggle.auto_jump" },
-
         { "Chaos Blades", { "!player.buff(Chaos Blades)", "player.spell(Metamorphosis).cooldown > 100" }},
         { "Chaos Blades", "player.buff(Metamorphosis)" },
 
@@ -128,6 +130,8 @@ local combat = {
         { "Demon's Bite" },
 
       }, { "!player.channeling", "target.range <= 5" }},
+
+      { "Throw Glaive", { "target.range > 5" }},
 
     }, "@NOC.isValidTarget('target')" },
   }, "!player.channeling" },
