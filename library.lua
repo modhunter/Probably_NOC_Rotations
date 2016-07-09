@@ -509,6 +509,11 @@ function NOC.autoSEF()
   return false
 end
 
+function NOC.FR()
+  StrafeRightStart()
+  StrafeLeftStart()
+  -- CastSpellByName("Fel Rush", target)
+end
 
 --energy+energy.regen*gcd<50 = powtime < 50
 function NOC.energyTime(energycheck)

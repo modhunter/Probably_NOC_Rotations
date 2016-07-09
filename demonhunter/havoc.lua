@@ -77,14 +77,16 @@ local combat = {
       }, "modifier.cooldowns" },
 
       {{
+        --{{
+          --{ "Vengeful Retreat", { "talent(5,1)", "!player.buff(Momentum)" }},
+          --{ "Vengeful Retreat", { "!talent(5,1)" }},
+        --}, { "target.range <= 5" }},
         {{
-          { "Vengeful Retreat", { "talent(5,1)", "!player.buff(Momentum)" }},
-          { "Vengeful Retreat", { "!talent(5,1)" }},
-        }, { "target.range <= 5" }},
-        {{
-          { "Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Fel Rush).charges = 2" }},
-          { "Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Vengeful Retreat).cooldown > 4" }},
+          --{ "Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Fel Rush).charges = 2" }},
+          --{ "Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Vengeful Retreat).cooldown > 4" }},
         }, { "target.range > 5" }},
+        { "/run StrafeRightStart()\n/run StrafeLeftStart()\n/cast Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Fel Rush).charges = 2" }},
+        { "/run StrafeRightStart()\n/run StrafeLeftStart()\n/cast Fel Rush", { "talent(5,1)", "!player.buff(Momentum)", "player.spell(Vengeful Retreat).cooldown > 4" }},
       }, "toggle.auto_jump" },
 
       -- { "Nemsis", "target.ttd < 60" },
