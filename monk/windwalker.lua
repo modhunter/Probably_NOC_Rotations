@@ -4,9 +4,8 @@
 local onLoad = function()
   ProbablyEngine.toggle.create('sint', 'Interface\\Icons\\ability_monk_spearhand', 'Sudden Interrupt', 'Stop spellcasting in order to use an interrupt')
   ProbablyEngine.toggle.create('cjl', 'Interface\\Icons\\ability_monk_cracklingjadelightning', 'Crackling Jade Lightning', 'Enable use of automatic Crackling Jade Lightning when the target is in combat and at range')
-  ProbablyEngine.toggle.create('nb', 'Interface\\Icons\\spell_monk_nimblebrew', 'Automatic use of Nimble Brew/Tigers Lust', 'Enable use of automatic Nimble Brew/Tigers Lust when the player is rooted')
   ProbablyEngine.toggle.create('dpstest', 'Interface\\Icons\\inv_misc_pocketwatch_01', 'DPS Test', 'Stop combat after 5 minutes in order to do a controlled DPS test')
-  --ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
+  ProbablyEngine.toggle.create('autosef', 'Interface\\Icons\\spell_sandstorm', 'Auto SEF', 'Automatically cast SEF on mouseover targets')
 
   NOC.BaseStatsTableInit()
 
@@ -24,28 +23,32 @@ local ooc = {
 }
 
 local aoe = {
-  { "Spinning Crane Kick", { "!talent(6,1)" }},
+  { "Spinning Crane Kick", { "!talent(6,1)", "!lastcast(Spinning Crane Kick)" }},
 }
 
 local st = {
-  --{ "Blackout Kick", { "player.tier18 >= 2" }},
+  { "Blackout Kick", { "player.tier18 >= 2", "player.buff(Blackout Kick!)", "!lastcast(Blackout Kick)" }},
 
   { "Rising Sun Kick" },
 
-  { "Blackout Kick", { "player.buff(Serenity)" }},
+  {{
+    { "Blackout Kick", { "player.buff(Blackout Kick!)" }},
+    { "Blackout Kick", { "player.buff(Serenity)" }},
+  }, { "!lastcast(Blackout Kick)" }},
 
   {{
     { "Chi Wave" }, -- 40 yard range 0 energy, 0 chi
     { "Chi Burst", { "!player.moving" }},
   }, { "!player.buff(Serenity)" }},
 
-  { "Rushing Jade Wind", { "player.chidiff <= 3" }},
+  { "Rushing Jade Wind", { "player.chidiff <= 3", "!lastcast(Rushing Jade Wind)" }},
 
-  { "Blackout Kick", { "player.chidiff <= 3" }},
+  --{ "Blackout Kick", { "player.chidiff <= 3", "!lastcast(Blackout Kick)" }},
+  { "Blackout Kick", { "player.chi >= 2", "!lastcast(Blackout Kick)" }},
 
-  { "Tiger Palm", { "player.buff(Power Strikes)", "player.chidiff >= 3" }},
+  { "Tiger Palm", { "player.buff(Power Strikes)", "player.chidiff >= 3", "!lastcast(Tiger Palm)" }},
 
-  { "Tiger Palm", { "!player.buff(Power Strikes)", "player.chidiff >= 2" }},
+  { "Tiger Palm", { "!player.buff(Power Strikes)", "player.chidiff >= 2", "!lastcast(Tiger Palm)" }},
 }
 
 
@@ -69,7 +72,7 @@ local opener = {
 
     { "Serenity", { "player.chidiff >= 2" }},
 
-    { "Tiger Palm", { "player.chidiff >= 2", "!player.buff(Serenity)" }},
+    { "Tiger Palm", { "player.chidiff >= 2", "!player.buff(Serenity)", "!lastcast(Tiger Palm)", "player.spell(Blackout Kick).casted = 0" }},
 }
 
 local interrupts = {
@@ -128,6 +131,9 @@ local combat = {
 
     -- wrapper for "@NOC.isValidTarget" which prevents the following from occuring when the target is CCed or otherwise not allowed to be attacked
     {{
+      { "Storm, Earth, and Fire", { "toggle.autosef", "player.buff(Storm, Earth, and Fire)", "!toggle.multitarget" }},
+      { "Storm, Earth, and Fire", { "toggle.autosef", "!player.buff(Storm, Earth, and Fire)" }},
+
       { "Touch of Death" },
 
       {{
@@ -151,7 +157,7 @@ local combat = {
 
         { "Energizing Elixir", { "player.energy < 30", "player.chi < 2" }},
 
-        { "Rushing Jade Wind", { "player.buff(Serenity)" }},
+        { "Rushing Jade Wind", { "player.buff(Serenity)", "!lastcast(Rushing Jade Wind)" }},
 
         { "Strike Of The Windlord" },
 

@@ -33,8 +33,7 @@ NOC Rotations
 ### Issues/Todo
 ====================
 - Make Metamorphosis cast correctly at the ground Automatically using generic unlock
-- Add appropriate simc APL conditionals
-- Add AOE Rotation
+- Add AOE Rotation - sort of done
 - Add automatic (toggleable) vengeful retreat & fel rush logic
 - Add automatic jump (JumpOrAscendStart()) & cancel (AscendStop()) when doing vengeful retreat and Fel Rush
 
